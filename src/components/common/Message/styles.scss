@@ -1,0 +1,10 @@
+.message-box {
+  background-color: #f8f8f8;
+  border: 1px solid #bdbdbd;
+
+  & .message {
+    font-size: 14px;
+    color: #bdbdbd;
+    line-height: 17px;
+  }
+}

@@ -1,0 +1,15 @@
+.app-container {
+  & .main-title {
+    font-size: 32px;
+    color: #241d5d;
+  }
+
+  & .separator {
+    opacity: 1;
+    border-top-color: #bdbdbd;
+  }
+
+  & .loading-data {
+    min-height: 350px;
+  }
+}

@@ -1,0 +1,15 @@
+// Styles
+@import "Video/styles";
+@import "ModuleHeader/styles";
+
+%stage_lesson {
+  & .lesson-stage {
+    @extend %lesson_video;
+    @extend %lesson_moduleHeader;
+
+    & .stage-description {
+      font-size: 14px;
+      white-space: pre-line;
+    }
+  }
+}

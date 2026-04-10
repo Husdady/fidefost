@@ -1,0 +1,19 @@
+.onboarding-info-message {
+  margin-top: 0.75rem;
+  background-color: #eff6ff;
+
+  & .message,
+  & .subtitle {
+    font-size: 14px;
+  }
+
+  & .subtitle {
+    color: #4f4f4f;
+  }
+
+  & .message {
+    color: #333333;
+    line-height: 19px;
+    white-space: pre-line;
+  }
+}

@@ -1,0 +1,16 @@
+// Styles
+@import "Courses/styles.scss";
+@import "InfoMessage/styles.scss";
+
+%coursesStage_courseListView {
+  &.course-list-view {
+    @extend %courseListView_courses;
+    @extend %courseListView_infoMessage;
+
+    & .training-float-buttons {
+      & .btn-next {
+        min-width: 204px;
+      }
+    }
+  }
+}

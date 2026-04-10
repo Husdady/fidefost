@@ -1,0 +1,10 @@
+// Styles
+@import "Loader/styles";
+
+button {
+  @extend %button_loader;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

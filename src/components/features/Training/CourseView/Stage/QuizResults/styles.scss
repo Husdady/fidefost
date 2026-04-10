@@ -1,0 +1,10 @@
+// Styles
+@import "Summary/styles";
+@import "Questions/styles";
+
+%stage_quizResults {
+  & .quiz-results-stage {
+    @extend %quizResults_summary;
+    @extend %quizResults_questions;
+  }
+}

@@ -1,0 +1,19 @@
+// Library styles
+@import "~bootstrap/scss/bootstrap";
+
+// Components styles
+@import "components/styles";
+@import "containers/styles";
+
+// Mixins
+@import "mixins/button";
+
+// Font styles
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
+
+html,
+body,
+#root {
+  color: #4f4f4f;
+  font-family: "Montserrat", sans-serif;
+}

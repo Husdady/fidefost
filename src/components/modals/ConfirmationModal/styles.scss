@@ -1,0 +1,40 @@
+.confirmation-modal {
+  & .modal-content {
+    min-height: 200px;
+    max-width: 268px !important;
+
+    & .wrapper {
+      padding: 0.65rem 1.25rem 1.25rem;
+
+      & .buttons {
+        column-gap: 1.25rem;
+
+        & .btn-cancel {
+          border: 1px solid #868686;
+          color: #4f4f4f !important;
+          background-color: #ffffff !important;
+        }
+
+        & .btn-confirm {
+          color: #ffffff;
+          border: 1px solid #dc6bbc;
+          background-color: #dc6bbc;
+
+          &.confirming {
+            color: #ffffff !important;
+            background-color: #dc6bbc !important;
+          }
+        }
+
+        & .btn-cancel,
+        & .btn-confirm {
+          font-size: 14px;
+          min-width: 103px;
+          min-height: 35px;
+          line-height: 18px;
+          padding: 0.25rem 0.65rem;
+        }
+      }
+    }
+  }
+}

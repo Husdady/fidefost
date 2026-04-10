@@ -1,0 +1,12 @@
+// Styles
+@import "Quiz/styles.scss";
+@import "Lesson/styles.scss";
+@import "QuizResults/styles.scss";
+@import "Congratulations/styles.scss";
+
+%courseView_stage {
+  @extend %stage_quiz;
+  @extend %stage_lesson;
+  @extend %stage_quizResults;
+  @extend %stage_congratulations;
+}

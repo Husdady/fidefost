@@ -1,0 +1,77 @@
+%quizResults_summary {
+  & .summary-box {
+    border-radius: 4px;
+    padding: 1rem 1.5rem;
+    background-color: #f8f8f8;
+
+    & .results-box,
+    & .answererd-correctly-box {
+      row-gap: 0.15rem;
+    }
+
+    &,
+    & .subtitle {
+      font-size: 14px;
+      color: #241d5d;
+    }
+
+    & .answererd-correctly-box {
+      row-gap: 0.3rem;
+
+      & .passing-grade {
+        font-size: 12px;
+      }
+    }
+
+    & .results-box {
+      & .results-percentage {
+        font-size: 18px;
+      }
+    }
+
+    & .btn-retake {
+      font-size: 13px;
+      min-width: 85px;
+      min-height: 32px;
+    }
+
+    &.failed-quiz {
+      background-color: #ffebeb;
+
+      & .results-percentage {
+        color: #f52828;
+      }
+    }
+
+    &.approved-quiz {
+      background-color: #e4fee3;
+
+      & .results-percentage {
+        color: #27ae60;
+      }
+    }
+
+    @media only screen and (max-width: 450px) {
+      row-gap: 1rem;
+      flex-wrap: wrap;
+
+      & .subtitle {
+        font-size: 15px;
+      }
+
+      & .results-percentage {
+        font-size: 22px !important;
+      }
+
+      & .passing-grade {
+        font-size: 13px !important;
+      }
+
+      & .btn-retake {
+        width: 100%;
+        font-size: 15px;
+        min-height: 40px;
+      }
+    }
+  }
+}

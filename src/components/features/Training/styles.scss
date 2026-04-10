@@ -1,0 +1,8 @@
+// Styles
+@import "CourseView/styles.scss";
+@import "CourseListView/styles.scss";
+
+.courses-stage {
+  @extend %coursesStage_courseView;
+  @extend %coursesStage_courseListView;
+}

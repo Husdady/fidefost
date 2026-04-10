@@ -1,0 +1,118 @@
+%courseList_courseItem {
+  & .course-item {
+    max-width: 300px;
+    padding: 1.25rem 1rem;
+    border: 1px solid #bdbdbd;
+    width: calc(33.33% - 0.5rem);
+
+    & .box {
+      column-gap: 0.75rem;
+
+      & .btn-retake-course {
+        min-width: 32px;
+        max-width: 32px;
+        max-height: 32px;
+        min-height: 32px;
+        border-radius: 2px;
+        border: 1px solid #2f80ed;
+        background-color: #2f80ed !important;
+
+        & svg {
+          min-width: 28px;
+          min-height: 28px;
+        }
+
+        &.reseting {
+          & svg {
+            transform-origin: center;
+            animation: rotateIcon 1s linear infinite;
+          }
+        }
+
+        @keyframes rotateIcon {
+          from {
+            transform: rotate(0deg);
+          }
+
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      }
+
+      & .btn-learn-course {
+        font-size: 14px;
+        min-height: 35px;
+        color: #007aff;
+        background-color: #ffffff;
+        border: 1px solid #007aff;
+        outline: 1px solid #007aff;
+
+        &.completed {
+          cursor: default;
+          color: #27ae60;
+          border-radius: 30px;
+          background-color: transparent;
+          border: 1px solid #27ae60;
+          outline: 1px solid #27ae60;
+          column-gap: 0.65rem !important;
+          flex-direction: row-reverse !important;
+
+          & svg {
+            min-width: 14px;
+            max-width: 14px;
+            min-height: 14px;
+            max-height: 14px;
+
+            & path:first-of-type {
+              fill: #27ae60;
+            }
+          }
+        }
+      }
+    }
+
+    & .course-header {
+      & .course-logo {
+        width: 146px;
+        height: auto;
+        display: block;
+        object-fit: contain;
+      }
+
+      & .course-condition-box {
+        min-width: 75px;
+        font-size: 13px;
+        min-height: 25px;
+        color: #241d5d;
+        padding: 0.25rem 0.75rem;
+        background-color: #eff6ff;
+      }
+    }
+
+    & .course-information {
+      row-gap: 0.35rem;
+      color: #241d5d;
+
+      & .course-name {
+        font-size: 16px;
+      }
+
+      & .course-description {
+        font-size: 15px;
+        line-height: 20px;
+      }
+    }
+
+    &.required {
+      background-color: #eff6ff;
+
+      & .course-header {
+        & .course-condition-box {
+          color: #ffffff;
+          background-color: #241d5d;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+%question_options {
+  & .question-option-list {
+    row-gap: 0.35rem;
+
+    & .option-item {
+      padding: 0.35rem 0.85rem;
+
+      & .option-label {
+        font-size: 14px;
+        color: #333333;
+        line-height: 19px;
+      }
+
+      &.correct {
+        background-color: #e4fee3;
+      }
+
+      &.incorrect {
+        background-color: #ffebeb;
+      }
+
+      & svg {
+        min-width: 16px;
+        max-width: 16px;
+        min-height: 16px;
+        max-height: 16px;
+      }
+    }
+  }
+}

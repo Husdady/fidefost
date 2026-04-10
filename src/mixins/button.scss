@@ -1,0 +1,36 @@
+button {
+  border: none;
+  outline: none;
+  transition: none;
+  box-shadow: none;
+  column-gap: 0.35rem;
+
+  &:disabled {
+    color: #ffffff !important;
+    background-color: #bdbdbd !important;
+  }
+
+  &.btn-close {
+    border-radius: 0;
+    font-weight: 500;
+    background-image: none;
+    color: #4f4f4f !important;
+    opacity: 1 !important;
+  }
+
+  &.btn-back,
+  &.btn-close,
+  &.btn-cancel {
+    color: #4f4f4f;
+    border: 1px solid #8c8c8c;
+    background-color: #ffffff;
+  }
+
+  &.btn-submit:enabled,
+  &.btn-submit.submitting,
+  &.btn-submit:disabled.submitting {
+    color: #ffffff !important;
+    border: 1px solid #2f80ed;
+    background-color: #2f80ed !important;
+  }
+}

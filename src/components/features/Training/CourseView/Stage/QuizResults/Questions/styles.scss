@@ -1,0 +1,10 @@
+// Styles
+@import "Question/styles";
+
+%quizResults_questions {
+  & .question-list {
+    row-gap: 2rem;
+
+    @extend %questions_question;
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "name": "fidefost-websystem",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "author": {
+    "name": "Husdady Mena",
+    "email": "husdadymena@gmail.com",
+    "url": "https://github.com/Husdady"
+  },
+  "contributors": [
+    {
+      "url": "",
+      "name": "",
+      "email": ""
+    }
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "5.2.2",
+    "bootstrap": "5.3.8",
+    "dayjs": "1.11.19",
+    "million": "3.1.11",
+    "react": "18.3.1",
+    "react-bootstrap": "2.10.10",
+    "react-detect-offline": "2.4.5",
+    "react-dom": "18.3.1",
+    "react-hook-form": "7.71.1",
+    "react-intersection-observer": "10.0.2",
+    "react-query": "3.39.3",
+    "sass": "1.97.3",
+    "yup": "1.7.1",
+    "zustand": "5.0.11"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.1",
+    "@types/react": "19.2.5",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react-swc": "4.2.2",
+    "eslint": "9.39.1",
+    "eslint-plugin-react-hooks": "7.0.1",
+    "eslint-plugin-react-refresh": "0.4.24",
+    "globals": "16.5.0",
+    "vite": "7.2.4",
+    "vite-plugin-singlefile": "2.3.0",
+    "vite-plugin-svgr": "4.5.0"
+  }
+}

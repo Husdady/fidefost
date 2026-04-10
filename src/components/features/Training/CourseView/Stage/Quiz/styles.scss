@@ -1,0 +1,17 @@
+// Styles
+@import "Header/styles";
+@import "Questions/styles";
+@import "ConfirmationModal/styles";
+
+%stage_quiz {
+  & .quiz-stage {
+    @extend %quiz_header;
+    @extend %quiz_questions;
+
+    & .btn-send {
+      font-size: 14px;
+      min-width: 90px;
+      min-height: 35px;
+    }
+  }
+}

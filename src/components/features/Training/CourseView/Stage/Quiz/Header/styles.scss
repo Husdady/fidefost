@@ -1,0 +1,38 @@
+%quiz_header {
+  & .header-box {
+    min-height: 60px;
+    padding: 0.85rem 1rem;
+    border: 1px solid #bdbdbd;
+
+    & svg {
+      min-width: 20px;
+      max-width: 20px;
+      min-height: 20px;
+      max-height: 20px;
+    }
+
+    &,
+    & .subtitle {
+      font-size: 14px;
+      line-height: 19px;
+    }
+
+    & .passing-grade-box {
+      & .box-index {
+        padding: 0.15rem 0.5rem;
+      }
+    }
+
+    @media only screen and (max-width: 460px) {
+      justify-content: end !important;
+
+      & > aside {
+        width: 100%;
+
+        & .box-index {
+          margin-left: auto;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+%courseView_courseName {
+  & .course-name-box {
+    font-size: 14px;
+    padding: 0.85rem 1rem;
+    border: 1px solid #bdbdbd;
+
+    & .course-information {
+      row-gap: 0.2rem;
+
+      & .course-name,
+      & .course-description {
+        font-size: 14px;
+        line-height: 19px;
+      }
+    }
+
+    @media only screen and (max-width: 600px) {
+      column-gap: 1.5rem !important;
+    }
+  }
+}
