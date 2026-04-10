@@ -1,0 +1,147 @@
+.not-access-view {
+  padding-top: 24px;
+  padding-bottom: 24px;
+  font-family: "Montserrat", Inter, Arial, sans-serif;
+  background: radial-gradient(
+      circle at top left,
+      rgba(47, 128, 237, 0.16),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(111, 66, 193, 0.14),
+      transparent 30%
+    ),
+    linear-gradient(135deg, #071120 0%, #0d1b2a 100%);
+
+  &__overlay {
+    inset: 0;
+    opacity: 0.45;
+    pointer-events: none;
+    background-size: 28px 28px;
+    background: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  }
+
+  &__card {
+    z-index: 1;
+    max-width: 560px;
+    padding: 40px 32px;
+    border-radius: 24px;
+    backdrop-filter: blur(10px);
+    background: rgba(10, 18, 33, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  &__icon-box {
+    margin-bottom: 18px;
+  }
+
+  &__icon {
+    width: 84px;
+    height: 84px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #2f80ed 0%, #56ccf2 100%);
+    box-shadow: 0 12px 28px rgba(47, 128, 237, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  &__screen {
+    width: 38px;
+    height: 26px;
+    border-radius: 6px;
+    border: 3px solid #ffffff;
+
+    &::before {
+      content: "";
+      left: 50%;
+      width: 18px;
+      height: 3px;
+      bottom: -10px;
+      position: absolute;
+      border-radius: 999px;
+      background: #ffffff;
+      transform: translateX(-50%);
+    }
+  }
+
+  &__warning {
+    top: 10px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    color: #2f80ed;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  }
+
+  &__eyebrow {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: #56ccf2;
+  }
+
+  &__title {
+    font-size: 32px;
+    line-height: 1.2;
+    color: #ffffff;
+  }
+
+  &__description {
+    font-size: 16px;
+    max-width: 440px;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  &__message {
+    gap: 10px;
+    font-size: 14px;
+    color: #dceeff;
+    min-height: 52px;
+    line-height: 1.5;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: rgba(47, 128, 237, 0.12);
+    border: 1px solid rgba(86, 204, 242, 0.22);
+
+    strong {
+      color: #ffffff;
+    }
+  }
+
+  &__message-dot {
+    width: 10px;
+    height: 10px;
+    min-width: 10px;
+    border-radius: 50%;
+    background: #56ccf2;
+    box-shadow: 0 0 0 6px rgba(86, 204, 242, 0.12);
+  }
+}
+
+@media (max-width: 640px) {
+  .not-access-view {
+    &__card {
+      padding: 32px 22px;
+      border-radius: 20px;
+    }
+
+    &__title {
+      font-size: 26px;
+    }
+
+    &__description {
+      font-size: 15px;
+    }
+
+    &__message {
+      font-size: 13px;
+      padding: 12px 14px;
+    }
+  }
+}
