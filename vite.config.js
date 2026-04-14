@@ -30,6 +30,7 @@ export default function () {
         assets: "/src/assets",
         styles: "/src/styles",
         context: "/src/context",
+        database: "/src/database",
         components: "/src/components",
         containers: "/src/containers",
         "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
