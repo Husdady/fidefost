@@ -4,16 +4,10 @@ import offlineViewImageSrc from "./offline-image.jpg";
 // Utils
 import classnames from "utils/classnames";
 
-// Constants
-import { isAllowedOrginForMakePostMessage } from "data/urls";
-
 export default function OfflineView() {
   return (
     <section
-      className={classnames([
-        isAllowedOrginForMakePostMessage ? "add-border" : null,
-        "offline-view d-flex flex-column align-items-center justify-content-center mx-auto",
-      ])}
+      className="offline-view d-flex flex-column align-items-center justify-content-center mx-auto"
     >
       <img
         width={300}
