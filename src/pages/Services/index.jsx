@@ -7,7 +7,7 @@ import AddButton from "components/features/PageHeader/AddButton";
 import useShowModal from "hooks/useShowModal";
 
 export default function Services() {
-  const createOperatorModal = useShowModal();
+  const createServiceModal = useShowModal();
 
   return (
     <main className="services-page main-container">

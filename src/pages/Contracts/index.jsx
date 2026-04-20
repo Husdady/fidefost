@@ -8,7 +8,7 @@ import ContractsSummary from "modules/contracts/Summary";
 import useShowModal from "hooks/useShowModal";
 
 export default function Contracts() {
-  const createOperatorModal = useShowModal();
+  const createContractModal = useShowModal();
 
   return (
     <main className="contracts-page main-container">
