@@ -19,11 +19,11 @@ export default function Services() {
           description="Administración de hojas de ruta, despachos y métricas mensuales"
         >
           <AddButton
-            onClick={createOperatorModal.show}
+            onClick={createServiceModal.show}
             title="EXPORTAR TODO"
           />
           <AddButton
-            onClick={createOperatorModal.show}
+            onClick={createServiceModal.show}
             title="CARGAR HOJA DE RUTA"
           />
         </PageHeader>

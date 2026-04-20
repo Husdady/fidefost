@@ -20,11 +20,11 @@ export default function Contracts() {
           description="Monitoreo y vinculación operativa de recursos."
         >
           <AddButton
-            onClick={createOperatorModal.show}
+            onClick={createContractModal.show}
             title="Crear Contrato de Seguro"
           />
           <AddButton
-            onClick={createOperatorModal.show}
+            onClick={createContractModal.show}
             title="Nuevo Contrato de Unidades"
           />
         </PageHeader>

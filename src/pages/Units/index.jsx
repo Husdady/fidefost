@@ -19,7 +19,7 @@ export default function Units() {
           description="Control operativo y vigencia de documentación técnica para unidades pesadas."
         >
           <AddButton
-            onClick={createOperatorModal.show}
+            onClick={createUnitModal.show}
             title="Agregar Nueva Unidad"
           />
         </PageHeader>
