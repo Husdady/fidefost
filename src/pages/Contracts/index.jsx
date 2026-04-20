@@ -2,6 +2,8 @@
 import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
 import AddButton from "components/features/PageHeader/AddButton";
+import ContractsSummary from "modules/contracts/Summary";
+
 // Hooks
 import useShowModal from "hooks/useShowModal";
 
@@ -25,8 +27,9 @@ export default function Contracts() {
             onClick={createOperatorModal.show}
             title="Nuevo Contrato de Unidades"
           />
-
         </PageHeader>
+
+        <ContractsSummary />
         </aside>
     </main>
   );
