@@ -1,0 +1,18 @@
+// Styles
+@import "Units/styles";
+@import "Services/styles";
+@import "Contracts/styles";
+@import "Operators/styles";
+
+.page-content {
+  height: 100%;
+  margin-left: auto;
+  padding: 1rem 1.5rem;
+  max-width: calc(100% - 350px);
+}
+
+body,
+#root,
+.page-content {
+  background-color: #f6fafecc;
+}

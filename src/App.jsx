@@ -13,6 +13,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <MainContainer />
+      <div id="portals" />
     </QueryClientProvider>
   );
 }
