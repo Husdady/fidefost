@@ -9,10 +9,7 @@ import "./styles.scss";
 
 const queryClient = new QueryClient();
 
-export default function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <MainContainer />
-    </QueryClientProvider>
-  );
+function App() {
+  return <h1>hola mundo</h1>;
 }
+export default App;
