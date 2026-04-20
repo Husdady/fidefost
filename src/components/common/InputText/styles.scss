@@ -1,0 +1,67 @@
+.form-control-container {
+  & .input-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #4f4f4f;
+  }
+
+  & > .form-control {
+    font-size: 14px;
+    min-height: 35px;
+    box-shadow: none;
+    color: #333333;
+    border-radius: 0 !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    padding: 0 0.65rem !important;
+
+    &.read-only {
+      &:hover {
+        cursor: default;
+      }
+    }
+
+    &::placeholder,
+    &:-moz-placeholder,
+    &::-moz-placeholder,
+    &:-ms-input-placeholder,
+    &::-ms-input-placeholder,
+    &::-webkit-input-placeholder {
+      opacity: 1 !important;
+      color: #bdbdbd !important;
+      -webkit-text-fill-color: #bdbdbd !important;
+    }
+
+    &:disabled {
+      background-color: #f8f8f8 !important;
+    }
+
+    &,
+    &:focus {
+      border-color: #bdbdbd !important;
+      background-color: #ffffff !important;
+    }
+
+    &.input-has-error {
+      &,
+      &:focus {
+        box-shadow: inset 0 0 0 1px #df2d24 !important;
+      }
+    }
+  }
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield !important;
+  appearance: textfield;
+
+  &:invalid {
+    border-color: #c3c3c3;
+  }
+}

@@ -1,21 +1,17 @@
 // Components
-import OfflineView from "components/views/OfflineView";
 import NotAccessView from "components/views/NotAccessView";
 
 // Containers
-import AppContainer from "containers/AppContainer";
+import RouterContainer from "containers/RouterContainer";
 
 // Hooks
-import useMainContainer from "./useMainContainer";
+import useCanAccessToApp from "./hooks/useCanAccessToApp";
 
 export default function MainContainer() {
-  const { isOnline, canAccessToApp } = useMainContainer();
-
-  // User is offline
-  if (!isOnline) return <OfflineView />;
+  const canAccessToApp = useCanAccessToApp();
 
   // User can only access in Desktop devices
   if (!canAccessToApp) return <NotAccessView />;
 
-  return <AppContainer />;
+  return <RouterContainer />;
 }

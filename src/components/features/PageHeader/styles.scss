@@ -1,0 +1,40 @@
+// Styles
+@import "AddButton/styles";
+
+.page-header {
+  width: 100%;
+  padding: 8px 0 28px;
+  font-family: "Montserrat", Inter, Arial, sans-serif;
+
+  @extend %pageHeader_addButton;
+
+  &__content {
+    gap: 24px;
+  }
+
+  &__info {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  &__title {
+    color: #171c1f;
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  &__description {
+    margin-top: 10px !important;
+    color: #4f5b67;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+
+  &__actions {
+    flex: 0 0 auto;
+    padding-top: 6px;
+  }
+}

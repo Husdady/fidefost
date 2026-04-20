@@ -2,8 +2,9 @@
 @import "~bootstrap/scss/bootstrap";
 
 // Components styles
+@import "pages/styles";
+@import "modules/styles";
 @import "components/styles";
-@import "containers/styles";
 
 // Mixins
 @import "mixins/button";

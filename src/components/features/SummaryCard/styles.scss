@@ -1,0 +1,100 @@
+.summary-card {
+  min-height: 176px;
+  padding: 28px 26px 24px;
+  border-radius: 20px;
+  background-color: #ffffff;
+  border: 1px solid #eef2f4;
+  box-shadow: 0px 1px 2px rgba(23, 28, 31, 0.03);
+  font-family: "Montserrat", Inter, Arial, sans-serif;
+
+  &__header {
+    gap: 16px;
+  }
+
+  &__icon-box {
+    width: 44px;
+    min-width: 44px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #f4f7f8;
+    color: #0a728b;
+
+    svg {
+      min-width: 21px;
+      min-height: 21px;
+      max-width: 21px;
+      min-height: 21px;
+      display: block;
+    }
+  }
+
+  &__title {
+    padding-top: 2px;
+    color: #49535d;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  &__body {
+    margin-top: 26px;
+  }
+
+  &__value {
+    color: #171c1f;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  &__description {
+    margin-top: 10px !important;
+    color: #8b939b;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  &--default {
+    .summary-card__icon-box {
+      background-color: #f4f7f8;
+      color: #0a728b;
+    }
+  }
+
+  &--info {
+    .summary-card__icon-box {
+      background-color: #f3f6f8;
+      color: #587484;
+    }
+  }
+
+  &--warning {
+    .summary-card__icon-box {
+      background-color: #faf5ef;
+      color: #a46800;
+    }
+
+    .summary-card__description {
+      color: #b66a00;
+      font-weight: 600;
+    }
+  }
+
+  &--danger {
+    border-color: #f6e3e3;
+
+    .summary-card__icon-box {
+      background-color: #fcf1f1;
+      color: #df2f26;
+    }
+
+    .summary-card__description {
+      color: #df2f26;
+      font-weight: 600;
+    }
+  }
+}
