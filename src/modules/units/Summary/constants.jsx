@@ -1,3 +1,7 @@
+import FleetIcon from "./icons/fleet-icon";
+import AlertsIcon from "./icons/alerts-icon";
+import  UpcomingExpirationsIcon from "./icons/upcoming-expirations-icon";
+import BarIcon from "./icons/bar-icon";
 export const SUMMARY_ITEMS = [
   {
     id: "flota_total",
@@ -5,7 +9,7 @@ export const SUMMARY_ITEMS = [
     value:"124",
     description: "+4 este mes",
     accent: "default",
-    icon: "✅",
+    icon: <FleetIcon />,
   },
   {
     id: "alertas_criticas",
@@ -13,7 +17,7 @@ export const SUMMARY_ITEMS = [
     value:"08",
     description: "Documentos vencidos",
     accent: "warning",
-    icon: "✅",
+    icon: <AlertsIcon />,
   },
   {
     id: "proximos_vencimientos",
@@ -21,12 +25,12 @@ export const SUMMARY_ITEMS = [
     value:"15",
     description: "Siguientes 30 días",
     accent: "default",
-    icon: "info",
+    icon: <UpcomingExpirationsIcon />,
   },
   {
     id: "reporte_cumplimiento",
     title: "Reporte de Cumplimiento",
     value:"94.2%",
-    accent: "info",
+    accent: <BarIcon />,
   },
 ];

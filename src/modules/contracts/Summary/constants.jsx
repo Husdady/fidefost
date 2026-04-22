@@ -1,34 +1,39 @@
+import ExpiredLicensesIcon from "./icons/expired-licenses-icon";
+import RiseIcon from "./icons/rise-icon";
+import ValidIcon from "./icons/valid-icon";
+import WarningSignIcon from "./icons/warning-sign-icon";
+
 export const SUMMARY_ITEMS = [
   {
-    id: "CONTRATOS_ACTIVOS",
+    id: "contratos_activos",
     title: "CONTRATOS ACTIVOS",
     value: "1,284",
     description: "12% este mes",
     accent: "default",
-    icon: "✅"
+    icon: <RiseIcon />,
   },
   {
-    id: "CONDUCTORES",
+    id: "conductores",
     title: "CONDUCTORES",
     value: "3,490",
     description: "15 licencias por vencer",
     accent: "warning",
-    icon: "✅"
+    icon: <ExpiredLicensesIcon />, 
   },
   {
-    id: "UNIDADES_WIFI",
+    id: "unidades_wifi",
     title: "UNIDADES WIFI",
     value: "94%",
     description: "Servicio óptimo",
     accent: "good",
-    icon: "✅"
+    icon: <ValidIcon />,
   },
   {
-    id: "ALERTAS_GPS",
+    id: "alertas_gps",
     title: "ALERTAS GPS",
     value: "08",
     description: "Servicio óptimo",
     accent: "danger",
-    icon: "✅"
+    icon: <WarningSignIcon />,
   },
 ];
