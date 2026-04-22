@@ -3,37 +3,34 @@ import RiseIcon from "./icons/rise-icon";
 import ValidIcon from "./icons/valid-icon";
 import WarningSignIcon from "./icons/warning-sign-icon";
 
+
 export const SUMMARY_ITEMS = [
   {
     id: "contratos_activos",
     title: "CONTRATOS ACTIVOS",
     value: "1,284",
-    description: "12% este mes",
+    description: <div> <RiseIcon /> 12 este mes</div>,
     accent: "default",
-    icon: <RiseIcon />,
   },
   {
     id: "conductores",
     title: "CONDUCTORES",
     value: "3,490",
-    description: "15 licencias por vencer",
+    description: <div> <ExpiredLicensesIcon /> 15 licencias por vencer </div>,
     accent: "warning",
-    icon: <ExpiredLicensesIcon />, 
   },
   {
     id: "unidades_wifi",
     title: "UNIDADES WIFI",
     value: "94%",
-    description: "Servicio óptimo",
+    description: <div> <ValidIcon /> Servicio óptimo </div>,
     accent: "good",
-    icon: <ValidIcon />,
   },
   {
     id: "alertas_gps",
     title: "ALERTAS GPS",
     value: "08",
-    description: "Servicio óptimo",
+    description: <div> <WarningSignIcon /> sin señal 4hrs </div>,
     accent: "danger",
-    icon: <WarningSignIcon />,
   },
 ];
