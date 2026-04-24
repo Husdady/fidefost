@@ -7,6 +7,7 @@ import MainContainer from "containers/MainContainer";
 // Styles
 import "./styles.scss";
 
+
 const queryClient = new QueryClient();
 
 export default function App() {

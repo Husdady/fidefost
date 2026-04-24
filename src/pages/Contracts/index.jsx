@@ -3,6 +3,7 @@ import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
 import AddButton from "components/features/PageHeader/AddButton";
 import ContractsSummary from "modules/contracts/Summary";
+import InsuranceContractsSection from "components/features/InsuranceContractsSection";
 
 // Hooks
 import useShowModal from "hooks/useShowModal";
@@ -30,6 +31,13 @@ export default function Contracts() {
         </PageHeader>
 
         <ContractsSummary />
+        <InsuranceContractsSection
+          title="Contratos de Seguro"
+          description="Aqui va el filtro de calendario"     
+        >
+          
+        </InsuranceContractsSection>
+        
         </aside>
     </main>
   );
