@@ -12,21 +12,21 @@ const dataInsuranceContracts = [
   {proveedor:'Mapfre',tipo:'P.Contenedor Endoso',fecha:'15/02/2024',estado:'PRO.EXPIRAR' },
   {proveedor:'Rimac',tipo:'P.Contenedor Endoso',fecha:'10/01/2025',estado:'EXPIRED' }, 
 ];
-function InsuranceContractsSection({ title, description, className = "",  accent = "default" }) {
+function InsuranceContracts({ title, description, className = "",  accent = "default" }) {
   return (
         <article
           className={classnames([
             className,
-            `insurance-contracts-section insurance-contracts-section--${accent}`,
+            `insurance-contracts insurance-contracts--${accent}`,
           ])}
         >
-          <div className="insurance-contracts-section__header d-flex align-items-start justify-content-between">
-            <div className="insurance-contracts-section__info">
-              <h1 className="insurance-contracts-section__title mb-0">{title}</h1>
-              <p className="insurance-contracts-section__description mb-0">{description}</p>
+          <div className="insurance-contracts__header d-flex align-items-start justify-content-between">
+            <div className="insurance-contracts__info">
+              <h1 className="insurance-contracts__title mb-0">{title}</h1>
+              <p className="insurance-contracts__description mb-0">{description}</p>
             </div>
           </div>
-          <div className="insurance-contracts-section__body">
+          <div className="insurance-contracts__body">
             <TableContainer>
               <Table>
                 <TableHead>
@@ -59,13 +59,13 @@ function InsuranceContractsSection({ title, description, className = "",  accent
   );
 }
 
-InsuranceContractsSection.propTypes = {
+InsuranceContracts.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   accent: PropTypes.oneOf(["default", "info", "warning", "danger"]),
 };
 
-export default memo(InsuranceContractsSection);
+export default memo(InsuranceContracts);
 
 

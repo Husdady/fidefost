@@ -1,0 +1,34 @@
+.contracts-section {
+  width: 100%;
+
+  &__grid {
+    gap: 16px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 24px;
+
+    position: absolute;
+    height: 462.5px;
+    left: 32px;
+    right: 362.67px;
+    top: 362.5px;
+
+  }
+  &__GPS {
+    width: 299px;
+    height: 462px;
+
+    background: #FFFFFF;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    border-radius: 24px;
+
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+
+  }
+}

@@ -3,10 +3,12 @@ import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
 import AddButton from "components/features/PageHeader/AddButton";
 import ContractsSummary from "modules/contracts/Summary";
-import InsuranceContractsSection from "components/features/InsuranceContractsSection";
+import InsuranceContracts from "components/features/InsuranceContracts";
+import ContractsGPS from "components/features/ContractsGPS";
 
 // Hooks
 import useShowModal from "hooks/useShowModal";
+import ContractsSection from "modules/contracts/ContractsSection";
 
 export default function Contracts() {
   const createContractModal = useShowModal();
@@ -31,12 +33,7 @@ export default function Contracts() {
         </PageHeader>
 
         <ContractsSummary />
-        <InsuranceContractsSection
-          title="Contratos de Seguro"
-          description="Aqui va el filtro de calendario"     
-        >
-          
-        </InsuranceContractsSection>
+        <ContractsSection />
         
         </aside>
     </main>
