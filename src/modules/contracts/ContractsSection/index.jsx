@@ -1,6 +1,10 @@
 // Components
 import InsuranceContracts from "components/features/InsuranceContracts";
 import ContractsGPS from "components/features/ContractsGPS";
+import ContractsGPSItems from "./ContractsGPSItems";
+
+
+
 
 export default function ContractsSection() {
   return (
@@ -13,12 +17,13 @@ export default function ContractsSection() {
         </InsuranceContracts>
       </div>
       
-      <div className="contracts-section__GPS">
+      <div className="contracts-section__grid">
         <ContractsGPS
-          title="Contratos de Seguro"
-          description="Aqui va el filtro de calendario" 
-        >
+          title="Contratos GPS"
+          summarygps={<ContractsGPSItems />}
+          >
         </ContractsGPS>
+
       </div>
     </section>
   );
