@@ -11,7 +11,7 @@
     gap: 16px;
   }
 
-  &__iconid {
+  &__icon-id {
     padding-top: 2px;
     color: #49535d;
     font-size: 12px;
@@ -30,17 +30,55 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
+    &__description {
+    padding-top: 2px;
+    color: #49535d;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+      &__description-end {
+    padding-top: 2px;
+    color: #49535d;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+    &__facility {
+    padding-top: 2px;
+    color: #49535d;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+      &__end {
+    padding-top: 2px;
+    color: #49535d;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-left: 50px;
+  }
+    &__icon {
+    padding-top: 2px;
+    color: #49535d;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
 
   &__body {
     margin-top: 26px;
-  }
-
-  &__value {
-    color: #171c1f;
-    font-size: 30px;
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -0.03em;
   }
 
   &__id {

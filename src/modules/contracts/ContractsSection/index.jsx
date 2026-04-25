@@ -2,7 +2,7 @@
 import InsuranceContracts from "components/features/InsuranceContracts";
 import ContractsGPS from "components/features/ContractsGPS";
 import ContractsGPSItems from "./ContractsGPSItems";
-
+import GpsIcon from "./icons/gps-icon";
 
 
 
@@ -19,6 +19,7 @@ export default function ContractsSection() {
       
       <div className="contracts-section__grid">
         <ContractsGPS
+          icon={<GpsIcon />}       
           title="Contratos GPS"
           summarygps={<ContractsGPSItems />}
           >

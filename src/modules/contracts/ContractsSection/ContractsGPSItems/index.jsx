@@ -11,9 +11,10 @@ export default function ContractsGPSItems() {
           <SummaryGPS
             key={item.id}
             id={item.cod}
-            icon={item.iconstatus}
-            title={item.facility}
-            value={item.endofcontract}
+            icon={item.icon}
+            status={item.status}
+            facility={item.facility}
+            endcontract={item.endcontract}
             accent={item.accent}
           />
         ))}
