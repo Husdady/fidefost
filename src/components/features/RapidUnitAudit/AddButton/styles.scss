@@ -1,0 +1,11 @@
+%rapidUnitAudit_addButton {
+  & .add-button {
+    min-height: 44px;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 0.75rem 1.65rem;
+    background-color: #00647c;
+    column-gap: 0.75rem !important;
+    box-shadow: 0px 4px 6px -4px #00647c33, 0px 10px 15px -3px #00647c33;
+  }
+}

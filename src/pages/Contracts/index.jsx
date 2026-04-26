@@ -3,8 +3,7 @@ import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
 import AddButton from "components/features/PageHeader/AddButton";
 import ContractsSummary from "modules/contracts/Summary";
-import InsuranceContracts from "components/features/InsuranceContracts";
-import ContractsGPS from "components/features/ContractsGPS";
+import RapidUnitAudit from "components/features/RapidUnitAudit";
 
 // Hooks
 import useShowModal from "hooks/useShowModal";
@@ -34,6 +33,14 @@ export default function Contracts() {
 
         <ContractsSummary />
         <ContractsSection />
+        <RapidUnitAudit
+          title="Auditoría Rapida de Unidades"
+        >
+          <AddButton
+            onClick={createContractModal.show}
+            title="EXPORTAR"
+          />
+        </RapidUnitAudit>
         
         </aside>
     </main>
