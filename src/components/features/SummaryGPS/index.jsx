@@ -16,7 +16,7 @@ function SummaryGPS({ id, icon, status, facility, endcontract, className = "",  
             <div className="summary-gps__icon-id d-flex align-items-center justify-content-center">
               <h1 className="summary-gps__id"> {id} </h1>
             </div>
-              <span className="summary-gps__icon">{icon} {status}</span>
+              <span className="summary-gps__icon d-flex align-items-center">{icon} {status}</span>
             </div>
             <div className="summary-gps__body d-flex align-items-start justify-content-between">
               <div className="summary-gps__facility">

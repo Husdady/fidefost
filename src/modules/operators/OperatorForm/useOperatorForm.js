@@ -1,6 +1,24 @@
 // Librarys
-import { useEffect, useMemo, useRef, useState } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+// Hooks
 import { useForm } from "react-hook-form";
+import { useRef, useMemo, useState, useEffect } from "react";
+import { useUpdateClient } from "context/clients/useClients";
+
+import useTriggerForm from "hooks/useTriggerForm";
+import useDisabledSubmitButton from "./hooks/useDisabledSubmitButton";
+
+// Database
+import { deleteDocument } from "database/deleteDocument";
+
+// Utils
+import generateId from "utils/generateId";
+import isValidString from "utils/isValidString";
+import getDocumentsByRelation from "database/getDocumentsByRelation";
+
+// Constants
+import schema from "./schema";
 
 // Utils
 function formatFileSize(size) {
@@ -19,6 +37,12 @@ function formatFileSize(size) {
 function normalizeFiles(files = []) {
   return files.map((file) => ({
     ...file,
+    file: file,
+    name: file?.name,
+    size: file?.size,
+    type: file?.type,
+    _id: file?._id || generateId(),
+    lastModified: file?.lastModified,
     formattedSize: file?.formattedSize || formatFileSize(file?.size || 0),
   }));
 }
@@ -37,21 +61,28 @@ function filterValidFiles(files = []) {
  */
 export default function useOperatorForm({ defaultValues, onSubmit }) {
   const fileInputRef = useRef(null);
+
   const [selectedFiles, setSelectedFiles] = useState(
     normalizeFiles(defaultValues?.files || [])
   );
+
+  const updateClient = useUpdateClient();
   const [dragActive, setDragActive] = useState(false);
 
   const initialValues = useMemo(
     () => ({
-      operatorName: defaultValues?.operatorName || "",
+      _id: defaultValues?._id || "",
       ruc: defaultValues?.ruc || "",
+      status: defaultValues?.status || "",
+      operatorName: defaultValues?.operatorName || "",
       files: normalizeFiles(defaultValues?.files || []),
     }),
     [defaultValues]
   );
 
   const {
+    watch,
+    trigger,
     register,
     handleSubmit,
     setValue,
@@ -60,7 +91,17 @@ export default function useOperatorForm({ defaultValues, onSubmit }) {
     reset,
     formState: { errors },
   } = useForm({
+    mode: "all",
     defaultValues: initialValues,
+    resolver: yupResolver(schema),
+  });
+
+  // Get operator id
+  const operatorId = watch("_id");
+
+  const isDisabledSubmitButton = useDisabledSubmitButton({
+    watch: watch,
+    errors: errors,
   });
 
   useEffect(() => {
@@ -93,6 +134,12 @@ export default function useOperatorForm({ defaultValues, onSubmit }) {
   const addFiles = (incomingFiles = []) => {
     const validFiles = filterValidFiles(incomingFiles).map((file) => ({
       ...file,
+      file: file,
+      name: file?.name,
+      size: file?.size,
+      type: file?.type,
+      _id: generateId(),
+      lastModified: file?.lastModified,
       formattedSize: formatFileSize(file.size),
     }));
 
@@ -123,16 +170,36 @@ export default function useOperatorForm({ defaultValues, onSubmit }) {
     }
   };
 
-  const handleRemoveFile = (indexToRemove) => {
+  const handleRemoveFile = async (file, indexToRemove) => {
     const updatedFiles = selectedFiles.filter(
       (_, index) => index !== indexToRemove
     );
 
+    if (updatedFiles.length <= 0) {
+      setError("files", {
+        type: "manual",
+        message: "Debes subir por lo menos 1 documento legal",
+      });
+    }
+
     setSelectedFiles(updatedFiles);
 
-    if (updatedFiles.length <= 10) {
-      clearErrors("files");
+    if (isValidString(operatorId)) {
+      const documents = await getDocumentsByRelation("operators", operatorId);
+
+      const filteredDocument = documents.find((item) => item?.id === file?._id);
+
+      updateClient(operatorId, {
+        files: updatedFiles,
+      });
+
+      if (filteredDocument?.id) {
+        await deleteDocument(filteredDocument?.id);
+      }
     }
+
+    if (updatedFiles.length <= 0 || updatedFiles.length > 10) return;
+    clearErrors("files");
   };
 
   const handleOpenFileDialog = () => {
@@ -173,6 +240,8 @@ export default function useOperatorForm({ defaultValues, onSubmit }) {
     });
   };
 
+  useTriggerForm({ trigger });
+
   return {
     register,
     errors,
@@ -189,5 +258,6 @@ export default function useOperatorForm({ defaultValues, onSubmit }) {
     handleDragOver,
     handleDrop,
     watchedFilesCount: selectedFiles.length,
+    isDisabledSubmitButton: isDisabledSubmitButton,
   };
 }

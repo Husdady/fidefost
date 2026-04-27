@@ -23,12 +23,12 @@ export default async function saveDocument({
 
     const documentRecord = {
       module,
-      id: generateId(),
       file: file,
       name: file.name,
       size: file.size,
       type: file.type,
       relatedId: relatedId,
+      id: file._id || generateId(),
       category: category || "general",
       lastModified: file.lastModified,
       createdAt: new Date().toISOString(),

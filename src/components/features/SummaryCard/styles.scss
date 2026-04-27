@@ -1,20 +1,19 @@
 .summary-card {
-  min-height: 176px;
-  padding: 28px 26px 24px;
   border-radius: 20px;
+  padding: 24px 22px 24px;
   background-color: #ffffff;
   border: 1px solid #eef2f4;
   box-shadow: 0px 1px 2px rgba(23, 28, 31, 0.03);
   font-family: "Montserrat", Inter, Arial, sans-serif;
 
   &__header {
-    gap: 16px;
+    gap: 12px;
   }
 
   &__icon-box {
-    width: 44px;
     min-width: 44px;
-    height: 40px;
+    max-width: 44px;
+    min-height: 40px;
     border-radius: 10px;
     background-color: #f4f7f8;
     color: #0a728b;
@@ -33,8 +32,10 @@
     color: #49535d;
     font-size: 12px;
     font-weight: 700;
-    line-height: 1.1;
+    line-height: 16px;
+    word-break: break-all;
     letter-spacing: 0.12em;
+    text-wrap-style: pretty;
     text-transform: uppercase;
   }
 

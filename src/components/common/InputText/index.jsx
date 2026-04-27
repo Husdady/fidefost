@@ -51,7 +51,7 @@ function InputText({
       className={classnames([containerClassName, "form-control-container"])}
     >
       {(isValidString(textLabel) || isValidElement(textLabel)) && (
-        <h6 className="input-label mb-1">{textLabel}</h6>
+        <h6 className="input-label">{textLabel}</h6>
       )}
 
       <input

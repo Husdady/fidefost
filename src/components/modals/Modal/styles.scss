@@ -38,12 +38,12 @@
       border: 1px solid #bdbdbd;
 
       & svg {
-        width: 11px;
-        height: 11px;
-        min-width: 11px;
-        min-height: 11px;
+        min-width: 16px;
+        max-width: 16px;
+        min-height: 16px;
+        max-height: 16px;
         stroke: #333333;
-        stroke-width: 0;
+        stroke-width: 0.5;
       }
     }
   }
@@ -57,15 +57,13 @@
       max-width: initial;
 
       & .btn-close-modal {
-        padding: 0;
         border: none;
         left: initial;
-        margin-top: 10px;
-        margin-right: 7px;
-        position: relative;
         min-width: initial;
         min-height: initial;
         background-color: transparent;
+        right: 12px;
+        top: 16px;
 
         & svg {
           min-width: 12px;

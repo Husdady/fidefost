@@ -1,13 +1,13 @@
 // Components
 import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
-import AddButton from "components/features/PageHeader/AddButton";
 import ContractsSummary from "modules/contracts/Summary";
+import AddButton from "components/features/PageHeader/AddButton";
 import RapidUnitAudit from "components/features/RapidUnitAudit";
+import ContractsSection from "modules/contracts/ContractsSection";
 
 // Hooks
 import useShowModal from "hooks/useShowModal";
-import ContractsSection from "modules/contracts/ContractsSection";
 
 export default function Contracts() {
   const createContractModal = useShowModal();
@@ -15,34 +15,31 @@ export default function Contracts() {
   return (
     <main className="contracts-page main-container">
       <Navigation />
-      
+
       <aside className="page-content d-flex flex-column row-gap-4">
         <PageHeader
           title="Gestion de Contratos"
           description="Monitoreo y vinculación operativa de recursos."
         >
-          <AddButton
-            onClick={createContractModal.show}
-            title="Crear Contrato de Seguro"
-          />
-          <AddButton
-            onClick={createContractModal.show}
-            title="Nuevo Contrato de Unidades"
-          />
+          <div className="d-flex align-items-center column-gap-3">
+            <AddButton
+              onClick={createContractModal.show}
+              title="Crear Contrato de Seguro"
+            />
+
+            <AddButton
+              onClick={createContractModal.show}
+              title="Nuevo Contrato de Unidades"
+            />
+          </div>
         </PageHeader>
 
         <ContractsSummary />
         <ContractsSection />
-        <RapidUnitAudit
-          title="Auditoría Rapida de Unidades"
-        >
-          <AddButton
-            onClick={createContractModal.show}
-            title="EXPORTAR"
-          />
+        <RapidUnitAudit title="Auditoría Rapida de Unidades">
+          <AddButton onClick={createContractModal.show} title="EXPORTAR" />
         </RapidUnitAudit>
-        
-        </aside>
+      </aside>
     </main>
   );
 }

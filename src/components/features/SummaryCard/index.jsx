@@ -21,9 +21,11 @@ function SummaryCard({
       ])}
     >
       <div className="summary-card__header d-flex align-items-start justify-content-between">
-        <div className="summary-card__icon-box d-flex align-items-center justify-content-center">
-          {icon}
-        </div>
+        {icon && (
+          <div className="summary-card__icon-box d-flex align-items-center justify-content-center">
+            {icon}
+          </div>
+        )}
 
         <span className="summary-card__title">{title}</span>
       </div>

@@ -1,6 +1,5 @@
 .summary-gps {
-  min-height: 176px;
-  padding: 28px 26px 24px;
+  padding: 18px 16px 16px;
   border-radius: 20px;
   background-color: #ffffff;
   border: 1px solid #eef2f4;
@@ -75,6 +74,7 @@
     line-height: 1.1;
     letter-spacing: 0.12em;
     text-transform: uppercase;
+    column-gap: 0.35rem;
   }
 
   &__body {

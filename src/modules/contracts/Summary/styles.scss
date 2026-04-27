@@ -2,7 +2,7 @@
   width: 100%;
 
   &__grid {
-    gap: 16px;
+    gap: 12px;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }

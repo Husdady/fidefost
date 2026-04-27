@@ -6,6 +6,7 @@
 
 .page-content {
   height: 100%;
+  overflow-x: hidden;
   margin-left: auto;
   padding: 1rem 1.5rem;
   max-width: calc(100% - 350px);

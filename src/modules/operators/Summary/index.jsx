@@ -1,14 +1,16 @@
 // Components
 import SummaryCard from "components/features/SummaryCard";
 
-// Constants
-import { SUMMARY_ITEMS } from "./constants";
+// Hooks
+import useSummary from "./useSummary";
 
 export default function OperatorsSummary() {
+  const { summaryItems } = useSummary();
+
   return (
     <section className="operators-summary">
       <div className="operators-summary__grid">
-        {SUMMARY_ITEMS.map((item) => (
+        {summaryItems.map((item) => (
           <SummaryCard
             key={item.id}
             icon={item.icon}

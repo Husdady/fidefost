@@ -18,16 +18,18 @@ export default function Services() {
           title="Gestión de Servicios"
           description="Administración de hojas de ruta, despachos y métricas mensuales"
         >
-          <AddButton
-            onClick={createServiceModal.show}
-            title="EXPORTAR TODO"
-          />
-          <AddButton
-            onClick={createServiceModal.show}
-            title="CARGAR HOJA DE RUTA"
-          />
+          <div className="d-flex align-items-center column-gap-3">
+            <AddButton
+              onClick={createServiceModal.show}
+              title="EXPORTAR TODO"
+            />
+            <AddButton
+              onClick={createServiceModal.show}
+              title="CARGAR HOJA DE RUTA"
+            />
+          </div>
         </PageHeader>
-        </aside>
+      </aside>
     </main>
   );
 }

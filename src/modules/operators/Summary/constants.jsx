@@ -15,7 +15,7 @@ export const SUMMARY_ITEMS = [
   },
   {
     id: "validated",
-    title: "VALIDADOS",
+    title: "SALUDABLES",
     value: 128,
     description: "Documentación al día",
     accent: "info",
@@ -23,7 +23,7 @@ export const SUMMARY_ITEMS = [
   },
   {
     id: "pending",
-    title: "PENDIENTES",
+    title: "EN RIESGO",
     value: 14,
     description: "Requieren atención",
     accent: "warning",
@@ -32,7 +32,7 @@ export const SUMMARY_ITEMS = [
   {
     id: "expired",
     title: "VENCIDOS",
-    value: 3,
+    value: 0,
     description: "Bloqueo operativo",
     accent: "danger",
     icon: <ExpiredIcon />,

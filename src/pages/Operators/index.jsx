@@ -3,13 +3,14 @@ import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
 import OperatorsSummary from "modules/operators/Summary";
 import OperatorForm from "modules/operators/OperatorForm";
+import OperatorList from "modules/operators/OperatorList";
 import AddButton from "components/features/PageHeader/AddButton";
 
 // Hooks
-import useShowModal from "hooks/useShowModal";
+import useOperators from "./useOperators";
 
 export default function Operators() {
-  const createOperatorModal = useShowModal();
+  const { createOperatorModal, handleCreateOperator } = useOperators();
 
   return (
     <main className="operators-page main-container">
@@ -27,10 +28,16 @@ export default function Operators() {
         </PageHeader>
 
         <OperatorsSummary />
+        <OperatorList />
       </aside>
 
       {createOperatorModal.isShowing && (
-        <OperatorForm isShowing onHide={createOperatorModal.hide} />
+        <OperatorForm
+          isShowing
+          title="Crear Nuevo Cliente"
+          onSubmit={handleCreateOperator}
+          onHide={createOperatorModal.hide}
+        />
       )}
     </main>
   );

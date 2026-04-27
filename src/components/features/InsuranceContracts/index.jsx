@@ -12,12 +12,13 @@ const dataInsuranceContracts = [
   {proveedor:'Mapfre',tipo:'P.Contenedor Endoso',fecha:'15/02/2024',estado:'PRO.EXPIRAR' },
   {proveedor:'Rimac',tipo:'P.Contenedor Endoso',fecha:'10/01/2025',estado:'EXPIRED' }, 
 ];
+
 function InsuranceContracts({ title, description, className = "",  accent = "default" }) {
   return (
         <article
           className={classnames([
             className,
-            `insurance-contracts insurance-contracts--${accent}`,
+            `insurance-contracts h-100 insurance-contracts--${accent}`,
           ])}
         >
           <div className="insurance-contracts__header d-flex align-items-start justify-content-between">

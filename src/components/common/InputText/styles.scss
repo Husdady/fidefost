@@ -3,17 +3,18 @@
     font-size: 14px;
     font-weight: 500;
     color: #4f4f4f;
+    margin-bottom: 0.38rem;
   }
 
   & > .form-control {
     font-size: 14px;
-    min-height: 35px;
+    min-height: 42px;
     box-shadow: none;
     color: #333333;
-    border-radius: 0 !important;
     border-width: 1px !important;
+    border-radius: 12px !important;
     border-style: solid !important;
-    padding: 0 0.65rem !important;
+    padding: 0 1rem !important;
 
     &.read-only {
       &:hover {
