@@ -3,6 +3,7 @@ import InsuranceContracts from "components/features/InsuranceContracts";
 import ContractsGPS from "components/features/ContractsGPS";
 import ContractsGPSItems from "./ContractsGPSItems";
 import GpsIcon from "./icons/gps-icon";
+import DateRange from "components/features/DateRange";
 
 export default function ContractsSection() {
   return (
@@ -10,7 +11,7 @@ export default function ContractsSection() {
       <div className="contracts-section__grid">
         <InsuranceContracts
           title="Contratos de Seguro"
-          description="Aqui va el filtro de calendario"
+          datefilter={<DateRange />}
         ></InsuranceContracts>
       </div>
 

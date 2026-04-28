@@ -13,7 +13,7 @@ const dataInsuranceContracts = [
   {proveedor:'Rimac',tipo:'P.Contenedor Endoso',fecha:'10/01/2025',estado:'EXPIRED' }, 
 ];
 
-function InsuranceContracts({ title, description, className = "",  accent = "default" }) {
+function InsuranceContracts({ title, datefilter, className = "",  accent = "default" }) {
   return (
         <article
           className={classnames([
@@ -24,7 +24,7 @@ function InsuranceContracts({ title, description, className = "",  accent = "def
           <div className="insurance-contracts__header d-flex align-items-start justify-content-between">
             <div className="insurance-contracts__info">
               <h1 className="insurance-contracts__title mb-0">{title}</h1>
-              <p className="insurance-contracts__description mb-0">{description}</p>
+              <p className="insurance-contracts__description mb-0">{datefilter}</p>
             </div>
           </div>
           <div className="insurance-contracts__body">
@@ -63,7 +63,7 @@ function InsuranceContracts({ title, description, className = "",  accent = "def
 InsuranceContracts.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  datefilter: PropTypes.string.isRequired,
   accent: PropTypes.oneOf(["default", "info", "warning", "danger"]),
 };
 
