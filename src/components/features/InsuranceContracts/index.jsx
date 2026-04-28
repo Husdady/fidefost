@@ -3,17 +3,11 @@ import PropTypes from "prop-types";
 
 // Utils
 import classnames from "utils/classnames";
+import DateRange from "../DateRange";
 
-//tableInsuranceContracts
-import {TableContainer, Table, TableHead, TableBody, TableRow, TableCell} from "@mui/material"
-
-const dataInsuranceContracts = [
-  {proveedor:'La Positiva',tipo:'P.Carga',fecha:'01/01/2024',estado:'ACTIVE' },
-  {proveedor:'Mapfre',tipo:'P.Contenedor Endoso',fecha:'15/02/2024',estado:'PRO.EXPIRAR' },
-  {proveedor:'Rimac',tipo:'P.Contenedor Endoso',fecha:'10/01/2025',estado:'EXPIRED' }, 
-];
 
 function InsuranceContracts({ title, datefilter, className = "",  accent = "default" }) {
+  //const {filteredInsuranceContracts} = useInsuranceContracts();
   return (
         <article
           className={classnames([
@@ -27,33 +21,65 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
               <p className="insurance-contracts__description mb-0">{datefilter}</p>
             </div>
           </div>
-          <div className="insurance-contracts__body">
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>PROVEEDOR</TableCell>
-                    <TableCell>TIPO</TableCell>
-                    <TableCell>FECHAS</TableCell>
-                    <TableCell>ESTADO</TableCell>
-                  </TableRow>
-                </TableHead>
+      <div className="insurance-contracts-list-table-wrapper">
+        <table className="insurance-contracts__body">
+          <colgroup>
+            <col className="col-contracts-supplier" />
+            <col className="col-contracts-type" />
+            <col className="col-contracts-date" />
+            <col className="col-contracts-status" />
+          </colgroup>
 
-                <TableBody>
-                  {dataInsuranceContracts.map(celda=>(
-                    <TableRow>
-                      <TableCell>{celda.proveedor}</TableCell>
-                      <TableCell>{celda.tipo}</TableCell>
-                      <TableCell>{celda.fecha}</TableCell>
-                      <TableCell>{celda.estado}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+          <thead>
+            <tr>
+              <th>PROVEEDOR</th>
+              <th>TIPO</th>
+              <th>FECHAS</th>
+              <th>ESTADO</th>
+            </tr>
+          </thead>
 
-              </Table>
+          <tbody>
+            {DateRange.length ? (
+              DateRange.map((contracts) => (
+                <tr key={contracts?._id}>
+                  <td>
+                    <span className="contracts-list-supplier">
+                      {contracts?.contractsSupplier || "-"}
+                    </span>
+                  </td>
 
-            </TableContainer>
-          </div>
+                  <td>
+                    <span className="contracts-list-type">
+                      {contracts?.contractsType || "-"}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span className="contracts-list-date">
+                      {formatCreatedAt(contracts?.createdAt)}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span className="contracts-list-status">                     
+                      {contracts?.contractsStatus || "-"}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4">
+                  <div className="contracts-list-empty">
+                    No se encontraron operadores.
+                  </div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
         </article>
           
 

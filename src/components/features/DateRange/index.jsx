@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function RangoFechas() {
+export default function DateRange() {
   const [desde, setDesde] = useState("");
   const [hasta, setHasta] = useState("");
 
