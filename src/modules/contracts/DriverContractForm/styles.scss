@@ -1,24 +1,204 @@
 .modal {
-  position: fixed;
-  inset: 0;
+  position: fixed !important;
+  inset: 0 !important;
 
-  background: rgba(0,0,0,0.5);
+  width: 100vw !important;
+  height: 100vh !important;
 
-  z-index: 99999;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  background: rgba(0,0,0,0.4);
+  z-index: 2147483647; /* máximo */
+}
+.modal-content {
+  width: 700px;
+  max-width: 90vw;
+  max-height: 90vh;   /*  limita altura */
+  overflow-y: auto;   /*  activa scroll vertical */
+
+  padding: 25px;
+  border-radius: 16px;
+  background: white;
+}
+.modal-content::-webkit-scrollbar {
+  width: 6px;
 }
 
-.modal-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.modal-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
 
-  background: #fff;
-  padding: 24px;
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* LABELS */
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+/* INPUTS BONITOS */
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: #f3f4f6;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+/* FECHAS EN FILA */
+.row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.row-2 > div {
+  min-width: 0; /* evita que el input se desborde */
+}
+.row-2 input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* CHECKLIST ORDENADO */
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checklist label {
+  display: grid;               /*  cambio clave */
+  grid-template-columns: 16px auto; /* checkbox + texto */
+  align-items: center;
+  gap: 10px;
+
+  width: fit-content;
+  padding: 4px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.checklist label:hover {
+  background: #f3f4f6;
+}
+
+.checklist input {
+  width: 16px;
+  height: 16px;
+  accent-color: #0ea5b7;
+  cursor: pointer;
+}
+
+/* CARDS WIFI / GPS */
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f3f4f6;
+  padding: 14px;
   border-radius: 12px;
+}
 
-  width: 600px;
-  max-width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
+.card strong {
+  display: block;
+}
+
+.card p {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* UPLOAD */
+.upload {
+  margin-top: 20px;
+}
+
+.upload-box {
+  display: block;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fafafa;
+}
+
+.upload-box:hover {
+  border-color: #0ea5b7;
+  background: #f0f9ff;
+}
+
+.upload-box input {
+  display: none; /* oculta el input feo */
+}
+
+.upload-content .icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.upload-content p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.upload-content span {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* BOTONES */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-primary {
+  background: #0ea5b7;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  overflow-x: hidden; /* evita desplazamientos raros */
 }
