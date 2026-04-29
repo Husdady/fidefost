@@ -7,7 +7,6 @@ import DateRange from "../DateRange";
 
 
 function InsuranceContracts({ title, datefilter, className = "",  accent = "default" }) {
-  //const {filteredInsuranceContracts} = useInsuranceContracts();
   return (
         <article
           className={classnames([
@@ -72,7 +71,7 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
               <tr>
                 <td colSpan="4">
                   <div className="contracts-list-empty">
-                    No se encontraron operadores.
+                    No se encontraron contratos de seguro.
                   </div>
                 </td>
               </tr>
@@ -80,6 +79,10 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
           </tbody>
         </table>
       </div>
+      <p className="contracts-list-results mb-0">
+        Mostrando {DateRange.length} resultado
+        {DateRange.length === 1 ? "" : "s"}
+      </p>
         </article>
           
 

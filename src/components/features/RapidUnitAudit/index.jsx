@@ -1,19 +1,21 @@
 import { memo } from "react";
 import PropTypes from "prop-types";
-
+import { useEffect, useState } from "react";
 // Utils
 import classnames from "utils/classnames";
 
 //tableRapidUnitAudit
-import {TableContainer, Table, TableHead, TableBody, TableRow, TableCell} from "@mui/material"
+//import {TableContainer, Table, TableHead, TableBody, TableRow, TableCell} from "@mui/material"
 
-const dataRapidUnitAudit = [
-  {conductor:'Ricardo Mendoza',contrato:'Ene 2025-Dic 2026',licenciaeps:'',estado:'EN RUTA',acciones:'' },
-  {conductor:'Carlos Salazar',contrato:'Mar 2024-Oct 2024',licenciaeps:'',estado:'DETENIDO/ALERTA',acciones:'' },
-  {conductor:'Elena Portillo',contrato:'Ene 2025-Dic 2026',licenciaeps:'',estado:'STAND-BY',acciones:'' }, 
-];
 
-function RapidUnitAudit({ title, children, className = "",  accent = "default" }) {
+function RapidUnitAudit({ title, children, className = "",  accent = "default", data = [] }) {
+
+  const [audits, setAudits] = useState([]);
+
+  useEffect(() => {
+    setAudits(data); 
+  }, [data]);
+
   return (
         <article
           className={classnames([
@@ -34,35 +36,77 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default" }
         
         </section>  
 
-          <div className="rapid-unit-audit__body">
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>CONDUCTOR</TableCell>
-                    <TableCell>CONTRATO</TableCell>
-                    <TableCell>LICENCIA/EPS</TableCell>
-                    <TableCell>ESTADO OPERATIVO</TableCell>
-                    <TableCell>ACCIONES</TableCell>
-                  </TableRow>
-                </TableHead>
+            <div className="rapid-unit-audit-list-table-wrapper">
+            <table className="rapid-unit-audit__body">
+              <colgroup>
+                <col className="col-audit-driver" />
+                <col className="col-audit-contract" />
+                <col className="col-audit-license" />
+                <col className="col-audit-operationalStatus" />
+                <col className="col-audit-actions" />
+              </colgroup>
 
-                <TableBody>
-                  {dataRapidUnitAudit.map(celda=>(
-                    <TableRow>
-                      <TableCell>{celda.conductor}</TableCell>
-                      <TableCell>{celda.contrato}</TableCell>
-                      <TableCell>{celda.licenciaeps}</TableCell>
-                      <TableCell>{celda.estado}</TableCell>
-                      <TableCell>{celda.acciones}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+              <thead>
+                <tr>
+                  <th>CONDUCTOR</th>
+                  <th>CONTRATO</th>
+                  <th>LICENCIA/EPS</th>
+                  <th>ESTADO OPERATIVO</th>
+                  <th>ACCIONES</th>
+                </tr>
+              </thead>
 
-              </Table>
+              <tbody>
+                {audits.length ? (
+                  audits.map((audit) => (
+                    <tr key={audit?._id}>
+                      <td>
+                        <span className="audit-list-driver">
+                          {audit?.auditDriver || "-"}
+                        </span>
+                      </td>
 
-            </TableContainer>
+                      <td>
+                        <span className="audit-list-contracts">
+                          {audit?.auditContract || "-"}
+                        </span>
+                      </td>
+
+                      <td>
+                        <span className="audit-list-license">
+                          {audit?.auditLicense || "-"}
+                        </span>
+                      </td>
+
+                      <td>
+                        <span className="audit-list-operationalStatus">
+                          {audit?.auditOperationalStatus || "-"}
+                        </span>
+                      </td>
+
+                      <td>
+                        <span className="audit-list-actions">
+                          {audit?.auditActions || "-"}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5">
+                      <div className="audit-list-empty">
+                        No se encontraron Auditoria Rapida de Unidades.
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
+          <p className="audit-list-results mb-0">
+          Mostrando {audits.length} resultado
+          {audits.length === 1 ? "" : "s"}
+          </p>
         </article>
           
 
