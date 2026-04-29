@@ -5,6 +5,7 @@ import ContractsSummary from "modules/contracts/Summary";
 import AddButton from "components/features/PageHeader/AddButton";
 import RapidUnitAudit from "components/features/RapidUnitAudit";
 import ContractsSection from "modules/contracts/ContractsSection";
+import DriverContractForm from "modules/contracts/DriverContractForm";
 
 // Hooks
 import useShowModal from "hooks/useShowModal";
@@ -40,6 +41,17 @@ export default function Contracts() {
           <AddButton onClick={createContractModal.show} title="EXPORTAR" />
         </RapidUnitAudit>
       </aside>
+
+      {createContractModal.isShowing && (
+        <DriverContractForm
+          isShowing
+          title="Nuevo Contrato Conductor"
+          onSubmit={createContractModal.onSubmit}
+          onHide={createContractModal.hide}
+        />
+     )}
+     
+
     </main>
   );
 }
