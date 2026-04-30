@@ -1,9 +1,10 @@
+import { useGetClients } from "context/clients/useClients";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 
 
 export default function DriverContractForm({ onHide, onSave }) {
-  
+  const operators = useGetClients();
   const calculateDays = (start, end) => {
   if (!start || !end) return 0;
 
@@ -91,7 +92,13 @@ export default function DriverContractForm({ onHide, onSave }) {
 
             <label className="label">EMPRESA OPERADORA</label>
             <select name="operador" onChange={handleChange}>
-              <option>Seleccionar operador...</option>
+              <option value="">Seleccionar operador...</option>
+
+              {operators.map((op) => (
+                <option key={op._id} value={op.operatorName}>
+                  {op.operatorName}
+                </option>
+              ))}
             </select>
 
             <label className="label">UNIDAD (TRACTOR / PLACA)</label>
