@@ -52,7 +52,13 @@ export default function DriverContractForm({ onHide, onSave }) {
   };
 
   const handleFiles = (e) => {
-    setForm({ ...form, archivos: e.target.files });
+    const files = Array.from(e.target.files);
+    setForm({ ...form, archivos: files });
+  };
+
+  const removeFile = (index) => {
+    const newFiles = form.archivos.filter((_, i) => i !== index);
+    setForm({ ...form, archivos: newFiles });
   };
 
   const handleSubmit = () => {
@@ -171,16 +177,67 @@ export default function DriverContractForm({ onHide, onSave }) {
         </div>
 
         {/* UPLOAD */}
-          <div className="upload">
-            <label className="upload-box">
-              <input type="file" multiple onChange={handleFiles} />
+        <div className="upload">
+          <label className="upload-box">
+            <input type="file" multiple onChange={handleFiles} />
 
-              <div className="upload-content">
-                <div className="icon">☁️</div>
-                <p>Arrastra archivos aquí</p>
-                <span>PDF, JPG o PNG hasta 10MB</span>
+            <div className="upload-content">
+              <div className="icon">☁️</div>
+
+              {form.archivos.length === 0 ? (
+                <>
+                  <p>Arrastra archivos aquí</p>
+                  <span>PDF, JPG o PNG hasta 10MB</span>
+                </>
+              ) : (
+                <>
+                 <p>Click para agregar más archivos</p>
+                </>
+              )}
+
+            </div>
+          </label>
+              {form.archivos.length > 0 && (
+              <div className="file-list">
+                {form.archivos.map((file, index) => (
+                  <div key={index} className="file-row">
+                    
+                    <div className="file-left">
+                      <span className="file-icon">📄</span>
+
+                      <div>
+                        <p className="file-name">{file.name}</p>
+                        <span className="file-size">
+                          {(file.size / 1024 / 1024).toFixed(1)} MB
+                        </span>
+                      </div>
+                    </div>
+
+                    <button
+                      className="file-delete"
+                      onClick={() => removeFile(index)}
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M3 6h18M9 6V4h6v2M10 11v6M14 11v6M5 6l1 14h12l1-14"
+                          stroke="#dc2626"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </button>
+
+                  </div>
+                ))}
               </div>
-            </label>
+            )}
+
           </div>
 
         {/* ACTIONS */}

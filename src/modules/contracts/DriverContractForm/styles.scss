@@ -194,6 +194,75 @@ input, select {
   color: #6b7280;
   cursor: pointer;
 }
+.file-item {
+  font-size: 13px;
+  background: #f3f4f6;
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin-top: 5px;
+  text-align: left;
+}
+.file-list {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.file-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f3f4f6;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.file-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.file-icon {
+  font-size: 18px;
+}
+
+.file-name {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.file-size {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.file-delete {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  padding: 6px;
+  border-radius: 6px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: 0.2s;
+}
+
+.file-delete svg {
+  width: 20px;
+  height: 20px;
+  stroke: #ef4444;
+}
+
+.file-delete:hover {
+  background: #fee2e2;
+}
 
 html, body {
   margin: 0;
