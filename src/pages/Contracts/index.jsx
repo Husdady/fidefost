@@ -1,5 +1,5 @@
 // Components
-import { useState } from "react";
+import { useGetContracts, useAddContract } from "components/features/RapidUnitAudit/useContracts";
 import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
 import ContractsSummary from "modules/contracts/Summary";
@@ -13,7 +13,8 @@ import useShowModal from "hooks/useShowModal";
 
 export default function Contracts() {
   const createContractModal = useShowModal();
-  const [audits, setAudits] = useState([]);
+  const audits = useGetContracts();
+  const addContract = useAddContract();
 
   return (
     <main className="contracts-page main-container">
@@ -53,7 +54,7 @@ export default function Contracts() {
             title="Nuevo Contrato Conductor"
             onHide={createContractModal.hide}
             onSave={(newData) => {
-              setAudits(prev => [...prev, newData]); //  AGREGA A LA TABLA
+              addContract(newData); //  guarda globalmente
               createContractModal.hide(); // cierra modal
             }}
         />

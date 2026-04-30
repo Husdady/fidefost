@@ -130,8 +130,17 @@
       }
     }
   }
+  .audit-list-contracts strong{
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .audit-list-contracts p{
+    margin: 0;
+    font-size: 12px;
+    color: #6b7280;
+  }
   .audit-list-driver,
-  .audit-list-contract,
   .audit-list-license,
   .audit-list-operationalStatus {
     color: #2b3137;

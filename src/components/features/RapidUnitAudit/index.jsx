@@ -4,6 +4,17 @@ import { useEffect, useState } from "react";
 // Utils
 import classnames from "utils/classnames";
 
+const formatMonthYear = (date) => {
+  if (!date) return "";
+
+  const months = [
+    "Ene","Feb","Mar","Abr","May","Jun",
+    "Jul","Ago","Sep","Oct","Nov","Dic"
+  ];
+
+  const [year, month] = date.split("-");
+  return `${months[parseInt(month) - 1]} ${year}`;
+};
 
 function RapidUnitAudit({ title, children, className = "",  accent = "default", data = [] }) {
 
@@ -64,9 +75,16 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                       </td>
 
                       <td>
-                        <span className="audit-list-contracts">
-                          {audit?.auditContract || "-"}
-                        </span>
+                        <div className="audit-list-contracts">
+                            <strong>
+                              {formatMonthYear(audit?.auditContract?.start)} -{" "}
+                              {formatMonthYear(audit?.auditContract?.end)}
+                            </strong>
+
+                            <p>
+                              Activo por {audit?.auditContract?.days} días
+                            </p>
+                        </div>
                       </td>
 
                       <td>

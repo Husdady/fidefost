@@ -1,7 +1,18 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 
+
 export default function DriverContractForm({ onHide, onSave }) {
+  
+  const calculateDays = (start, end) => {
+  if (!start || !end) return 0;
+
+  const d1 = new Date(start);
+  const d2 = new Date(end);
+
+  const diff = d2 - d1;
+  return Math.floor(diff / (1000 * 60 * 60 * 24));
+};
   const [form, setForm] = useState({
     operador: "",
     conductor: "",
@@ -44,11 +55,17 @@ export default function DriverContractForm({ onHide, onSave }) {
   };
 
   const handleSubmit = () => {
+    const dias = calculateDays(form.fechaInicio, form.fechaFin);
+    
     const newAudit = {
       _id: Date.now(),
 
       auditDriver: form.conductor,
-      auditContract: form.operador,
+      auditContract: {
+        start: form.fechaInicio,
+        end: form.fechaFin,
+        days: dias
+      },
       auditLicense: "OK",
       auditOperationalStatus: "EN RUTA"
     };
