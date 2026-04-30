@@ -1,4 +1,5 @@
 // Components
+import { useState } from "react";
 import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
 import ContractsSummary from "modules/contracts/Summary";
@@ -12,6 +13,7 @@ import useShowModal from "hooks/useShowModal";
 
 export default function Contracts() {
   const createContractModal = useShowModal();
+  const [audits, setAudits] = useState([]);
 
   return (
     <main className="contracts-page main-container">
@@ -37,17 +39,23 @@ export default function Contracts() {
 
         <ContractsSummary />
         <ContractsSection />
-        <RapidUnitAudit title="Auditoría Rapida de Unidades">
+        <RapidUnitAudit 
+          title="Auditoría Rapida de Unidades"
+          data={audits}
+          >
           <AddButton onClick={createContractModal.show} title="EXPORTAR" />
         </RapidUnitAudit>
       </aside>
 
       {createContractModal.isShowing && (
         <DriverContractForm
-          isShowing
-          title="Nuevo Contrato Conductor"
-          onSubmit={createContractModal.onSubmit}
-          onHide={createContractModal.hide}
+            isShowing
+            title="Nuevo Contrato Conductor"
+            onHide={createContractModal.hide}
+            onSave={(newData) => {
+              setAudits(prev => [...prev, newData]); //  AGREGA A LA TABLA
+              createContractModal.hide(); // cierra modal
+            }}
         />
      )}
      

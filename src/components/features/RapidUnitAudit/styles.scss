@@ -140,10 +140,15 @@
     line-height: 1.3;
   }
   .audit-list-actions{
-    color: #2b3137;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+   .audit-list-actions-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   .audit-list-empty {
     padding: 28px 0;
@@ -159,3 +164,29 @@
     font-weight: 500;
     line-height: 1.3;
   }
+  .status-btn {
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* EN RUTA */
+.status-btn.en-ruta {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* DETENIDO */
+.status-btn.detenido {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* STAND-BY */
+.status-btn.stand-by {
+  background: #fef3c7;
+  color: #92400e;
+}

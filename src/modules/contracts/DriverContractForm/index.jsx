@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 
-export default function DriverContractForm({ onHide }) {
+export default function DriverContractForm({ onHide, onSave }) {
   const [form, setForm] = useState({
     operador: "",
     conductor: "",
@@ -44,7 +44,16 @@ export default function DriverContractForm({ onHide }) {
   };
 
   const handleSubmit = () => {
-    console.log(form);
+    const newAudit = {
+      _id: Date.now(),
+
+      auditDriver: form.conductor,
+      auditContract: form.operador,
+      auditLicense: "OK",
+      auditOperationalStatus: "EN RUTA"
+    };
+
+    onSave(newAudit); //  ENVÍA A LA TABLA
   };
 
   return createPortal(
@@ -88,9 +97,12 @@ export default function DriverContractForm({ onHide }) {
           <div className="col">
 
             <label className="label">CONDUCTOR ASIGNADO</label>
-            <select name="conductor" onChange={handleChange}>
-              <option>Seleccionar conductor...</option>
-            </select>
+            <input
+              type="text"
+              name="conductor"
+              placeholder="Seleccionar conductor..."
+              onChange={handleChange}
+            />
 
             <div className="row-2">
               <div>
