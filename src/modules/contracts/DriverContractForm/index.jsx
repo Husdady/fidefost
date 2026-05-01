@@ -1,9 +1,12 @@
 import { useGetClients } from "context/clients/useClients";
 import { useState } from "react";
 import { createPortal } from "react-dom";
-
+import saveDocument from "database/saveDocument";
+import getDocumentsByRelation from "database/getDocumentsByRelation";
+import { useEffect } from "react";
 
 export default function DriverContractForm({ onHide, onSave }) {
+  const [contractId] = useState(() => Date.now().toString());
   const operators = useGetClients();
   const calculateDays = (start, end) => {
   if (!start || !end) return 0;
@@ -32,6 +35,22 @@ export default function DriverContractForm({ onHide, onSave }) {
     archivos: []
   });
 
+  useEffect(() => {
+
+  const loadFiles = async () => {
+    if (!contractId) return;
+
+    const files = await getDocumentsByRelation("contracts", contractId);
+
+    setForm((prev) => ({
+      ...prev,
+      archivos: files
+    }));
+  };
+
+  loadFiles();
+}, [contractId]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
@@ -51,9 +70,25 @@ export default function DriverContractForm({ onHide, onSave }) {
     setForm({ ...form, [name]: !form[name] });
   };
 
-  const handleFiles = (e) => {
+  const handleFiles = async (e) => {
     const files = Array.from(e.target.files);
-    setForm({ ...form, archivos: files });
+    const savedFiles = [];
+
+    for (const file of files) {
+      const saved = await saveDocument({
+        file,
+        module: "contracts",
+        relatedId: contractId, 
+        category: "legal"
+      });
+
+      savedFiles.push(saved);
+    }
+
+    setForm((prev) => ({
+      ...prev,
+      archivos: [...prev.archivos, ...savedFiles]
+    }));
   };
 
   const removeFile = (index) => {
@@ -63,9 +98,9 @@ export default function DriverContractForm({ onHide, onSave }) {
 
   const handleSubmit = () => {
     const dias = calculateDays(form.fechaInicio, form.fechaFin);
-    
+
     const newAudit = {
-      _id: Date.now(),
+      _id: contractId, 
 
       auditDriver: form.conductor,
       auditContract: {
@@ -77,7 +112,7 @@ export default function DriverContractForm({ onHide, onSave }) {
       auditOperationalStatus: "EN RUTA"
     };
 
-    onSave(newAudit); //  ENVÍA A LA TABLA
+    onSave(newAudit);
   };
 
   return createPortal(
@@ -215,7 +250,10 @@ export default function DriverContractForm({ onHide, onSave }) {
 
                     <button
                       className="file-delete"
-                      onClick={() => removeFile(index)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeFile(index);
+                      }}
                     >
                       <svg
                         width="18"
@@ -243,7 +281,13 @@ export default function DriverContractForm({ onHide, onSave }) {
         {/* ACTIONS */}
         <div className="actions">
           <button className="btn-secondary" onClick={onHide}>Cancelar</button>
-          <button className="btn-primary" onClick={handleSubmit}>Guardar Contrato</button>
+          <button 
+            type="button"
+            className="btn-primary" 
+            onClick={handleSubmit}
+          >
+            Guardar Contrato
+          </button>
         </div>
 
       </div>

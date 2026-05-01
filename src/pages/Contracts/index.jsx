@@ -1,4 +1,5 @@
 // Components
+import { useState } from "react";
 import { useGetContracts, useAddContract } from "components/features/RapidUnitAudit/useContracts";
 import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
@@ -11,11 +12,12 @@ import DriverContractForm from "modules/contracts/DriverContractForm";
 // Hooks
 import useShowModal from "hooks/useShowModal";
 
+
 export default function Contracts() {
   const createContractModal = useShowModal();
   const audits = useGetContracts();
   const addContract = useAddContract();
-
+  const [currentContractId, setCurrentContractId] = useState(null);
   return (
     <main className="contracts-page main-container">
       <Navigation />
@@ -32,7 +34,10 @@ export default function Contracts() {
             />
 
             <AddButton
-              onClick={createContractModal.show}
+              onClick={() => {
+                setCurrentContractId(Date.now().toString()); //  ID único
+                createContractModal.show();
+              }}
               title="Nuevo Contrato de Unidades"
             />
           </div>
@@ -51,12 +56,13 @@ export default function Contracts() {
       {createContractModal.isShowing && (
         <DriverContractForm
             isShowing
+            contractId={currentContractId}
             title="Nuevo Contrato Conductor"
             onHide={createContractModal.hide}
             onSave={(newData) => {
-              addContract(newData); //  guarda globalmente
-              createContractModal.hide(); // cierra modal
-            }}
+            addContract(newData); // usar store
+            createContractModal.hide();
+          }}
         />
      )}
      
