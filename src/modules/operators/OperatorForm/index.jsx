@@ -56,7 +56,7 @@ function OperatorForm({ title, onHide, onSubmit, isShowing, defaultValues }) {
         >
           <div className="box d-flex flex-column row-gap-4 overflow-y-auto">
             <InputText
-              textLabel="NOMBRE DEL OPERADOR"
+              textLabel="Nombre del operador"
               placeholder="Ej: Transportes Globales S.A."
               customInput={register("operatorName")}
               error={errors?.operatorName?.message}

@@ -128,10 +128,11 @@ export default function useEditOperator() {
   );
 
   return {
-    editOperatorForm,
-    selectedOperator,
-    isEditingOperator,
-    handleEditOperator,
-    handleShowEditOperatorForm,
+    editOperatorForm: editOperatorForm,
+    selectedOperator: selectedOperator,
+    isEditingOperator: isEditingOperator,
+    setSelectedOperator: setSelectedOperator,
+    handleEditOperator: handleEditOperator,
+    handleShowEditOperatorForm: handleShowEditOperatorForm,
   };
 }

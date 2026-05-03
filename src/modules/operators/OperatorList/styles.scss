@@ -184,20 +184,16 @@
     gap: 6px;
     padding: 0;
     border: none;
-    background: transparent;
+    background: transparent !important;
     color: #007d97;
     font-size: 12px;
     font-weight: 700;
     line-height: 1.2;
     cursor: pointer;
-    transition: opacity 0.2s ease;
-
-    &:hover {
-      opacity: 0.72;
-    }
+    opacity: 1 !important;
 
     &.secondary {
-      color: #1877f2;
+      color: #1877f2 !important;
     }
   }
 

@@ -166,9 +166,13 @@ function OperatorList() {
 
                       <button
                         type="button"
-                        disabled={isDownloadingDocuments}
-                        onClick={() => handleDownloadDocuments(operator)}
                         className="operator-list-action-btn secondary"
+                        onClick={() => handleDownloadDocuments(operator)}
+                        disabled={
+                          selectedOperator?._id === operator?._id
+                            ? isDownloadingDocuments
+                            : undefined
+                        }
                       >
                         <span className="operator-list-action-icon">
                           <svg
