@@ -48,7 +48,7 @@ function normalizeFiles(files = []) {
 }
 
 function filterValidFiles(files = []) {
-  const validExtensions = [".pdf", ".jpg", ".jpeg", ".png"];
+  const validExtensions = [".pdf", ".doc", ".docx"];
 
   return files.filter((file) => {
     const lowerName = file?.name?.toLowerCase?.() || "";
