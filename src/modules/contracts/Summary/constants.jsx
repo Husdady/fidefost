@@ -7,7 +7,7 @@ import WarningSignIcon from "./icons/warning-sign-icon";
 export const SUMMARY_ITEMS = [
   {
     id: "contratos_activos",
-    title: "CONTRATOS ACTIVOS",
+    title: "CONTR. ACTIVOS",
     value: "1,284",
     description: <div> <RiseIcon /> 12 este mes</div>,
     accent: "default",

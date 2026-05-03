@@ -9,7 +9,7 @@ export default function AddButton(props) {
   return (
     <Button
       {...props}
-      icon={<CirclePlusIcon />}
+      icon={props.icon ?? <CirclePlusIcon />}
       className={classnames(["add-button fw-semibold", props.className])}
     />
   );

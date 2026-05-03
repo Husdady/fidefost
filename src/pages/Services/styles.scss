@@ -1,0 +1,16 @@
+.services-page {
+  padding-bottom: 2rem;
+
+  & .btn-export {
+    color: #00647c !important;
+    background-color: #ffffff !important;
+  }
+
+  & .left-content {
+    width: 65%;
+  }
+
+  & .right-content {
+    width: 35%;
+  }
+}
