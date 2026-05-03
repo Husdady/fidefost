@@ -24,7 +24,7 @@ export default function Contracts() {
 
       <aside className="page-content d-flex flex-column row-gap-4">
         <PageHeader
-          title="Gestion de Contratos"
+          title="Gestion de los Contratos"
           description="Monitoreo y vinculación operativa de recursos."
         >
           <div className="d-flex align-items-center column-gap-3">
