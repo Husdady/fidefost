@@ -93,13 +93,16 @@ async function resolveDocumentFile(document, index) {
 
 /**
  * Hook for download operator documents
+ * @param {object} params Params
  */
-export default function useDownloadDocuments() {
+export default function useDownloadDocuments({ setSelectedOperator }) {
   const [isDownloadingDocuments, setIsDownloadingDocuments] = useState(false);
 
   const handleDownloadDocuments = useCallback(async (operator) => {
     // Validate operator
     if (!operator?._id) return;
+
+    setSelectedOperator(operator);
 
     try {
       setIsDownloadingDocuments(true);
@@ -148,7 +151,7 @@ export default function useDownloadDocuments() {
   }, []);
 
   return {
-    isDownloadingDocuments,
-    handleDownloadDocuments,
+    isDownloadingDocuments: isDownloadingDocuments,
+    handleDownloadDocuments: handleDownloadDocuments,
   };
 }

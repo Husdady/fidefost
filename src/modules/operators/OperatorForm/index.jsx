@@ -10,6 +10,7 @@ import InputText from "components/common/InputText";
 import useOperatorForm from "./useOperatorForm";
 
 // Utils
+import getShortType from "./utils/getShortType";
 import typeOnlyNumbers from "utils/format/typeOnlyNumbers";
 
 function OperatorForm({ title, onHide, onSubmit, isShowing, defaultValues }) {
@@ -56,7 +57,7 @@ function OperatorForm({ title, onHide, onSubmit, isShowing, defaultValues }) {
         >
           <div className="box d-flex flex-column row-gap-4 overflow-y-auto">
             <InputText
-              textLabel="NOMBRE DEL OPERADOR"
+              textLabel="Nombre del operador"
               placeholder="Ej: Transportes Globales S.A."
               customInput={register("operatorName")}
               error={errors?.operatorName?.message}
@@ -79,12 +80,12 @@ function OperatorForm({ title, onHide, onSubmit, isShowing, defaultValues }) {
               </label>
 
               <input
-                ref={fileInputRef}
-                type="file"
                 multiple
-                accept=".pdf,.jpg,.jpeg,.png"
+                type="file"
                 className="d-none"
+                accept=".pdf,.doc,.docx"
                 onChange={handleFilesChange}
+                ref={fileInputRef}
               />
 
               <button
@@ -122,7 +123,7 @@ function OperatorForm({ title, onHide, onSubmit, isShowing, defaultValues }) {
                   </h6>
 
                   <p className="operator-form-dropzone-text mb-0">
-                    PDF, JPG o PNG hasta 10MB
+                    Documentos PDF, DOC o DOCX hasta 10MB
                   </p>
 
                   <p className="operator-form-dropzone-helper mb-0">
@@ -147,8 +148,8 @@ function OperatorForm({ title, onHide, onSubmit, isShowing, defaultValues }) {
                       className="operator-form-file-item d-flex align-items-center justify-content-between"
                     >
                       <div className="operator-form-file-left d-flex align-items-center">
-                        <div className="operator-form-file-icon d-flex align-items-center justify-content-center">
-                          {file?.type?.includes("pdf") ? "PDF" : "IMG"}
+                        <div className="operator-form-file-icon d-flex align-items-center justify-content-center text-uppercase">
+                          {getShortType(file?.type)}
                         </div>
 
                         <div className="operator-form-file-info d-flex flex-column">

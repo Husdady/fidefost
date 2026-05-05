@@ -1,0 +1,155 @@
+.road-maps {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 34px;
+  background-color: #ffffff;
+  box-shadow: 0 18px 45px rgba(23, 28, 31, 0.06);
+
+  & .service-name {
+    max-width: 64%;
+  }
+
+  & .road-maps-header {
+    min-height: 65px;
+    padding: 0 2rem;
+    border-bottom: 1px solid #eef3f6;
+  }
+
+  & .road-maps-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #006b84;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  & .road-maps-pending {
+    gap: 0.65rem;
+    font-size: 13px;
+    font-weight: 700;
+    color: #6f7b83;
+  }
+
+  & .road-maps-pending-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: #006f86;
+  }
+
+  & .road-maps-row {
+    width: 100%;
+  }
+
+  & .road-maps-row-head {
+    min-height: 54px;
+    padding: 0 2rem;
+    background-color: #f6f9fb;
+
+    & .road-maps-cell {
+      font-size: 12px;
+      font-weight: 800;
+      color: #7a858c;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+  }
+
+  & .road-maps-row-body {
+    min-height: 114px;
+    padding: 0 2rem;
+    border-bottom: 1px solid #f0f3f5;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    & .road-maps-cell {
+      font-size: 14px;
+      color: #6f7b83;
+    }
+  }
+
+  // 4 columns = 100%
+  & .road-maps-file {
+    width: 46%;
+  }
+
+  & .road-maps-date {
+    width: 18%;
+  }
+
+  & .road-maps-size {
+    width: 16%;
+  }
+
+  & .road-maps-status {
+    width: 20%;
+  }
+
+  & .road-maps-icon {
+    min-width: 40px;
+    max-width: 40px;
+    min-height: 40px;
+    max-height: 40px;
+    margin-right: 0.65rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & span {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    &.processed {
+      color: #2f6f7d;
+      background-color: #eaf8fc;
+    }
+
+    &.pending {
+      color: #b56a11;
+      background-color: #fff3e7;
+    }
+
+    &.error {
+      color: #d92626;
+      background-color: #fff0f0;
+    }
+  }
+
+  & .road-maps-file strong {
+    font-size: 14px;
+    font-weight: 800;
+    color: #1f2529;
+  }
+
+  & .road-maps-status-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 106px;
+    min-height: 26px;
+    padding: 0.25rem 0.85rem;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+
+    &.processed {
+      color: #2f7d32;
+      background-color: #dff3e2;
+    }
+
+    &.pending {
+      color: #b56513;
+      background-color: #ffdcae;
+    }
+
+    &.error {
+      color: #d92626;
+      background-color: #ffd2d2;
+    }
+  }
+}

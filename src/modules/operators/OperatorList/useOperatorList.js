@@ -13,7 +13,7 @@ export default function useOperatorList() {
   const operators = useGetClients();
   const [search, setSearch] = useState("");
   const editOperatorData = useEditOperator();
-  const downloadData = useDownloadDocuments();
+  const downloadData = useDownloadDocuments(editOperatorData);
   const toggleOperatorStatus = useToggleOperatorStatus();
 
   const handleSearch = useCallback((event) => {
