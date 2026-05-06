@@ -4,6 +4,8 @@ import { createPortal } from "react-dom";
 import saveDocument from "database/saveDocument";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
 import { useEffect } from "react";
+import { deleteDocument } from "database/deleteDocument";
+
 
 export default function DriverContractForm({ onHide, onSave, contractData }) {
   const [contractId] = useState(() => contractData?._id || Date.now().toString());
@@ -101,29 +103,36 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
     }));
   };
 
-  const removeFile = (index) => {
-    const newFiles = form.archivos.filter((_, i) => i !== index);
-    setForm({ ...form, archivos: newFiles });
+  const removeFile = async (fileId) => {
+  await deleteDocument(fileId);
+
+  setForm((prev) => ({
+    ...prev,
+    archivos: prev.archivos.filter(f => f.id !== fileId)
+  }));
+};
+
+const handleSubmit = () => {
+  const dias = calculateDays(form.fechaInicio, form.fechaFin);
+
+  const newAudit = {
+    ...contractData, 
+
+    _id: contractId,
+
+    auditDriver: form.conductor,
+    auditContract: {
+      start: form.fechaInicio,
+      end: form.fechaFin,
+      days: dias
+    },
+
+    auditLicense: "OK",
+    auditOperationalStatus: "EN RUTA"
   };
 
-  const handleSubmit = () => {
-    const dias = calculateDays(form.fechaInicio, form.fechaFin);
-
-    const newAudit = {
-      _id: contractId, 
-
-      auditDriver: form.conductor,
-      auditContract: {
-        start: form.fechaInicio,
-        end: form.fechaFin,
-        days: dias
-      },
-      auditLicense: "OK",
-      auditOperationalStatus: "EN RUTA"
-    };
-
-    onSave(newAudit);
-  };
+  onSave(newAudit, !!contractData);
+};
 
   return createPortal(
     <div className="modal" onClick={onHide}>
@@ -186,12 +195,23 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
             <div className="row-2">
               <div>
                 <label className="label">FECHA INICIO</label>
-                <input type="date" name="fechaInicio" onChange={handleChange} />
+                <input
+                  type="date" 
+                  name="fechaInicio" 
+                  value={form.fechaInicio || ""}
+                  onChange={handleChange} 
+                />
+          
               </div>
 
               <div>
                 <label className="label">FECHA FIN</label>
-                <input type="date" name="fechaFin" onChange={handleChange} />
+                <input 
+                  type="date" 
+                  name="fechaFin" 
+                  value={form.fechaFin || ""}
+                  onChange={handleChange} 
+                />
               </div>
             </div>
 
@@ -248,8 +268,11 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
           </label>
               {form.archivos.length > 0 && (
               <div className="file-list">
-                {form.archivos.map((file, index) => (
-                  <div key={index} className="file-row">
+                {form.archivos.map((file, index) =>  {
+                  console.log("FILE ID:", file.id);
+
+                  return(
+                  <div key={file.id} className="file-row">
                     
                     <div className="file-left">
                       <span className="file-icon">📄</span>
@@ -261,12 +284,12 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
                         </span>
                       </div>
                     </div>
-
+                
                     <button
                       className="file-delete"
                       onClick={(e) => {
                         e.stopPropagation();
-                        removeFile(index);
+                        removeFile(file.id);
                       }}
                     >
                       <svg
@@ -286,7 +309,7 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
                     </button>
 
                   </div>
-                ))}
+                )})}
               </div>
             )}
 

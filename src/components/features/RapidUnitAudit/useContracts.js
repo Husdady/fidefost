@@ -30,6 +30,9 @@ const useContracts = create(
   )
 );
 
+export const useUpdateContract = () => 
+  useContracts((state) => state.update);
+
 export const useGetContracts = () =>
   useContracts((state) => state.contracts);
 

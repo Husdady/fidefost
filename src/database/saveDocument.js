@@ -1,6 +1,5 @@
 // Utils
 import openDatabase from "./openDatabase";
-import generateId from "utils/generateId";
 
 // Constants
 import { STORE_NAME } from "./index";
@@ -21,14 +20,17 @@ export default async function saveDocument({
     const transaction = db.transaction(STORE_NAME, "readwrite");
     const store = transaction.objectStore(STORE_NAME);
 
+    // ID único REAL
+    const id = crypto.randomUUID();
+
     const documentRecord = {
+      id, 
       module,
-      file: file,
+      file,
       name: file.name,
       size: file.size,
       type: file.type,
-      relatedId: relatedId,
-      id: file._id || generateId(),
+      relatedId,
       category: category || "general",
       lastModified: file.lastModified,
       createdAt: new Date().toISOString(),

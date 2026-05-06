@@ -1,6 +1,6 @@
 // Components
+import { useGetContracts, useAddContract, useUpdateContract } from "components/features/RapidUnitAudit/useContracts";
 import { useState } from "react";
-import { useGetContracts, useAddContract } from "components/features/RapidUnitAudit/useContracts";
 import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
 import ContractsSummary from "modules/contracts/Summary";
@@ -14,6 +14,8 @@ import useShowModal from "hooks/useShowModal";
 
 
 export default function Contracts() {
+  const [refresh, setRefresh] = useState(0);
+  const updateContract = useUpdateContract();
   const [selectedContract, setSelectedContract] = useState(null);
   const handleEdit = (contract) => {
   setSelectedContract(contract);
@@ -21,7 +23,7 @@ export default function Contracts() {
 };
 
   const createContractModal = useShowModal();
-  const audits = useGetContracts();
+  const audits = useGetContracts(refresh);
   const addContract = useAddContract();
 
   return (
@@ -65,13 +67,17 @@ export default function Contracts() {
 
       {createContractModal.isShowing && (
       <DriverContractForm
-        contractId={selectedContract?._id || null}
         contractData={selectedContract}
         onHide={createContractModal.hide}
-        onSave={(newData) => {
-          addContract(newData);
+        onSave={(newData, isEdit) => {
+          if (isEdit) {
+            updateContract(newData._id, newData); 
+          } else {
+            addContract(newData);
+          }
+
           createContractModal.hide();
-          setSelectedContract(null); 
+          setSelectedContract(null);
         }}
       />
      )}

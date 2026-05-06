@@ -13,7 +13,7 @@
   z-index: 2147483647; /* máximo */
 }
 .modal-content {
-  width: 700px;
+  width: 800px;
   max-width: 90vw;
   max-height: 90vh;   /*  limita altura */
   overflow-y: auto;   /*  activa scroll vertical */
@@ -49,11 +49,11 @@
   min-width: 0;
 }
 
-/* LABELS */
 .label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   color: #6b7280;
+  margin-bottom: 4px;
 }
 
 /* INPUTS BONITOS */
@@ -67,15 +67,39 @@ input, select {
   font-size: 14px;
 }
 
+input[type="date"] {
+  min-width: 110px;
+  width: 100%;
+  padding: 6px 32px 6px 8px;
+  border-radius: 8px;
+  border: none;
+  background: #e5e7eb;
+  font-size: 12px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 10px;
+  opacity: 1;
+  cursor: pointer;
+}
+
 /* FECHAS EN FILA */
 .row-2 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: minmax(110px, 140px) minmax(110px, 140px);
+  gap: 5px;
 }
+
+.row-2 input[type="date"] {
+  min-width: 100px;
+ 
+}
+
 .row-2 > div {
-  min-width: 0; /* evita que el input se desborde */
+  position: relative;
 }
+
 .row-2 input {
   width: 100%;
   min-width: 0;
