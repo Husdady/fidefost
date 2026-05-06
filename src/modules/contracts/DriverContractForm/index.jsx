@@ -5,8 +5,8 @@ import saveDocument from "database/saveDocument";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
 import { useEffect } from "react";
 
-export default function DriverContractForm({ onHide, onSave }) {
-  const [contractId] = useState(() => Date.now().toString());
+export default function DriverContractForm({ onHide, onSave, contractData }) {
+  const [contractId] = useState(() => contractData?._id || Date.now().toString());
   const operators = useGetClients();
   const calculateDays = (start, end) => {
   if (!start || !end) return 0;
@@ -36,7 +36,17 @@ export default function DriverContractForm({ onHide, onSave }) {
   });
 
   useEffect(() => {
+    if (!contractData) return;
 
+    setForm((prev) => ({
+      ...prev,
+      conductor: contractData.auditDriver,
+      fechaInicio: contractData.auditContract?.start,
+      fechaFin: contractData.auditContract?.end,
+    }));
+  }, [contractData]);
+  
+  useEffect(() => {
   const loadFiles = async () => {
     if (!contractId) return;
 
@@ -121,7 +131,10 @@ export default function DriverContractForm({ onHide, onSave }) {
         className="modal-content"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="title">Nuevo Contrato Conductor</h2>
+        <h2 className="title">
+          {contractData ? "Editar Contrato" : "Nuevo Contrato Conductor"}
+
+        </h2>
         <p className="subtitle">
           Configure los parámetros operativos para la nueva unidad.
         </p>
@@ -165,6 +178,7 @@ export default function DriverContractForm({ onHide, onSave }) {
             <input
               type="text"
               name="conductor"
+              value={form.conductor}
               placeholder="Seleccionar conductor..."
               onChange={handleChange}
             />
@@ -286,7 +300,7 @@ export default function DriverContractForm({ onHide, onSave }) {
             className="btn-primary" 
             onClick={handleSubmit}
           >
-            Guardar Contrato
+            {contractData ? "Actualizar Contrato" : "Guardar Contrato"}
           </button>
         </div>
 

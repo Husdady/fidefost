@@ -14,10 +14,16 @@ import useShowModal from "hooks/useShowModal";
 
 
 export default function Contracts() {
+  const [selectedContract, setSelectedContract] = useState(null);
+  const handleEdit = (contract) => {
+  setSelectedContract(contract);
+  createContractModal.show();
+};
+
   const createContractModal = useShowModal();
   const audits = useGetContracts();
   const addContract = useAddContract();
-  const [currentContractId, setCurrentContractId] = useState(null);
+
   return (
     <main className="contracts-page main-container">
       <Navigation />
@@ -35,7 +41,7 @@ export default function Contracts() {
 
             <AddButton
               onClick={() => {
-                setCurrentContractId(Date.now().toString()); //  ID único
+                setSelectedContract(null);
                 createContractModal.show();
               }}
               title="Nuevo Contrato de Unidades"
@@ -48,22 +54,26 @@ export default function Contracts() {
         <RapidUnitAudit 
           title="Auditoría Rapida de Unidades"
           data={audits}
-          >
+          onEdit={(audit) => {
+          setSelectedContract(audit);
+          createContractModal.show();
+        }}
+        >
           <AddButton onClick={createContractModal.show} title="EXPORTAR" />
         </RapidUnitAudit>
       </aside>
 
       {createContractModal.isShowing && (
-        <DriverContractForm
-            isShowing
-            contractId={currentContractId}
-            title="Nuevo Contrato Conductor"
-            onHide={createContractModal.hide}
-            onSave={(newData) => {
-            addContract(newData); // usar store
-            createContractModal.hide();
-          }}
-        />
+      <DriverContractForm
+        contractId={selectedContract?._id || null}
+        contractData={selectedContract}
+        onHide={createContractModal.hide}
+        onSave={(newData) => {
+          addContract(newData);
+          createContractModal.hide();
+          setSelectedContract(null); 
+        }}
+      />
      )}
      
 
