@@ -2,7 +2,8 @@ import { createPortal } from "react-dom";
 
 export default function DriverContractView({
   contractData,
-  onHide,
+  onHide, 
+  onDelete,
 }) {
   if (!contractData) return null;
 
@@ -100,7 +101,9 @@ export default function DriverContractView({
         </div>
 
         {/* ACTION */}
-        <button className="contract-delete-btn">
+        <button className="contract-delete-btn"
+                onClick={() => onDelete(contractData)}
+        >
           Eliminar Contrato Conductor
         </button>
 

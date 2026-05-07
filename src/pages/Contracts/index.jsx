@@ -13,16 +13,35 @@ import { useDeleteContract } from "components/features/RapidUnitAudit/useContrac
 // Hooks
 import useShowModal from "hooks/useShowModal";
 
+const deleteContract = useDeleteContract();
 
 export default function Contracts() {
   const [viewContract, setViewContract] = useState(null);
   const [refresh, setRefresh] = useState(0);
   const updateContract = useUpdateContract();
   const [selectedContract, setSelectedContract] = useState(null);
+  const handleDelete = async (contract) => {
+
+  // obtener archivos relacionados
+  const files = await getDocumentsByRelation(
+    "contracts",
+    contract._id
+  );
+
+  // eliminar archivos del indexeddb
+  for (const file of files) {
+    await deleteDocument(file.id);
+  }
+
+  // eliminar contrato del store
+  deleteContract(contract._id);
+
+  setViewContract(null);
+  };
   const handleEdit = (contract) => {
   setSelectedContract(contract);
   createContractModal.show();
-};
+  };
 
   const createContractModal = useShowModal();
   const audits = useGetContracts(refresh);
