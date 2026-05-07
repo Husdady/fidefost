@@ -3,8 +3,10 @@ import RoadMaps from "modules/services/RoadMaps";
 import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
 import ExportReport from "modules/services/ExcelReport";
+import TravelVolume from "modules/services/TravelVolume";
 import DownloadIcon from "components/icons/download-icon";
 import UploadRoadMap from "modules/services/UploadRoadMap";
+import RecentActivity from "modules/services/RecentActivity";
 import FileUploadIcon from "components/icons/file-upload-icon";
 import AddButton from "components/features/PageHeader/AddButton";
 
@@ -48,6 +50,8 @@ export default function Services() {
 
           <aside className="right-content d-flex flex-column row-gap-3">
             <ExportReport />
+            <TravelVolume />
+            <RecentActivity />
           </aside>
         </div>
       </aside>
