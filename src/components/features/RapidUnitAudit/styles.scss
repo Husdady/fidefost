@@ -152,9 +152,23 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  transition: 0.2s;
   cursor: pointer;
   }
-   .audit-list-actions-icon {
+  .audit-list-actions-edit:hover {
+  opacity: 0.7;
+  }
+
+  .audit-list-actions-visual {
+  cursor: pointer;
+  transition: 0.2s;
+ }
+
+ .audit-list-actions-visual:hover {
+  opacity: 0.7;
+ }
+
+ .audit-list-actions-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;

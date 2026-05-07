@@ -8,12 +8,14 @@ import AddButton from "components/features/PageHeader/AddButton";
 import RapidUnitAudit from "components/features/RapidUnitAudit";
 import ContractsSection from "modules/contracts/ContractsSection";
 import DriverContractForm from "modules/contracts/DriverContractForm";
-
+import DriverContractView from "modules/contracts/DriversContractView";
+import { useDeleteContract } from "components/features/RapidUnitAudit/useContracts";
 // Hooks
 import useShowModal from "hooks/useShowModal";
 
 
 export default function Contracts() {
+  const [viewContract, setViewContract] = useState(null);
   const [refresh, setRefresh] = useState(0);
   const updateContract = useUpdateContract();
   const [selectedContract, setSelectedContract] = useState(null);
@@ -25,6 +27,7 @@ export default function Contracts() {
   const createContractModal = useShowModal();
   const audits = useGetContracts(refresh);
   const addContract = useAddContract();
+  const deleteContract = useDeleteContract();
 
   return (
     <main className="contracts-page main-container">
@@ -60,6 +63,9 @@ export default function Contracts() {
           setSelectedContract(audit);
           createContractModal.show();
         }}
+          onView={(audit) => {
+          setViewContract(audit);
+        }}
         >
           <AddButton onClick={createContractModal.show} title="EXPORTAR" />
         </RapidUnitAudit>
@@ -73,15 +79,22 @@ export default function Contracts() {
           if (isEdit) {
             updateContract(newData._id, newData); 
           } else {
+
             addContract(newData);
           }
 
           createContractModal.hide();
           setSelectedContract(null);
         }}
-      />
+      /> 
      )}
-     
+
+     {viewContract && (
+      <DriverContractView
+        contractData={viewContract}
+        onHide={() => setViewContract(null)}
+      />
+    )}
 
     </main>
   );

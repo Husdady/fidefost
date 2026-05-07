@@ -17,7 +17,7 @@ const formatMonthYear = (date) => {
   return `${months[parseInt(month) - 1]} ${year}`;
 };
 
-function RapidUnitAudit({ title, children, className = "",  accent = "default", data = [], onEdit }) {
+function RapidUnitAudit({ title, children, className = "",  accent = "default", data = [], onEdit, onView }) {
 
   const [audits, setAudits] = useState([]);
 
@@ -139,7 +139,9 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                           <span>Editar</span>
                         </div>
 
-                        <div className="audit-list-actions-visual">
+                        <div className="audit-list-actions-visual"
+                        onClick={() => onView(audit)}
+                        >  
                           <span className="audit-list-actions-icon">
                             <svg width="22" 
                                 height="15"

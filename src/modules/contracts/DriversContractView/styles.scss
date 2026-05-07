@@ -1,0 +1,96 @@
+.contract-view-modal {
+  width: 520px;
+  background: white;
+  border-radius: 24px;
+  padding: 30px;
+  position: relative;
+}
+
+.contract-view-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.contract-view-header {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.contract-view-avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+
+.contract-view-label {
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.contract-view-tags {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.contract-view-tags span {
+  background: #f3f4f6;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+}
+
+.contract-view-tags .cert {
+  color: #0891b2;
+  font-weight: 700;
+}
+
+.contract-view-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 30px;
+  gap: 20px;
+}
+
+.contract-view-services {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contract-view-status {
+  display: flex;
+  gap: 18px;
+  font-size: 13px;
+}
+
+.contract-view-map {
+  margin-top: 20px;
+  background: #e5e7eb;
+  padding: 20px;
+  border-radius: 14px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.contract-delete-btn {
+  width: 100%;
+  margin-top: 30px;
+  border: none;
+  background: #0891b2;
+  color: white;
+  padding: 14px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+}

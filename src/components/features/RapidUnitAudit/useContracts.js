@@ -39,4 +39,7 @@ export const useGetContracts = () =>
 export const useAddContract = () =>
   useContracts((state) => state.add);
 
+export const useDeleteContract = () =>
+  useContracts((state) => state.delete);
+
 export default useContracts;
