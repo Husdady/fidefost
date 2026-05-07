@@ -22,6 +22,9 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
   const [form, setForm] = useState({
     operador: "",
     conductor: "",
+    licencia: "",
+    fechaInduccion: "",
+    fechaVencimiento: "",
     unidad: "",
     fechaInicio: "",
     fechaFin: "",
@@ -31,6 +34,7 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
       sctr: false,
       antecedentesPenales: false,
       antecedentesPoliciales: false,
+      induccion: false,
     },
     wifi: false,
     gps: true,
@@ -42,9 +46,13 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
 
     setForm((prev) => ({
       ...prev,
+      operador: contractData.operador || "",
       conductor: contractData.auditDriver,
+      licencia: contractData.auditLicense || "",
       fechaInicio: contractData.auditContract?.start,
       fechaFin: contractData.auditContract?.end,
+      fechaInduccion: contractData.auditInductionDate || "",
+      fechaVencimiento: contractData.auditLicenseExpiration || ""
     }));
   }, [contractData]);
   
@@ -120,6 +128,7 @@ const handleSubmit = () => {
 
     _id: contractId,
 
+    operador: form.operador,
     auditDriver: form.conductor,
     auditContract: {
       start: form.fechaInicio,
@@ -127,7 +136,9 @@ const handleSubmit = () => {
       days: dias
     },
 
-    auditLicense: "OK",
+    auditLicense: form.licencia,
+    auditInductionDate: form.fechaInduccion,
+    auditLicenseExpiration: form.fechaVencimiento,
     auditOperationalStatus: "EN RUTA"
   };
 
@@ -154,7 +165,7 @@ const handleSubmit = () => {
           <div className="col">
 
             <label className="label">EMPRESA OPERADORA</label>
-            <select name="operador" onChange={handleChange}>
+            <select name="operador" value={form.operador} onChange={handleChange}>
               <option value="">Seleccionar operador...</option>
 
               {operators.map((op) => (
@@ -172,10 +183,32 @@ const handleSubmit = () => {
             <label className="label">CHECKLIST DE DOCUMENTACIÓN</label>
             <div className="checklist">
               <label><input type="checkbox" onChange={() => handleCheckbox("brevete")} /> Brevete</label>
+                <div className="approval-date">
+                  <p className="approval-label">Fecha Vencimiento</p>
+                  <input
+                    className="small-date"
+                    type="date"
+                    name="fechaVencimiento"
+                    value={form.fechaVencimiento || ""}
+                    onChange={handleChange}
+                />
+                </div>
+
               <label><input type="checkbox" onChange={() => handleCheckbox("dni")} /> DNI</label>
               <label><input type="checkbox" onChange={() => handleCheckbox("sctr")} /> SCTR Vincula</label>
               <label><input type="checkbox" onChange={() => handleCheckbox("antecedentesPenales")} /> Antecedentes Penales</label>
               <label><input type="checkbox" onChange={() => handleCheckbox("antecedentesPoliciales")} /> Antecedentes Policiales</label>
+              <label><input type="checkbox" onChange={() => handleCheckbox("induccion")} /> Inducción</label>
+              <div className="approval-date">
+                <p className="approval-label">Fecha de aprobación</p>
+                <input
+                  className="small-date"
+                  type="date"
+                  name="fechaInduccion"
+                  value={form.fechaInduccion || ""}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
           </div>
@@ -191,6 +224,25 @@ const handleSubmit = () => {
               placeholder="Seleccionar conductor..."
               onChange={handleChange}
             />
+
+            <div>
+                <label className="label">TIPO DE LICENCIA</label>
+                  <select name="licencia" value={form.licencia || ""} onChange={handleChange}>
+                    <option value="">
+                      Seleccionar T. Licencia...
+                    </option>
+                    
+                    <option value="A-I">A-I</option>
+                    <option value="A-IIa">A-IIa</option>
+                    <option value="A-IIb">A-IIb</option>
+                    <option value="A-IIIa">A-IIIa</option>
+                    <option value="A-IIIb">A-IIIb</option>
+                    <option value="A-IIIc">A-IIIc</option>
+                    <option value="A-IV">A-IV</option>
+
+                  </select>
+            </div>
+
 
             <div className="row-2">
               <div>
@@ -213,7 +265,7 @@ const handleSubmit = () => {
                   onChange={handleChange} 
                 />
               </div>
-            </div>
+          </div>
 
             <label className="label">EQUIPAMIENTO DE TELEMETRÍA</label>
 

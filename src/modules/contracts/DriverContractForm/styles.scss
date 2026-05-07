@@ -77,13 +77,6 @@ input[type="date"] {
   font-size: 12px;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-  position: absolute;
-  right: 10px;
-  opacity: 1;
-  cursor: pointer;
-}
-
 /* FECHAS EN FILA */
 .row-2 {
   display: grid;
@@ -133,6 +126,25 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   height: 16px;
   accent-color: #0ea5b7;
   cursor: pointer;
+}
+.approval-date {
+  margin-left: 26px;
+  margin-top: 6px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: fit-content;
+}
+.approval-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  margin: 0;
+}
+
+.approval-date input[type="date"] {
+  width: 160px !important;
 }
 
 /* CARDS WIFI / GPS */
@@ -294,4 +306,18 @@ html, body {
 }
 body {
   overflow-x: hidden; /* evita desplazamientos raros */
+}
+.small-date {
+  width: 145px !important;
+  min-width: 145px !important;
+  max-width: 145px !important;
+
+  font-size: 12px;
+
+  display: inline-block;
+}
+
+.small-date::-webkit-calendar-picker-indicator {
+  margin-left: 4px;
+  cursor: pointer;
 }

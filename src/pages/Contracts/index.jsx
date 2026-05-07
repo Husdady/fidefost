@@ -10,10 +10,11 @@ import ContractsSection from "modules/contracts/ContractsSection";
 import DriverContractForm from "modules/contracts/DriverContractForm";
 import DriverContractView from "modules/contracts/DriversContractView";
 import { useDeleteContract } from "components/features/RapidUnitAudit/useContracts";
+import getDocumentsByRelation from "database/getDocumentsByRelation";
+import { deleteDocument } from "database/deleteDocument";
+
 // Hooks
 import useShowModal from "hooks/useShowModal";
-
-const deleteContract = useDeleteContract();
 
 export default function Contracts() {
   const [viewContract, setViewContract] = useState(null);
@@ -112,6 +113,7 @@ export default function Contracts() {
       <DriverContractView
         contractData={viewContract}
         onHide={() => setViewContract(null)}
+        onDelete={handleDelete}
       />
     )}
 

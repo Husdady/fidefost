@@ -59,7 +59,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                 <tr>
                   <th>CONDUCTOR</th>
                   <th>CONTRATO</th>
-                  <th>LICENCIA/EPS</th>
+                  <th>LICENCIA/INDUCCION</th>
                   <th>ESTADO OPERATIVO</th>
                   <th>ACCIONES</th>
                 </tr>
@@ -91,6 +91,33 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                       <td>
                         <span className="audit-list-license">
                           {audit?.auditLicense || "-"}
+
+                          {audit?.auditInductionDate && (() => {
+                            const inductionDate = new Date(audit.auditInductionDate);
+                            const today = new Date();
+
+                            const diffTime = today - inductionDate;
+                            const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+                            const isValid = diffDays <= 365;
+
+                            return (
+                              <>
+                                {" / "}
+                                <span
+                                  style={{
+                                    color: isValid ? "#16a34a" : "#dc2626",
+                                    fontWeight: 600,
+                                    fontSize: 11,
+                                  }}
+                                >
+                                  {isValid
+                                    ? "Inducción OK"
+                                    : "Inducción Pendiente"}
+                                </span>
+                              </>
+                            );
+                          })()}
                         </span>
                       </td>
 
