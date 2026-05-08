@@ -5,8 +5,11 @@
   margin-bottom: 24px;
 }
 
+/* LABEL DOCUMENTOS */
 .insurance-upload-label {
   display: block;
+
+  margin-top: 20px;
   margin-bottom: 8px;
 
   font-size: 9px;
@@ -17,78 +20,113 @@
   text-transform: uppercase;
 }
 
-
 .insurance-upload-label span {
   font-weight: 500;
   font-size: 8px;
   color: #9ca3af;
 }
 
+/* GRID FECHAS */
+.insurance-dates-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+
+  gap: 16px;
+
+  margin-top: 18px;
+  margin-bottom: 20px;
+}
+
+/* UPLOAD */
 .insurance-modal .upload-box {
   padding: 40px 20px;
 }
 
+.insurance-modal .upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.insurance-modal .upload-content .icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
 .insurance-modal .upload-content p {
+  margin: 0;
+
   font-size: 14px;
   font-weight: 600;
   color: #374151;
 }
 
 .insurance-modal .upload-content span {
+  margin-top: 4px;
+
   font-size: 11px;
   color: #9ca3af;
 }
 
-.insurance-modal .actions {
-  margin-top: 30px;
-}
-
-.insurance-modal .btn-primary {
-  min-width: 170px;
-}
-
-.insurance-modal .btn-secondary {
-  font-weight: 500;
-}
-
+/* LISTA ARCHIVOS */
 .insurance-file-list {
   margin-top: 14px;
 
   display: flex;
   flex-direction: column;
+
   gap: 10px;
-}
 
-.insurance-file-row {
   width: 100%;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  background: #f3f4f6;
-
-  padding: 14px 16px;
-
-  border-radius: 12px;
-
-  box-sizing: border-box;
 }
 
-.insurance-file-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-  min-width: 0;
-}
-.insurance-file-left div {
-  min-width: 0;
+/* ITEM */
+.insurance-file-row {
+  display: flex !important;
+  flex-direction: row !important;
+
+  justify-content: space-between !important;
+  align-items: center !important;
+
+  width: 100% !important;
+
+  background: #f3f4f6 !important;
+
+  padding: 14px 16px !important;
+
+  border-radius: 12px !important;
+
+  box-sizing: border-box !important;
 }
 
+/* IZQUIERDA */
+.insurance-file-info {
+  display: flex !important;
+  flex-direction: row !important;
+
+  align-items: center !important;
+
+  gap: 12px !important;
+
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+/* ICONO */
 .insurance-file-icon {
-  font-size: 22px;
-  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+/* TEXTO */
+.insurance-file-text {
+  display: flex !important;
+  flex-direction: column !important;
+
+  min-width: 0 !important;
 }
 
 .insurance-file-name {
@@ -96,6 +134,7 @@
 
   font-size: 14px;
   font-weight: 500;
+  color: #111827;
 
   white-space: nowrap;
   overflow: hidden;
@@ -108,13 +147,17 @@
   font-size: 11px;
   color: #9ca3af;
 }
+
+/* DELETE */
 .insurance-file-delete {
   width: 34px;
   height: 34px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  margin-left: auto !important;
 
   border: none;
   background: transparent;
@@ -129,25 +172,16 @@
 .insurance-file-delete:hover {
   background: #fee2e2;
 }
-.insurance-dates-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr;
-  gap: 16px;
 
-  margin-top: 18px;
-  margin-bottom: 20px;
+/* BOTONES */
+.insurance-modal .actions {
+  margin-top: 30px;
 }
-.insurance-file-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
 
-  flex: 1;
-  min-width: 0;
+.insurance-modal .btn-primary {
+  min-width: 170px;
 }
-.insurance-file-text {
-  display: flex;
-  flex-direction: column;
 
-  min-width: 0;
+.insurance-modal .btn-secondary {
+  font-weight: 500;
 }
