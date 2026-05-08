@@ -52,7 +52,10 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
       fechaInicio: contractData.auditContract?.start,
       fechaFin: contractData.auditContract?.end,
       fechaInduccion: contractData.auditInductionDate || "",
-      fechaVencimiento: contractData.auditLicenseExpiration || ""
+      fechaVencimiento: contractData.auditLicenseExpiration || "",
+      documentos: contractData.documentos || prev.documentos,
+      wifi: contractData.wifi ?? prev.wifi,
+      gps: contractData.gps ?? prev.gps,
     }));
   }, [contractData]);
   
@@ -121,24 +124,51 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
 };
 
 const handleSubmit = () => {
-  const dias = calculateDays(form.fechaInicio, form.fechaFin);
+  const dias = calculateDays(
+    form.fechaInicio,
+    form.fechaFin
+  );
+
+  // calcular vigencia inducción
+  const inductionDate = new Date(form.fechaInduccion);
+  const today = new Date();
+
+  const diffTime = today - inductionDate;
+
+  const diffDays =
+    diffTime / (1000 * 60 * 60 * 24);
+
+  const inductionStatus =
+    diffDays <= 365
+      ? "Inducción OK"
+      : "Inducción Pendiente";
 
   const newAudit = {
-    ...contractData, 
+    ...contractData,
 
     _id: contractId,
 
     operador: form.operador,
+
     auditDriver: form.conductor,
+
     auditContract: {
       start: form.fechaInicio,
       end: form.fechaFin,
       days: dias
     },
+    documentos: form.documentos,
+    wifi: form.wifi,
+    gps: form.gps,
 
     auditLicense: form.licencia,
+
     auditInductionDate: form.fechaInduccion,
+
+    auditInductionStatus: inductionStatus,
+
     auditLicenseExpiration: form.fechaVencimiento,
+
     auditOperationalStatus: "EN RUTA"
   };
 
@@ -182,7 +212,7 @@ const handleSubmit = () => {
 
             <label className="label">CHECKLIST DE DOCUMENTACIÓN</label>
             <div className="checklist">
-              <label><input type="checkbox" onChange={() => handleCheckbox("brevete")} /> Brevete</label>
+              <label><input type="checkbox" checked={form.documentos.brevete} onChange={() => handleCheckbox("brevete")} /> Brevete</label>
                 <div className="approval-date">
                   <p className="approval-label">Fecha Vencimiento</p>
                   <input
@@ -194,11 +224,11 @@ const handleSubmit = () => {
                 />
                 </div>
 
-              <label><input type="checkbox" onChange={() => handleCheckbox("dni")} /> DNI</label>
-              <label><input type="checkbox" onChange={() => handleCheckbox("sctr")} /> SCTR Vincula</label>
-              <label><input type="checkbox" onChange={() => handleCheckbox("antecedentesPenales")} /> Antecedentes Penales</label>
-              <label><input type="checkbox" onChange={() => handleCheckbox("antecedentesPoliciales")} /> Antecedentes Policiales</label>
-              <label><input type="checkbox" onChange={() => handleCheckbox("induccion")} /> Inducción</label>
+              <label><input type="checkbox" checked={form.documentos.dni} onChange={() => handleCheckbox("dni")} /> DNI</label>
+              <label><input type="checkbox" checked={form.documentos.sctr} onChange={() => handleCheckbox("sctr")} /> SCTR Vincula</label>
+              <label><input type="checkbox" checked={form.documentos.antecedentesPenales} onChange={() => handleCheckbox("antecedentesPenales")} /> Antecedentes Penales</label>
+              <label><input type="checkbox" checked={form.documentos.antecedentesPoliciales} onChange={() => handleCheckbox("antecedentesPoliciales")} /> Antecedentes Policiales</label>
+              <label><input type="checkbox" checked={form.documentos.induccion} onChange={() => handleCheckbox("induccion")} /> Inducción</label>
               <div className="approval-date">
                 <p className="approval-label">Fecha de aprobación</p>
                 <input

@@ -39,10 +39,15 @@ export default function Contracts() {
 
   setViewContract(null);
   };
+
   const handleEdit = (contract) => {
   setSelectedContract(contract);
   createContractModal.show();
   };
+  
+  const toggleEstado = (id) => {
+  console.log("Cambiar estado:", id);
+};
 
   const createContractModal = useShowModal();
   const audits = useGetContracts(refresh);

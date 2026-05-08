@@ -38,8 +38,20 @@ export default function DriverContractView({
             <h2>{contractData.auditDriver}</h2>
 
             <div className="contract-view-tags">
-              <span>Lic-A IIIB (Vence 2026)</span>
-              <span>Inducción OK</span>
+              <span>  Lic-{contractData.auditLicense || "-"}
+
+                      {contractData.auditLicenseExpiration && (
+                        <>
+                          {" "}
+                          (Vence{" "}
+                          {new Date(
+                            contractData.auditLicenseExpiration
+                          ).getFullYear()}
+                          )
+                        </>
+                      )}
+              </span>
+              <span>{contractData.auditInductionStatus}</span>
               <span className="cert">CERTIFICADO</span>
             </div>
           </div>

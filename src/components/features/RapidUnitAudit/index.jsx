@@ -92,35 +92,27 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                         <span className="audit-list-license">
                           {audit?.auditLicense || "-"}
 
-                          {audit?.auditInductionDate && (() => {
-                            const inductionDate = new Date(audit.auditInductionDate);
-                            const today = new Date();
+                          {audit?.auditInductionStatus && (
+                            <>
+                              {" / "}
+                              <span
+                                style={{
+                                  color:
+                                    audit.auditInductionStatus === "Inducción OK"
+                                      ? "#16a34a"
+                                      : "#dc2626",
 
-                            const diffTime = today - inductionDate;
-                            const diffDays = diffTime / (1000 * 60 * 60 * 24);
-
-                            const isValid = diffDays <= 365;
-
-                            return (
-                              <>
-                                {" / "}
-                                <span
-                                  style={{
-                                    color: isValid ? "#16a34a" : "#dc2626",
-                                    fontWeight: 600,
-                                    fontSize: 11,
-                                  }}
-                                >
-                                  {isValid
-                                    ? "Inducción OK"
-                                    : "Inducción Pendiente"}
-                                </span>
-                              </>
-                            );
-                          })()}
+                                  fontWeight: 600,
+                                  fontSize: 11,
+                                }}
+                              >
+                                {audit.auditInductionStatus}
+                              </span>
+                            </>
+                          )}
                         </span>
                       </td>
-
+                      
                       <td>
                         <button
                           className={`status-btn ${
