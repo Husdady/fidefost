@@ -43,13 +43,22 @@ export default function InsuranceContractForm({
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+
+  const savedFiles =
+    await getDocumentsByRelation(
+      "insurance",
+      insuranceId
+    );
+
+  console.log(savedFiles);
+
   const newInsurance = {
     _id: insuranceId,
 
     ...form,
 
-    archivos: files
+    archivos: savedFiles,
   };
 
   onSave(newInsurance);
@@ -164,30 +173,29 @@ export default function InsuranceContractForm({
           </div>
 
           <label className="upload-box">
-
             <input
               type="file"
               multiple
               onChange={async (e) => {
-                const uploadedFiles = Array.from(e.target.files);
 
-                const savedFiles = [];
-
-                for (const file of uploadedFiles) {
-                  const saved = await saveDocument({
-                    file,
-                    module: "insurance",
-                    relatedId: insuranceId,
-                    category: "insurance",
-                  });
-
-                  savedFiles.push(saved);
-                }
+                const uploadedFiles =
+                  Array.from(e.target.files);
 
                 setFiles((prev) => [
                   ...prev,
-                  ...savedFiles
+                  ...uploadedFiles
                 ]);
+
+                for (const file of uploadedFiles) {
+
+                  await saveDocument({
+                    file,
+                    module: "insurance",
+                    relatedId: insuranceId,
+                  });
+
+                }
+
               }}
             />
 

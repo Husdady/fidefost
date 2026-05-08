@@ -1,10 +1,12 @@
 // Components
 import SummaryCard from "components/features/SummaryCard";
-
 // Constants
-import { SUMMARY_ITEMS } from "./constants";
+//import { useSummaryItems } from "./constants";
+import useSummaryItems from "./constants";
+
 
 export default function ContractsSummary() {
+  const SUMMARY_ITEMS = useSummaryItems();
   return (
     <section className="contracts-summary">
       <div className="contracts-summary__grid">

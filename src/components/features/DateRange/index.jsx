@@ -1,24 +1,29 @@
-import React, { useState } from "react";
-
-export default function DateRange() {
-  const [desde, setDesde] = useState("");
-  const [hasta, setHasta] = useState("");
+export default function DateRange({
+  desde,
+  hasta,
+  setDesde,
+  setHasta,
+}) {
 
   return (
     <div className="rango">
+
       <input
-        type="text"
-        placeholder="DESDE dd/mm/aaaa"
+        type="date"
         value={desde}
-        onChange={(e) => setDesde(e.target.value)}
+        onChange={(e) =>
+          setDesde(e.target.value)
+        }
       />
 
       <input
-        type="text"
-        placeholder="HASTA dd/mm/aaaa"
+        type="date"
         value={hasta}
-        onChange={(e) => setHasta(e.target.value)}
+        onChange={(e) =>
+          setHasta(e.target.value)
+        }
       />
+
     </div>
   );
 }

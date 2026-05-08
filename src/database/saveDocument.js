@@ -26,7 +26,7 @@ export default async function saveDocument({
     const documentRecord = {
       id, 
       module,
-      file,
+      blob: file,
       name: file.name,
       size: file.size,
       type: file.type,

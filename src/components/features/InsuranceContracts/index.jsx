@@ -3,12 +3,46 @@ import PropTypes from "prop-types";
 
 // Utils
 import classnames from "utils/classnames";
-import DateRange from "../DateRange";
 import {useGetInsurance} from "context/contracts/useInsurance"
+import DateRange from "../DateRange";
+import {useState} from "react";
 
 function InsuranceContracts({ title, datefilter, className = "",  accent = "default" 
 }) {
+  const [desde, setDesde] = useState("");
+  const [hasta, setHasta] = useState("");
   const insuranceContracts = useGetInsurance();
+
+  const filteredContracts =
+  insuranceContracts.filter((insurance) => {
+
+    if (!desde && !hasta) {
+      return true;
+    }
+
+    const startDate =
+      new Date(insurance.fechaInicio);
+
+    const fromDate =
+      desde
+        ? new Date(desde)
+        : null;
+
+    const toDate =
+      hasta
+        ? new Date(hasta)
+        : null;
+
+    if (fromDate && startDate < fromDate) {
+      return false;
+    }
+
+    if (toDate && startDate > toDate) {
+      return false;
+    }
+
+    return true;
+  });
   return (
         <article
           className={classnames([
@@ -23,6 +57,12 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
             </div>
           </div>
       <div className="insurance-contracts-list-table-wrapper">
+         <DateRange
+            desde={desde}
+            hasta={hasta}
+            setDesde={setDesde}
+            setHasta={setHasta}
+          />
         <table className="insurance-contracts__body">
           <colgroup>
             <col className="col-contracts-supplier" />
@@ -42,8 +82,8 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
           </thead>
 
           <tbody>
-            {insuranceContracts.length > 0 ? (
-              insuranceContracts.map((insurance) => (
+            {filteredContracts.length > 0 ? (
+              filteredContracts.map((insurance) => (
                 <tr key={insurance._id}>
                   <td>
                     <div className="contracts-list-supplier">
@@ -117,21 +157,34 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
                     <button
                       className="contracts-download-btn"
                       onClick={() => {
-                        if (
-                          insurance.archivos &&
-                          insurance.archivos.length > 0
-                        ) {
-                          window.open(
-                            insurance.archivos[0].url,
-                            "_blank"
-                          );
-                        }
-                      }}
+
+                      insurance.archivos.forEach((doc) => {
+
+                        const url =
+                          URL.createObjectURL(doc.blob);
+
+                        const a =
+                          document.createElement("a");
+
+                        a.href = url;
+
+                        a.download = doc.name;
+
+                        document.body.appendChild(a);
+
+                        a.click();
+
+                        a.remove();
+
+                        URL.revokeObjectURL(url);
+
+                      });
+
+                    }}
                     >
                       Descargar
                     </button>
                   </td>
-
                 </tr>
               ))
             ) : (
@@ -158,6 +211,7 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
   );
 }
 
+
 InsuranceContracts.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string.isRequired,
@@ -166,5 +220,7 @@ InsuranceContracts.propTypes = {
 };
 
 export default memo(InsuranceContracts);
+
+
 
 

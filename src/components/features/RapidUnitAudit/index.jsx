@@ -19,6 +19,28 @@ const formatMonthYear = (date) => {
 
 function RapidUnitAudit({ title, children, className = "",  accent = "default", data = [], onEdit, onView }) {
 
+  const licensesToExpire = data.filter((audit) => {
+
+  if (!audit.auditLicenseExpiration) {
+    return false;
+  }
+
+  const today = new Date();
+
+  const expirationDate =
+    new Date(audit.auditLicenseExpiration);
+
+  const diffTime =
+    expirationDate - today;
+
+  const diffDays =
+    diffTime / (1000 * 60 * 60 * 24);
+
+  return diffDays >= 0 && diffDays <= 59;
+
+}).length;
+
+
   const [audits, setAudits] = useState([]);
 
   useEffect(() => {
@@ -44,6 +66,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
           </div>
         
         </section>  
+        <h1>{licensesToExpire}</h1>
 
             <div className="rapid-unit-audit-list-table-wrapper">
             <table className="rapid-unit-audit__body">
