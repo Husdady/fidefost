@@ -12,6 +12,8 @@ import DriverContractView from "modules/contracts/DriversContractView";
 import { useDeleteContract } from "components/features/RapidUnitAudit/useContracts";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
 import { deleteDocument } from "database/deleteDocument";
+import InsuranceContractForm from "modules/contracts/InsuranceContractForm";
+import { useAddInsurance } from "context/contracts/useInsurance";
 
 // Hooks
 import useShowModal from "hooks/useShowModal";
@@ -50,6 +52,8 @@ export default function Contracts() {
 };
 
   const createContractModal = useShowModal();
+  const insuranceModal = useShowModal();
+  const addInsurance = useAddInsurance();
   const audits = useGetContracts(refresh);
   const addContract = useAddContract();
   const deleteContract = useDeleteContract();
@@ -65,7 +69,7 @@ export default function Contracts() {
         >
           <div className="d-flex align-items-center column-gap-3">
             <AddButton
-              onClick={createContractModal.show}
+              onClick={insuranceModal.show}
               title="Crear Contrato de Seguro"
             />
 
@@ -122,6 +126,17 @@ export default function Contracts() {
       />
     )}
 
-    </main>
-  );
-}
+      {insuranceModal.isShowing && (
+       <InsuranceContractForm
+          onHide={insuranceModal.hide}
+          onSave={(data) => {
+            addInsurance(data);
+
+            insuranceModal.hide();
+          }}
+        />
+      )}
+
+        </main>
+      );
+  }

@@ -1,0 +1,153 @@
+.insurance-form-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 24px;
+}
+
+.insurance-upload-label {
+  display: block;
+  margin-bottom: 8px;
+
+  font-size: 9px;
+  font-weight: 700;
+  color: #6b7280;
+
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+
+.insurance-upload-label span {
+  font-weight: 500;
+  font-size: 8px;
+  color: #9ca3af;
+}
+
+.insurance-modal .upload-box {
+  padding: 40px 20px;
+}
+
+.insurance-modal .upload-content p {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.insurance-modal .upload-content span {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.insurance-modal .actions {
+  margin-top: 30px;
+}
+
+.insurance-modal .btn-primary {
+  min-width: 170px;
+}
+
+.insurance-modal .btn-secondary {
+  font-weight: 500;
+}
+
+.insurance-file-list {
+  margin-top: 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.insurance-file-row {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: #f3f4f6;
+
+  padding: 14px 16px;
+
+  border-radius: 12px;
+
+  box-sizing: border-box;
+}
+
+.insurance-file-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+.insurance-file-left div {
+  min-width: 0;
+}
+
+.insurance-file-icon {
+  font-size: 22px;
+  color: #6b7280;
+}
+
+.insurance-file-name {
+  margin: 0;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.insurance-file-size {
+  margin-top: 4px;
+
+  font-size: 11px;
+  color: #9ca3af;
+}
+.insurance-file-delete {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  flex-shrink: 0;
+}
+
+.insurance-file-delete:hover {
+  background: #fee2e2;
+}
+.insurance-dates-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 16px;
+
+  margin-top: 18px;
+  margin-bottom: 20px;
+}
+.insurance-file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  flex: 1;
+  min-width: 0;
+}
+.insurance-file-text {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+}
