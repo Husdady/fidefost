@@ -4,9 +4,11 @@ import PropTypes from "prop-types";
 // Utils
 import classnames from "utils/classnames";
 import DateRange from "../DateRange";
+import {useGetInsurance} from "context/contracts/useInsurance"
 
-
-function InsuranceContracts({ title, datefilter, className = "",  accent = "default" }) {
+function InsuranceContracts({ title, datefilter, className = "",  accent = "default" 
+}) {
+  const insuranceContracts = useGetInsurance();
   return (
         <article
           className={classnames([
@@ -35,36 +37,101 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
               <th>TIPO</th>
               <th>FECHAS</th>
               <th>ESTADO</th>
+              <th>DESCARGA</th>
             </tr>
           </thead>
 
           <tbody>
-            {DateRange.length ? (
-              DateRange.map((contracts) => (
-                <tr key={contracts?._id}>
+            {insuranceContracts.length > 0 ? (
+              insuranceContracts.map((insurance) => (
+                <tr key={insurance._id}>
                   <td>
-                    <span className="contracts-list-supplier">
-                      {contracts?.contractsSupplier || "-"}
-                    </span>
+                    <div className="contracts-list-supplier">
+                      
+                      <strong>
+                        {insurance.proveedor || "-"}
+                      </strong>
+
+                      <small>
+                        {insurance.poliza || "-"}
+                      </small>
+
+                    </div>
                   </td>
 
                   <td>
                     <span className="contracts-list-type">
-                      {contracts?.contractsType || "-"}
+                      {insurance.tipo || "-"}
                     </span>
                   </td>
 
                   <td>
                     <span className="contracts-list-date">
-                      {formatCreatedAt(contracts?.createdAt)}
+                      {insurance.fechaInicio}
+                      {" - "}
+                      {insurance.fechaFin}
                     </span>
                   </td>
 
                   <td>
-                    <span className="contracts-list-status">                     
-                      {contracts?.contractsStatus || "-"}
-                    </span>
+                    {(() => {
+
+                      const today = new Date();
+
+                      const endDate = new Date(
+                        insurance.fechaFin
+                      );
+
+                      const diffTime =
+                        endDate - today;
+
+                      const diffDays =
+                        Math.ceil(
+                          diffTime / (1000 * 60 * 60 * 24)
+                        );
+
+                      let status = "ACTIVO";
+                      let statusClass = "active";
+
+                      if (diffDays < 0) {
+                        status = "EXPIRADO";
+                        statusClass = "expired";
+                      } else if (diffDays <= 59) {
+                        status = "PROX. EXPIRAR";
+                        statusClass = "warning";
+                      }
+
+                      return (
+                        <span
+                          className={`contracts-list-status ${statusClass}`}
+                        >
+                          {status}
+                        </span>
+                      );
+
+                    })()}
+
+
                   </td>
+                  <td>
+                    <button
+                      className="contracts-download-btn"
+                      onClick={() => {
+                        if (
+                          insurance.archivos &&
+                          insurance.archivos.length > 0
+                        ) {
+                          window.open(
+                            insurance.archivos[0].url,
+                            "_blank"
+                          );
+                        }
+                      }}
+                    >
+                      Descargar
+                    </button>
+                  </td>
+
                 </tr>
               ))
             ) : (
@@ -80,10 +147,12 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
         </table>
       </div>
       <p className="contracts-list-results mb-0">
-        Mostrando {DateRange.length} resultado
-        {DateRange.length === 1 ? "" : "s"}
+        Mostrando {insuranceContracts.length}{" "}
+          {insuranceContracts.length === 1
+            ? "resultado"
+            : "resultados"}
       </p>
-        </article>
+      </article>
           
 
   );

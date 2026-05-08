@@ -117,20 +117,60 @@
         vertical-align: middle;
       }
     }
-  }
-  .contracts-list-supplier,
-  .contracts-list-type,
-  .contracts-list-date {
+}
+
+.contracts-list-supplier{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.contracts-list-supplier strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.contracts-list-supplier small {
+  font-size: 11px;
+  color: #111827;
+}
+.contracts-list-type,
+.contracts-list-date {
     color: #2b3137;
     font-size: 14px;
     font-weight: 500;
     line-height: 1.3;
+}
+  .contracts-list-status {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    font-size: 11px;
+    font-weight: 700;
   }
-  .contracts-list-status{
-    color: #2b3137;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.3;
+
+  /* ACTIVO */
+  .contracts-list-status.active {
+    background: #dcfce7;
+    color: #15803d;
+  }
+
+  /* PROXIMO */
+  .contracts-list-status.warning {
+    background: #fef3c7;
+    color: #d97706;
+  }
+
+  /* EXPIRADO */
+  .contracts-list-status.expired {
+    background: #fee2e2;
+    color: #dc2626;
   }
   .contracts-list-empty {
     padding: 28px 0;
@@ -147,4 +187,24 @@
     line-height: 1.3;
   }
 
-  
+.contracts-download-btn {
+  border: none;
+
+  background: #0ea5b7;
+  color: white;
+
+  padding: 8px 14px;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.contracts-download-btn:hover {
+  background: #0891b2;
+}

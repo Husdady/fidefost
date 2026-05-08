@@ -13,7 +13,7 @@ import { useDeleteContract } from "components/features/RapidUnitAudit/useContrac
 import getDocumentsByRelation from "database/getDocumentsByRelation";
 import { deleteDocument } from "database/deleteDocument";
 import InsuranceContractForm from "modules/contracts/InsuranceContractForm";
-import { useAddInsurance } from "context/contracts/useInsurance";
+import { useAddInsurance} from "context/contracts/useInsurance";
 
 // Hooks
 import useShowModal from "hooks/useShowModal";
@@ -50,7 +50,6 @@ export default function Contracts() {
   const toggleEstado = (id) => {
   console.log("Cambiar estado:", id);
 };
-
   const createContractModal = useShowModal();
   const insuranceModal = useShowModal();
   const addInsurance = useAddInsurance();

@@ -1,10 +1,16 @@
+import saveDocument from "database/saveDocument";
+import getDocumentsByRelation from "database/getDocumentsByRelation";
+import { deleteDocument } from "database/deleteDocument";
 import { createPortal } from "react-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function InsuranceContractForm({
   onHide,
   onSave,
 }) {
+  const [insuranceId] = useState(() =>
+  crypto.randomUUID()
+);
   const [files, setFiles] = useState([]);
   const [form, setForm] = useState({
     proveedor: "",
@@ -13,6 +19,20 @@ export default function InsuranceContractForm({
     fechaInicio: "",
     fechaFin: "",
   });
+
+  useEffect(() => {
+  const loadFiles = async () => {
+    const savedFiles =
+      await getDocumentsByRelation(
+        "insurance",
+        insuranceId
+      );
+
+    setFiles(savedFiles);
+  };
+
+  loadFiles();
+}, [insuranceId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,13 +44,16 @@ export default function InsuranceContractForm({
   };
 
   const handleSubmit = () => {
-    const newInsurance = {
-      _id: crypto.randomUUID(),
-      ...form,
-    };
+  const newInsurance = {
+    _id: insuranceId,
 
-    onSave(newInsurance);
+    ...form,
+
+    archivos: files
   };
+
+  onSave(newInsurance);
+};
 
   return createPortal(
     <div className="modal" onClick={onHide}>
@@ -145,12 +168,25 @@ export default function InsuranceContractForm({
             <input
               type="file"
               multiple
-              onChange={(e) => {
+              onChange={async (e) => {
                 const uploadedFiles = Array.from(e.target.files);
+
+                const savedFiles = [];
+
+                for (const file of uploadedFiles) {
+                  const saved = await saveDocument({
+                    file,
+                    module: "insurance",
+                    relatedId: insuranceId,
+                    category: "insurance",
+                  });
+
+                  savedFiles.push(saved);
+                }
 
                 setFiles((prev) => [
                   ...prev,
-                  ...uploadedFiles
+                  ...savedFiles
                 ]);
               }}
             />
@@ -222,10 +258,18 @@ export default function InsuranceContractForm({
                     <button
                       type="button"
                       className="insurance-file-delete"
-                      onClick={() => {
-                        setFiles((prev) =>
-                          prev.filter((_, i) => i !== index)
-                        );
+                      onClick={async () => {
+                        const fileToDelete = files[index];
+
+                        await deleteDocument(fileToDelete.id);
+
+                        const updatedFiles =
+                          await getDocumentsByRelation(
+                            "insurance",
+                            insuranceId
+                          );
+
+                        setFiles(updatedFiles);
                       }}
                     >
                       <svg
