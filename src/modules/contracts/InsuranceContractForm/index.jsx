@@ -94,7 +94,6 @@ export default function InsuranceContractForm({
               <option>Rimac</option>
               <option>Pacífico</option>
               <option>Mapfre</option>
-              <option>La Positiva</option>
             </select>
 
           </div>
@@ -114,9 +113,9 @@ export default function InsuranceContractForm({
                 Seleccionar
               </option>
 
-              <option>SOAT</option>
-              <option>SCTR</option>
-              <option>Seguro Vehicular</option>
+              <option>Polizas de Carga y Contenedor</option>
+              <option>Endosos</option>
+              <option>Poliza Vehicular</option>
             </select>
 
           </div>

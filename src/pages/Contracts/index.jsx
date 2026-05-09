@@ -14,6 +14,7 @@ import getDocumentsByRelation from "database/getDocumentsByRelation";
 import { deleteDocument } from "database/deleteDocument";
 import InsuranceContractForm from "modules/contracts/InsuranceContractForm";
 import { useAddInsurance} from "context/contracts/useInsurance";
+import exportAuditExcel from "utils/exportAuditExcel"; 
 
 // Hooks
 import useShowModal from "hooks/useShowModal";
@@ -95,7 +96,12 @@ export default function Contracts() {
           setViewContract(audit);
         }}
         >
-          <AddButton onClick={createContractModal.show} title="EXPORTAR" />
+          <AddButton onClick={()=>
+            exportAuditExcel(audits,
+            "Lista Auditoría Unidades"
+            )
+         } title="EXPORTAR LISTA" />
+         
         </RapidUnitAudit>
       </aside>
 

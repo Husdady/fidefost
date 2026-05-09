@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 // Utils
 import classnames from "utils/classnames";
-
+import exportAuditExcel from "utils/exportAuditExcel";
 
 const formatMonthYear = (date) => {
   if (!date) return "";
@@ -176,39 +176,11 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                         </div>
                         <div
                           className="audit-list-actions-export"
-                          onClick={() => {
-
-                            const dataStr =
-                              JSON.stringify(audit, null, 2);
-
-                            const blob =
-                              new Blob(
-                                [dataStr],
-                                {
-                                  type: "application/json",
-                                }
-                              );
-
-                            const url =
-                              URL.createObjectURL(blob);
-
-                            const a =
-                              document.createElement("a");
-
-                            a.href = url;
-
-                            a.download =
-                              `${audit.auditDriver}.json`;
-
-                            document.body.appendChild(a);
-
-                            a.click();
-
-                            a.remove();
-
-                            URL.revokeObjectURL(url);
-
-                          }}
+                          onClick={()=>
+                            exportAuditExcel(audit,
+                            `AU-${audit.auditDriver}`
+                            )
+                          }
                         >
 
                           <span className="audit-list-actions-icon">
