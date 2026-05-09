@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 // Utils
 import classnames from "utils/classnames";
 import exportAuditExcel from "utils/exportAuditExcel";
+import exportAuditZip from "utils/exportAuditZip";
 
 const formatMonthYear = (date) => {
   if (!date) return "";
@@ -177,7 +178,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                         <div
                           className="audit-list-actions-export"
                           onClick={()=>
-                            exportAuditExcel(audit,
+                            exportAuditZip(audit,
                             `AU-${audit.auditDriver}`
                             )
                           }
