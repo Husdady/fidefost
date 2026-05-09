@@ -208,3 +208,24 @@
 .contracts-download-btn:hover {
   background: #0891b2;
 }
+
+.contracts-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contracts-delete-btn {
+  border: none;
+  background: #fee2e2;
+  color: #dc2626;
+
+  padding: 8px 12px;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  font-size: 12px;
+  font-weight: 600;
+}

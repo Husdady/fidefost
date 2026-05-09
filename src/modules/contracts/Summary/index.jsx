@@ -6,6 +6,7 @@ import useSummaryItems from "./constants";
 
 
 export default function ContractsSummary() {
+  
   const SUMMARY_ITEMS = useSummaryItems();
   return (
     <section className="contracts-summary">

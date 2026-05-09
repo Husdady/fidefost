@@ -6,9 +6,11 @@ import classnames from "utils/classnames";
 import {useGetInsurance} from "context/contracts/useInsurance"
 import DateRange from "../DateRange";
 import {useState} from "react";
+import { useDeleteInsurance } from "context/contracts/useInsurance";
 
 function InsuranceContracts({ title, datefilter, className = "",  accent = "default" 
 }) {
+  const deleteInsurance = useDeleteInsurance();
   const [desde, setDesde] = useState("");
   const [hasta, setHasta] = useState("");
   const insuranceContracts = useGetInsurance();
@@ -154,36 +156,49 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
 
                   </td>
                   <td>
-                    <button
-                      className="contracts-download-btn"
-                      onClick={() => {
+                    <div className="contracts-actions">
 
-                      insurance.archivos.forEach((doc) => {
+                      <button
+                        className="contracts-download-btn"
+                        onClick={() => {
 
-                        const url =
-                          URL.createObjectURL(doc.blob);
+                          insurance.archivos.forEach((doc) => {
 
-                        const a =
-                          document.createElement("a");
+                            const url =
+                              URL.createObjectURL(doc.blob);
 
-                        a.href = url;
+                            const a =
+                              document.createElement("a");
 
-                        a.download = doc.name;
+                            a.href = url;
 
-                        document.body.appendChild(a);
+                            a.download = doc.name;
 
-                        a.click();
+                            document.body.appendChild(a);
 
-                        a.remove();
+                            a.click();
 
-                        URL.revokeObjectURL(url);
+                            a.remove();
 
-                      });
+                            URL.revokeObjectURL(url);
 
-                    }}
-                    >
-                      Descargar
-                    </button>
+                          });
+
+                        }}
+                      >
+                        Descargar
+                      </button>
+
+                      <button
+                        className="contracts-delete-btn"
+                        onClick={() => {
+                          deleteInsurance(insurance._id);
+                        }}
+                      >
+                        Eliminar
+                      </button>
+
+                    </div>
                   </td>
                 </tr>
               ))
