@@ -8,7 +8,11 @@
   font-family: "Montserrat", Inter, Arial, sans-serif;
 
   &__header {
-    gap: 16px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
   }
 
   &__info {
@@ -17,16 +21,16 @@
   }
 
   &__title {
-    padding-top: 2px;
-    color: #171c1f;
-    font-style: normal;
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 24px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
   &__body {
     margin-top: 26px;
+  }
+  &__button {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
   }
 }
