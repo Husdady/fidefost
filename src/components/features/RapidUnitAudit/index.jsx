@@ -174,6 +174,79 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
 
                           <span>Visualizar</span>
                         </div>
+                        <div
+                          className="audit-list-actions-export"
+                          onClick={() => {
+
+                            const dataStr =
+                              JSON.stringify(audit, null, 2);
+
+                            const blob =
+                              new Blob(
+                                [dataStr],
+                                {
+                                  type: "application/json",
+                                }
+                              );
+
+                            const url =
+                              URL.createObjectURL(blob);
+
+                            const a =
+                              document.createElement("a");
+
+                            a.href = url;
+
+                            a.download =
+                              `${audit.auditDriver}.json`;
+
+                            document.body.appendChild(a);
+
+                            a.click();
+
+                            a.remove();
+
+                            URL.revokeObjectURL(url);
+
+                          }}
+                        >
+
+                          <span className="audit-list-actions-icon">
+
+                            <svg
+                              width="18"
+                              height="18"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                            >
+                              <path
+                                d="M12 3V15"
+                                stroke="#6E797E"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                              />
+
+                              <path
+                                d="M7 10L12 15L17 10"
+                                stroke="#6E797E"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+
+                              <path
+                                d="M5 21H19"
+                                stroke="#6E797E"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                              />
+                            </svg>
+
+                          </span>
+
+                          <span>Exportar</span>
+
+                        </div>
 
                       </td>
                     </tr>

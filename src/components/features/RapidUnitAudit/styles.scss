@@ -167,6 +167,18 @@
  .audit-list-actions-visual:hover {
   opacity: 0.7;
  }
+ .audit-list-actions-export {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  cursor: pointer;
+
+  color: #6E797E;
+
+  font-size: 14px;
+  font-weight: 500;
+}
 
  .audit-list-actions-icon {
     display: inline-flex;
