@@ -1,8 +1,13 @@
+// Librarys
+import dayjs from "libs/dayjs";
+
 // Hooks
 import useExportReport from "./useExportReport";
 
 // Icons
 import DownloadIcon from "components/icons/download-icon";
+
+const date = dayjs();
 
 export default function ExportReport() {
   const { handleDownloadReport } = useExportReport();
@@ -24,7 +29,10 @@ export default function ExportReport() {
         <div className="export-report-fields d-flex flex-column">
           <div className="export-report-field d-flex align-items-center justify-content-between">
             <span>Mes</span>
-            <strong>OCTUBRE 2023</strong>
+
+            <strong className="text-uppercase">
+              {date.format("MMMM")} {date.year()}
+            </strong>
           </div>
 
           <div className="export-report-field d-flex align-items-center justify-content-between">

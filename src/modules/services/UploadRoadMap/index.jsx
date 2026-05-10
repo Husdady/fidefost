@@ -1,34 +1,33 @@
-// Librarys
-import { useRef } from "react";
-
 // Components
 import RoadmapIcon from "./icons/roadmap-icon";
 
 // Hooks
-import useUploadRoadMap from "./useUploadRoadMap";
+import useUploadFiles from "../hooks/useUploadFiles";
+
+// Constants
+import { acceptedFiles } from "../constants";
 
 export default function UploadRoadMap() {
-  const fileInputRef = useRef(null);
-
-  const { handleFilesChange, handleDrop, handleDragOver } = useUploadRoadMap();
+  const { fileInputRef, handleDrop, handleDragOver, handleFilesChange } =
+    useUploadFiles();
 
   return (
     <div
-      className="upload-road-map d-flex flex-column align-items-center justify-content-center"
-      onClick={() => fileInputRef.current?.click()}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
+      onClick={() => fileInputRef.current?.click()}
+      className="upload-road-map d-flex flex-column align-items-center justify-content-center"
     >
       <input
-        ref={fileInputRef}
-        type="file"
         multiple
-        accept=".csv,.xlsx"
+        type="file"
         className="d-none"
         onChange={handleFilesChange}
+        accept={acceptedFiles}
+        ref={fileInputRef}
       />
 
-      <div className="upload-road-map-icon d-flex align-items-center justify-content-center">
+      <div className="upload-road-map-icon w-100 h-100 mb-3 d-flex align-items-center justify-content-center">
         <RoadmapIcon />
       </div>
 

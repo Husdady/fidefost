@@ -109,8 +109,8 @@ export default function useEditOperator() {
           filteredFiles.map((file) =>
             saveDocument({
               file: file,
-              module: "operators",
               relatedId: _id,
+              module: "operators",
               category: "legal-documents",
             })
           )
