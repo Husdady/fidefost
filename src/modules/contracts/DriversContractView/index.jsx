@@ -5,6 +5,7 @@ export default function DriverContractView({
   onHide, 
   onDelete,
 }) {
+  
   if (!contractData) return null;
 
   return createPortal(

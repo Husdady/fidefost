@@ -1,10 +1,49 @@
+import EditIcon from "./Icons/edit-icon";
+import DeleteIcon from "./Icons/delete-icon";
 export default function ContractsGPSItems({
   items = [],
 }) {
+  const getGpsStatus = (endDate) => {
+  const today = new Date();
+
+  const contractDate = new Date(endDate);
+
+  const diffTime =
+    contractDate - today;
+
+  const diffDays = Math.ceil(
+    diffTime / (1000 * 60 * 60 * 24)
+  );
+
+  if (diffDays <= 0) {
+    return {
+      text: "SIST. GPS VENCIDO",
+      color: "#e53935",
+    };
+  }
+
+  if (diffDays <= 30) {
+    return {
+      text: "SIST. GPS POR VENCER",
+      color: "#ff9800",
+    };
+  }
+
+  return {
+    text: "SIST. GPS ACTIVO",
+    color: "#1db954",
+  };
+};
   return (
     <div className="contracts-gps__list">
 
-      {items.map((item, index) => (
+      {items.map((item, index) => {
+
+        const status = getGpsStatus(
+          item.endDate
+        );
+
+        return (
         <div
           key={index}
           className="contracts-gps-item"
@@ -15,7 +54,14 @@ export default function ContractsGPSItems({
             </span>
 
             <span className="contracts-gps-item__status">
-              ● ONLINE
+              <span
+                className="contracts-gps-item__status"
+                style={{
+                  color: status.color,
+                }}
+              >
+                ● {status.text}
+              </span>
             </span>
           </div>
 
@@ -41,9 +87,19 @@ export default function ContractsGPSItems({
               </span>
             </div>
 
+            <div className="contracts-gps-item__column">
+              <span className="contracts-gps-item__label">
+                <EditIcon/>
+              </span>
+              <span className="contracts-gps-item__label">
+                <DeleteIcon/>
+              </span>
+            </div>
+
           </div>
         </div>
-      ))}
+      );
+    })}
 
     </div>
   );

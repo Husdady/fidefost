@@ -1,11 +1,42 @@
 import { useGetContracts } from "context/contracts/useContracts";
+import useGpsContractsStore from "context/contracts/gpsContractsStore";
 import ExpiredLicensesIcon from "./icons/expired-licenses-icon";
 import RiseIcon from "./icons/rise-icon";
 import ValidIcon from "./icons/valid-icon";
-import WarningSignIcon from "./icons/warning-sign-icon";
-
 
 export default function useSummaryItems(){
+   const gpsContracts = useGpsContractsStore(
+   (state) => state.gpsContracts);
+   const expiredGps = gpsContracts.filter(
+      (gps) => {
+        const today = new Date();
+
+        const endDate = new Date(
+          gps.endDate
+        );
+
+        return endDate <= today;
+      }
+    );
+    const gpsExpiringSoon = gpsContracts.filter(
+      (gps) => {
+        const today = new Date();
+
+        const endDate = new Date(
+          gps.endDate
+        );
+
+        const diffTime =
+          endDate - today;
+
+        const diffDays = Math.ceil(
+          diffTime / (1000 * 60 * 60 * 24)
+        );
+
+        return diffDays > 0 &&
+              diffDays <= 30;
+      }
+    );
    const auditContracts = useGetContracts();
    const totaldrivers = auditContracts.length;
    const totalWifi = auditContracts.filter(
@@ -59,8 +90,8 @@ export default function useSummaryItems(){
       {
         id: "alertas_gps",
         title: "ALERTAS GPS",
-        value: "08",
-        description: <div> <WarningSignIcon /> sin señal 4hrs </div>,
+        value: <div> {expiredGps.length} vencidos </div>,
+        description: <div style={{color: "#b66a00",}}> <ExpiredLicensesIcon /> {gpsExpiringSoon.length} por vencer </div>,
         accent: "danger",
       },
       

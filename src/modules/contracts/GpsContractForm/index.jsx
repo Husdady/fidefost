@@ -101,7 +101,10 @@ export default function GpsContractForm({
 
           <button
             onClick={() => {
-              onSave(form);
+              onSave({
+              ...form,
+              status: "ONLINE",
+            });
 
               setForm({
                 id: "",

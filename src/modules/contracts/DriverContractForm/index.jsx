@@ -9,7 +9,54 @@ import { deleteDocument } from "database/deleteDocument";
 
 
 export default function DriverContractForm({ onHide, onSave, contractData }) {
-  const gpsContracts = useGpsContractsStore((state) => state.gpsContracts);
+  
+    const getGpsStatus = (endDate) => {
+    const today = new Date();
+
+    const contractDate = new Date(endDate);
+
+    const diffTime =
+      contractDate - today;
+
+    const diffDays = Math.ceil(
+      diffTime / (1000 * 60 * 60 * 24)
+    );
+
+    if (diffDays <= 0) {
+      return {
+        text: "SIST. GPS VENCIDO",
+        color: "#e53935",
+      };
+    }
+
+    if (diffDays <= 30) {
+      return {
+        text: "SIST. GPS POR VENCER",
+        color: "#ff9800",
+      };
+    }
+
+    return {
+      text: "SIST. GPS ACTIVO",
+      color: "#1db954",
+    };
+  };
+  const [selectedGps, setSelectedGps] = useState("");
+
+  const gpsContracts = useGpsContractsStore(
+    (state) => state.gpsContracts
+  );
+
+  const gpsSelectedData = gpsContracts.find(
+    (gps) => gps.id === selectedGps
+  );
+
+  const gpsStatus = gpsSelectedData
+  ? getGpsStatus(
+      gpsSelectedData.endDate
+    )
+  : null;
+
   const [contractId] = useState(() => contractData?._id || Date.now().toString());
   const operators = useGetClients();
   const calculateDays = (start, end) => {
@@ -328,7 +375,16 @@ const handleSubmit = () => {
             <div className="driver-contract-form__field">
               <label>ID GPS:</label>
 
-              <select>
+              <select
+                value={selectedGps}
+                onChange={(e) =>
+                  setSelectedGps(e.target.value)
+                }
+              >
+                <option value="">
+                  Seleccionar GPS
+                </option>
+
                 {gpsContracts.map((gps) => (
                   <option
                     key={gps.id}
@@ -338,6 +394,19 @@ const handleSubmit = () => {
                   </option>
                 ))}
               </select>
+            </div>
+            <div className="gps-status-info">
+              <label>
+                Estado GPS:
+              </label>
+
+              <span className="gps-status-online"
+                style={{
+                color: gpsStatus?.color,
+                fontWeight: "600",
+              }}>
+                ● {gpsStatus?.text || "--"}
+              </span>
             </div>
 
           </div>
