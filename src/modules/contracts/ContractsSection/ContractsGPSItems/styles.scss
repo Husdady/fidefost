@@ -1,9 +1,54 @@
-.contracts-gps-items {
-  width: 100%;
+.contracts-gps-item {
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 20px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+}
 
-  &__grid {
-    gap: 16px;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
+.contracts-gps-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.contracts-gps-item__id {
+  color: #8d8d8d;
+  font-size: 14px;
+}
+
+.contracts-gps-item__status {
+  color: #1ea84b;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.contracts-gps-item__body {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.contracts-gps-item__column {
+  display: flex;
+  flex-direction: column;
+}
+
+.contracts-gps-item__label {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #7d7d7d;
+  margin-bottom: 0.4rem;
+}
+
+.contracts-gps-item__date {
+  font-size: 14px;
+  font-weight: 700;
+}
+.contracts-gps__list {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 6px;
 }

@@ -1,5 +1,5 @@
 // Components
-import { useGetContracts, useAddContract, useUpdateContract } from "components/features/RapidUnitAudit/useContracts";
+import { useGetContracts, useAddContract, useUpdateContract, useDeleteContract} from "context/contracts/useContracts";
 import { useState } from "react";
 import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
@@ -9,7 +9,6 @@ import RapidUnitAudit from "components/features/RapidUnitAudit";
 import ContractsSection from "modules/contracts/ContractsSection";
 import DriverContractForm from "modules/contracts/DriverContractForm";
 import DriverContractView from "modules/contracts/DriversContractView";
-import { useDeleteContract } from "components/features/RapidUnitAudit/useContracts";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
 import { deleteDocument } from "database/deleteDocument";
 import InsuranceContractForm from "modules/contracts/InsuranceContractForm";

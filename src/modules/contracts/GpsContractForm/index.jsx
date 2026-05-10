@@ -1,7 +1,17 @@
+import { useState } from "react";
+
 export default function GpsContractForm({
   show,
   onHide,
+  onSave,
 }) {
+  const [form, setForm] = useState({
+  id: "",
+  unit: "",
+  installationDate: "",
+  endDate: "",
+});
+
   if (!show) return null;
 
   return (
@@ -20,6 +30,13 @@ export default function GpsContractForm({
             <input
               type="text"
               placeholder="GPS-AX-882"
+              value={form.id}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  id: e.target.value,
+                })
+              }
             />
           </div>
 
@@ -46,15 +63,33 @@ export default function GpsContractForm({
           </div>
 
           <div className="gps-modal__field">
-            <label>Fecha instalación</label>
+            <label>Fecha inicio contrato</label>
 
-            <input type="date" />
+            <input
+              type="date"
+              value={form.installationDate}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  installationDate: e.target.value,
+                })
+              }
+            />
           </div>
 
           <div className="gps-modal__field">
             <label>Fecha fin contrato</label>
 
-            <input type="date" />
+            <input
+              type="date"
+              value={form.endDate}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  endDate: e.target.value,
+                })
+              }
+            />
           </div>
 
         </div>
@@ -64,7 +99,20 @@ export default function GpsContractForm({
             Cancelar
           </button>
 
-          <button>
+          <button
+            onClick={() => {
+              onSave(form);
+
+              setForm({
+                id: "",
+                unit: "",
+                installationDate: "",
+                endDate: "",
+              });
+
+              onHide();
+            }}
+          >
             Guardar
           </button>
         </div>

@@ -1,4 +1,4 @@
-import { useGetContracts } from "components/features/RapidUnitAudit/useContracts";
+import { useGetContracts } from "context/contracts/useContracts";
 import ExpiredLicensesIcon from "./icons/expired-licenses-icon";
 import RiseIcon from "./icons/rise-icon";
 import ValidIcon from "./icons/valid-icon";

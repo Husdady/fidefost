@@ -1,4 +1,5 @@
 import { useGetClients } from "context/clients/useClients";
+import useGpsContractsStore from "context/contracts/gpsContractsStore";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import saveDocument from "database/saveDocument";
@@ -8,7 +9,7 @@ import { deleteDocument } from "database/deleteDocument";
 
 
 export default function DriverContractForm({ onHide, onSave, contractData }) {
-  
+  const gpsContracts = useGpsContractsStore((state) => state.gpsContracts);
   const [contractId] = useState(() => contractData?._id || Date.now().toString());
   const operators = useGetClients();
   const calculateDays = (start, end) => {
@@ -314,7 +315,7 @@ const handleSubmit = () => {
 
             <div className="card">
               <div>
-                <strong>GPS Tracker</strong>
+                <strong>GPS</strong>
                 <p>Geolocalización satelital</p>
               </div>
               <input
@@ -322,6 +323,21 @@ const handleSubmit = () => {
                 checked={form.gps}
                 onChange={() => handleToggle("gps")}
               />
+            </div>
+
+            <div className="driver-contract-form__field">
+              <label>ID GPS:</label>
+
+              <select>
+                {gpsContracts.map((gps) => (
+                  <option
+                    key={gps.id}
+                    value={gps.id}
+                  >
+                    {gps.id}
+                  </option>
+                ))}
+              </select>
             </div>
 
           </div>

@@ -1,4 +1,6 @@
 // Components
+import useGpsContractsStore from "context/contracts/gpsContractsStore";
+
 import InsuranceContracts from "components/features/InsuranceContracts";
 import ContractsGPS from "components/features/ContractsGPS";
 import ContractsGPSItems from "./ContractsGPSItems";
@@ -8,6 +10,13 @@ import GpsContractForm from "../GpsContractForm";
 import useShowModal from "hooks/useShowModal";
 
 export default function ContractsSection() {
+  const gpsContracts = useGpsContractsStore(
+  (state) => state.gpsContracts
+  );
+
+  const addGpsContract = useGpsContractsStore(
+    (state) => state.addGpsContract
+  );
   const gpsContractModal = useShowModal();
   return (
     <>
@@ -22,7 +31,7 @@ export default function ContractsSection() {
         <ContractsGPS
           icon={<GpsIcon />}
           title="Contratos GPS"
-          summarygps={<ContractsGPSItems />}
+          summarygps={<ContractsGPSItems items={gpsContracts}/>}
           action={
             <button 
                 className="contracts-gps__button"
@@ -36,6 +45,10 @@ export default function ContractsSection() {
      <GpsContractForm
         show={gpsContractModal.isShowing}
         onHide={gpsContractModal.hide}
+        onSave={(newContract) => {
+          addGpsContract(newContract);
+          gpsContractModal.hide();
+        }}
       />
   </>
   );
