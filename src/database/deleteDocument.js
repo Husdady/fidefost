@@ -8,7 +8,7 @@ import { STORE_NAME } from "./index";
  * Callback to delete document
  * @param {string} documentId Document ID
  */
-export async function deleteDocument(documentId) {
+export default async function deleteDocument(documentId) {
   const db = await openDatabase();
 
   return new Promise((resolve, reject) => {

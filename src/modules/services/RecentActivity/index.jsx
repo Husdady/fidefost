@@ -1,6 +1,7 @@
 // Hooks
 import { useMemo } from "react";
 import { useGetServices } from "context/services/useServices";
+import isValidArray from "utils/isValidArray";
 
 const statuses = {
   pending: "pending",
@@ -67,6 +68,12 @@ export default function RecentActivity() {
       </header>
 
       <div className="recent-activity-list d-flex flex-column">
+        {!isValidArray(recentServices) && (
+          <p className="empty-message small text-center">
+            No hay actividad reciente registrada para visualizarla....
+          </p>
+        )}
+
         {recentServices.map((service) => (
           <article
             key={service?._id}
