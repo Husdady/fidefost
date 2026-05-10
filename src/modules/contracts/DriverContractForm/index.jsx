@@ -9,7 +9,7 @@ import { deleteDocument } from "database/deleteDocument";
 
 
 export default function DriverContractForm({ onHide, onSave, contractData }) {
-  
+    const [selectedGps, setSelectedGps] = useState("");
     const getGpsStatus = (endDate) => {
     const today = new Date();
 
@@ -41,36 +41,10 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
       color: "#1db954",
     };
   };
-  const [selectedGps, setSelectedGps] = useState("");
-
-  const gpsContracts = useGpsContractsStore(
-    (state) => state.gpsContracts
-  );
-
-  const gpsSelectedData = gpsContracts.find(
-    (gps) => gps.id === selectedGps
-  );
-
-  const gpsStatus = gpsSelectedData
-  ? getGpsStatus(
-      gpsSelectedData.endDate
-    )
-  : null;
-
-  const [contractId] = useState(() => contractData?._id || Date.now().toString());
-  const operators = useGetClients();
-  const calculateDays = (start, end) => {
-  if (!start || !end) return 0;
-
-  const d1 = new Date(start);
-  const d2 = new Date(end);
-
-  const diff = d2 - d1;
-  return Math.floor(diff / (1000 * 60 * 60 * 24));
-};
-  const [form, setForm] = useState({
+   const [form, setForm] = useState({
     operador: "",
     conductor: "",
+    gpsId: "",
     licencia: "",
     fechaInduccion: "",
     fechaVencimiento: "",
@@ -90,6 +64,32 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
     archivos: []
   });
 
+  const gpsContracts = useGpsContractsStore(
+    (state) => state.gpsContracts
+  );
+
+  const gpsSelectedData = gpsContracts.find(
+    (gps) => gps.id === form.gpsId
+  );
+
+  const gpsStatus = gpsSelectedData
+  ? getGpsStatus(
+      gpsSelectedData.endDate
+    )
+  : null;
+
+  const [contractId] = useState(() => contractData?._id || Date.now().toString());
+  const operators = useGetClients();
+  const calculateDays = (start, end) => {
+  if (!start || !end) return 0;
+
+  const d1 = new Date(start);
+  const d2 = new Date(end);
+
+  const diff = d2 - d1;
+  return Math.floor(diff / (1000 * 60 * 60 * 24));
+};
+
   useEffect(() => {
     if (!contractData) return;
 
@@ -97,6 +97,7 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
       ...prev,
       operador: contractData.operador || "",
       conductor: contractData.auditDriver,
+      gpsId: contractData.gpsId || "",
       licencia: contractData.auditLicense || "",
       fechaInicio: contractData.auditContract?.start,
       fechaFin: contractData.auditContract?.end,
@@ -200,6 +201,8 @@ const handleSubmit = () => {
     operador: form.operador,
 
     auditDriver: form.conductor,
+
+    gpsId: form.gpsId,
 
     auditContract: {
       start: form.fechaInicio,
@@ -376,9 +379,12 @@ const handleSubmit = () => {
               <label>ID GPS:</label>
 
               <select
-                value={selectedGps}
+                value={form.gpsId}
                 onChange={(e) =>
-                  setSelectedGps(e.target.value)
+                  setForm({
+                    ...form,
+                    gpsId: e.target.value,
+                  })
                 }
               >
                 <option value="">

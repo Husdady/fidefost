@@ -1,5 +1,7 @@
 import { createPortal } from "react-dom";
 
+import DriverIcon from "./Icons/driver-icon";
+
 export default function DriverContractView({
   contractData,
   onHide, 
@@ -24,12 +26,7 @@ export default function DriverContractView({
 
         {/* HEADER */}
         <div className="contract-view-header">
-
-          <img
-            src="https://i.pravatar.cc/100"
-            alt="driver"
-            className="contract-view-avatar"
-          />
+           <DriverIcon />
 
           <div>
             <p className="contract-view-label">
@@ -53,7 +50,6 @@ export default function DriverContractView({
                       )}
               </span>
               <span>{contractData.auditInductionStatus}</span>
-              <span className="cert">CERTIFICADO</span>
             </div>
           </div>
 
@@ -95,15 +91,24 @@ export default function DriverContractView({
 
           <div>
             <p className="contract-view-label">
-              SERVICIOS DE UNIDAD
+              TELEMETRIA
             </p>
+            <div className="contract-view-status">
 
-            <h3>Telemetría Avanzada</h3>
-          </div>
+                {contractData.wifi && (
+                  <span>
+                    WIFI ✅
+                  </span>
+                )}
 
-          <div className="contract-view-status">
-            <span>📶 CONECTADO</span>
-            <span>📍 GPS OK</span>
+                {contractData.gps && (
+                  <span>
+                    GPS ✅
+                  </span>
+                )}
+
+            </div>
+
           </div>
 
         </div>

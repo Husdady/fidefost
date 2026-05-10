@@ -34,7 +34,7 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
     
     Estado:
       audit.auditOperationalStatus,
-
+    
     Wifi:
       audit.wifi ? "SI" : "NO",
 

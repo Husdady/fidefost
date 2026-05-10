@@ -68,23 +68,23 @@ export default function useSummaryItems(){
 
       {
         id: "contratos_activos",
-        title: "CONTR. ACTIVOS",
+        title: "CONTRATOS ACTIVOS",
         value: totaldrivers,
-        description: <div> <RiseIcon /></div>,
+        description: <div style={{color: "#110542",}}> <RiseIcon />  Activos</div>,
         accent: "default",
       },
       {
         id: "conductores",
         title: "CONDUCTORES",
         value: totaldrivers,
-        description: <div> <ExpiredLicensesIcon />{" "} {licensesToExpire}{" "} licencias por vencer </div>,
+        description: <div> <ExpiredLicensesIcon />{" "} {licensesToExpire}{" "} Licencias por vencer </div>,
         accent: "warning",
       },
       {
         id: "unidades_wifi",
         title: "UNIDADES WIFI",
         value: totalWifi,
-        description: <div> <ValidIcon /></div>,
+        description: <div style={{color: "#110542",}}> <ValidIcon />  WiFi</div>,
         accent: "good",
       },
       {

@@ -4,6 +4,7 @@
   border-radius: 24px;
   padding: 30px;
   position: relative;
+  font-size: 10px;
 }
 
 .contract-view-close {
@@ -22,6 +23,19 @@
   align-items: center;
 }
 
+.contract-view-header h2 {
+  font-size: 18px;
+}
+
+.contract-view-grid h3 {
+  font-size: 14px;
+}
+.contract-view-grid small {
+  font-size: 11px;
+}
+.contract-view-status span {
+  font-size: 11px;
+}
 .contract-view-avatar {
   width: 70px;
   height: 70px;
@@ -60,7 +74,6 @@
   margin-top: 30px;
   gap: 20px;
 }
-
 .contract-view-services {
   margin-top: 30px;
   display: flex;
@@ -84,6 +97,7 @@
 }
 
 .contract-delete-btn {
+  font-size: 13px;
   width: 100%;
   margin-top: 30px;
   border: none;
