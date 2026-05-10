@@ -19,7 +19,6 @@ const formatMonthYear = (date) => {
 };
 
 function RapidUnitAudit({ title, children, className = "",  accent = "default", data = [], onEdit, onView }) {
-console.log(contractData.gpsId);
   const [audits, setAudits] = useState([]);
 
   useEffect(() => {
