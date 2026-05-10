@@ -13,6 +13,16 @@ const useGpsContractsStore = create(
             contract,
           ],
         })),
+    
+        updateGpsContract: (updatedContract) =>
+            set((state) => ({
+                gpsContracts: state.gpsContracts.map(
+                (item) =>
+                    item.id === updatedContract.id
+                    ? updatedContract
+                    : item
+                ),
+            })),
 
       removeGpsContract: (id) =>
         set((state) => ({

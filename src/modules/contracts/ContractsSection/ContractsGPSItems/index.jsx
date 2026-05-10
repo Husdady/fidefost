@@ -1,7 +1,9 @@
 import EditIcon from "./Icons/edit-icon";
 import DeleteIcon from "./Icons/delete-icon";
+
+
 export default function ContractsGPSItems({
-  items = [],
+  items = [], onEdit, onDelete,
 }) {
   const getGpsStatus = (endDate) => {
   const today = new Date();
@@ -89,10 +91,20 @@ export default function ContractsGPSItems({
 
             <div className="contracts-gps-item__column">
               <span className="contracts-gps-item__label">
-                <EditIcon/>
+                <button
+                  onClick={() => onEdit(item)}
+                >
+                  <EditIcon />
+                </button>
               </span>
               <span className="contracts-gps-item__label">
-                <DeleteIcon/>
+                <button
+                  onClick={() =>
+                    onDelete(item.id)
+                  }
+                >
+                  <DeleteIcon/>
+                </button>
               </span>
             </div>
 

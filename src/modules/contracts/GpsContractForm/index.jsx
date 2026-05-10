@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function GpsContractForm({
   show,
   onHide,
   onSave,
+  onUpdate,
+  editingGps,
 }) {
   const [form, setForm] = useState({
   id: "",
@@ -12,6 +14,17 @@ export default function GpsContractForm({
   endDate: "",
 });
 
+ useEffect(() => {
+
+    if (editingGps) {
+
+      setForm(editingGps);
+
+    }
+
+  }, [editingGps]);
+
+  
   if (!show) return null;
 
   return (
@@ -19,7 +32,9 @@ export default function GpsContractForm({
       <div className="gps-modal__content">
 
         <h2 className="gps-modal__title">
-          Nuevo Contrato GPS
+          {editingGps
+            ? "Editar Contrato GPS"
+            : "Nuevo Contrato GPS"}
         </h2>
 
         <div className="gps-modal__form">
@@ -43,7 +58,14 @@ export default function GpsContractForm({
           <div className="gps-modal__field">
             <label>UNIDAD</label>
 
-            <select>
+            <select
+            value={form.unit}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                unit: e.target.value,
+              })
+            }>
               <option value="">
                 Seleccionar unidad
               </option>
@@ -101,10 +123,18 @@ export default function GpsContractForm({
 
           <button
             onClick={() => {
-              onSave({
-              ...form,
-              status: "ONLINE",
-            });
+              if (editingGps) {
+
+                onUpdate(form);
+
+              } else {
+
+                onSave({
+                  ...form,
+                  status: "ONLINE",
+                });
+
+              }
 
               setForm({
                 id: "",
