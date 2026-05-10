@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import EditIcon from "./Icons/edit-icon";
 import DeleteIcon from "./Icons/delete-icon";
 
@@ -5,6 +7,14 @@ import DeleteIcon from "./Icons/delete-icon";
 export default function ContractsGPSItems({
   items = [], onEdit, onDelete,
 }) {
+  const [search, setSearch] = useState("");
+  const filteredItems = items.filter(
+  (item) =>
+    item.id
+      .toLowerCase()
+      .includes(search.toLowerCase())
+);
+
   const getGpsStatus = (endDate) => {
   const today = new Date();
 
@@ -38,8 +48,18 @@ export default function ContractsGPSItems({
 };
   return (
     <div className="contracts-gps__list">
+      <div className="contracts-gps__search">
+      <input
+        type="text"
+        placeholder="Buscar por ID GPS..."
+        value={search}
+        onChange={(e) =>
+          setSearch(e.target.value)
+        }
+      />
+    </div>
 
-      {items.map((item, index) => {
+      {filteredItems.map((item, index) => {
 
         const status = getGpsStatus(
           item.endDate
