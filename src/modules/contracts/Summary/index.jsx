@@ -14,7 +14,6 @@ export default function ContractsSummary() {
         {SUMMARY_ITEMS.map((item) => (
           <SummaryCard
             key={item.id}
-            icon={item.icon}
             title={item.title}
             value={item.value}
             accent={item.accent}

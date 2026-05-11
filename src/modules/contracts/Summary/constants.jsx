@@ -85,7 +85,7 @@ export default function useSummaryItems(){
         title: "UNIDADES WIFI",
         value: totalWifi,
         description: <div style={{color: "#110542",}}> <ValidIcon />  WiFi</div>,
-        accent: "good",
+        accent: "default",
       },
       {
         id: "alertas_gps",

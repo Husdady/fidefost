@@ -230,7 +230,7 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
 InsuranceContracts.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string.isRequired,
-  datefilter: PropTypes.string.isRequired,
+  dateFilter: PropTypes.string,
   accent: PropTypes.oneOf(["default", "info", "warning", "danger"]),
 };
 

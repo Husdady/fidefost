@@ -32,6 +32,9 @@ export default async function exportAuditZip(
       
     Conductor:
       audit.auditDriver,
+    
+    Unidad:
+          "",  //ingresar propiedad de la UNIDAD "PENDIENTE"
 
     Licencia:
       audit.auditLicense,

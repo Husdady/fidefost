@@ -269,7 +269,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
 RapidUnitAudit.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string.isRequired,
-  children: PropTypes.string.isRequired,
+  children: PropTypes.node,
   accent: PropTypes.oneOf(["default", "info", "warning", "danger"]),
 };
 

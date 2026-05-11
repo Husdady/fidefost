@@ -27,6 +27,9 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
         Conductor:
           audit.auditDriver,
 
+        Unidad:
+          "",  //ingresar propiedad de la UNIDAD "PENDIENTE"
+
         Licencia:
           audit.auditLicense,
         

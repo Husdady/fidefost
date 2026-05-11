@@ -32,7 +32,7 @@ function SummaryCard({
 
       <div className="summary-card__body">
         <h3 className="summary-card__value mb-0">{value}</h3>
-        <p className="summary-card__description mb-0">{description}</p>
+        <div className="summary-card__description mb-0">{description}</div>
       </div>
     </article>
   );
@@ -40,10 +40,10 @@ function SummaryCard({
 
 SummaryCard.propTypes = {
   className: PropTypes.string,
-  icon: PropTypes.node.isRequired,
+  icon: PropTypes.node,
   title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  description: PropTypes.node,
+  value: PropTypes.node,
   accent: PropTypes.oneOf(["default", "info", "warning", "danger"]),
 };
 

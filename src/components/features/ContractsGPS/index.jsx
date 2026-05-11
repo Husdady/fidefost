@@ -33,8 +33,8 @@ function ContractsGPS({ title, icon, summarygps, action, className = "",  accent
 ContractsGPS.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string.isRequired,
-  icon: PropTypes.string.isRequired,
-  summarygps: PropTypes.string.isRequired,
+  icon: PropTypes.node,
+  summarygps: PropTypes.node,
   accent: PropTypes.oneOf(["default", "info", "warning", "danger"]),
 };
 
