@@ -1,6 +1,6 @@
 import saveDocument from "database/saveDocument";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
-import { deleteDocument } from "database/deleteDocument";
+import deleteDocument from "database/deleteDocument";
 import { createPortal } from "react-dom";
 import { useState, useEffect } from "react";
 

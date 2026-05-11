@@ -37,6 +37,22 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
     setAudits(data); 
   }, [data]);
 
+  const toggleEstado = (id) => {
+  setAudits((prev) =>
+    prev.map((audit) =>
+      audit._id === id
+        ? {
+            ...audit,
+            auditOperationalStatus:
+              audit.auditOperationalStatus === "EN RUTA"
+                ? "DETENIDO"
+                : "EN RUTA",
+          }
+        : audit
+    )
+  );
+};
+
   return (
         <article
           className={classnames([

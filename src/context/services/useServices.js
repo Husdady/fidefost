@@ -4,6 +4,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 // Utils
 import isValidArray from "utils/isValidArray";
+import createValidArray from "utils/createValidArray";
 
 const useServices = create(
   persist(

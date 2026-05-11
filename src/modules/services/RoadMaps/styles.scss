@@ -30,6 +30,12 @@
     color: #6f7b83;
   }
 
+  & .road-maps-table {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #9a9a9a #eef2f5;
+  }
+
   & .road-maps-pending-dot {
     width: 9px;
     height: 9px;
@@ -39,6 +45,16 @@
 
   & .road-maps-row {
     width: 100%;
+  }
+
+  & .empty-message {
+    max-width: 550px;
+  }
+
+  & .empty-message-box,
+  & .road-maps-row-body,
+  & .road-maps-row-head {
+    min-width: 1000px;
   }
 
   & .road-maps-row-head {
@@ -56,7 +72,7 @@
   }
 
   & .road-maps-row-body {
-    min-height: 114px;
+    min-height: 70px;
     padding: 0 2rem;
     border-bottom: 1px solid #f0f3f5;
 
@@ -72,19 +88,68 @@
 
   // 4 columns = 100%
   & .road-maps-file {
-    width: 46%;
+    width: 31%;
   }
 
   & .road-maps-date {
-    width: 18%;
+    width: 23%;
   }
 
   & .road-maps-size {
-    width: 16%;
+    width: 11%;
   }
 
-  & .road-maps-status {
-    width: 20%;
+  & .road-maps-last-modified {
+    width: 24%;
+  }
+
+  & .road-maps-actions {
+    width: 11%;
+  }
+
+  & .road-maps-delete,
+  & .road-maps-download-file {
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: scale(0.96);
+    }
+
+    & svg {
+      min-width: 18px;
+      max-width: 18px;
+      min-height: 18px;
+      max-height: 18px;
+    }
+  }
+
+  & .road-maps-delete {
+    color: #d92626;
+    background-color: #fff0f0;
+
+    &:hover {
+      background-color: #ffdada;
+    }
+  }
+
+  & .road-maps-download-file {
+    color: #2f80ed;
+    background-color: #f0f0ff;
+
+    &:hover {
+      background-color: #dadaff;
+    }
   }
 
   & .road-maps-icon {
@@ -94,28 +159,18 @@
     max-height: 40px;
     margin-right: 0.65rem;
     border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background-color: #eaf8fc;
 
-    & span {
-      font-size: 22px;
-      line-height: 1;
-    }
+    & svg {
+      min-width: 18px;
+      max-width: 18px;
+      min-height: 18px;
+      max-height: 18px;
 
-    &.processed {
-      color: #2f6f7d;
-      background-color: #eaf8fc;
-    }
-
-    &.pending {
-      color: #b56a11;
-      background-color: #fff3e7;
-    }
-
-    &.error {
-      color: #d92626;
-      background-color: #fff0f0;
+      &,
+      & path {
+        fill: #2f6f7d;
+      }
     }
   }
 
@@ -123,33 +178,5 @@
     font-size: 14px;
     font-weight: 800;
     color: #1f2529;
-  }
-
-  & .road-maps-status-tag {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 106px;
-    min-height: 26px;
-    padding: 0.25rem 0.85rem;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-
-    &.processed {
-      color: #2f7d32;
-      background-color: #dff3e2;
-    }
-
-    &.pending {
-      color: #b56513;
-      background-color: #ffdcae;
-    }
-
-    &.error {
-      color: #d92626;
-      background-color: #ffd2d2;
-    }
   }
 }

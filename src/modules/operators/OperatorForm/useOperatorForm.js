@@ -10,7 +10,7 @@ import useTriggerForm from "hooks/useTriggerForm";
 import useDisabledSubmitButton from "./hooks/useDisabledSubmitButton";
 
 // Database
-import { deleteDocument } from "database/deleteDocument";
+import deleteDocument from "database/deleteDocument";
 
 // Utils
 import generateId from "utils/generateId";

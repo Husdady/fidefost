@@ -1,0 +1,70 @@
+.recent-activity {
+  width: 100%;
+  border-radius: 16px;
+  background-color: #ffffff;
+  padding: 1.35rem 1.25rem 1.35rem;
+
+  & .recent-activity-header {
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+  }
+
+  & .activity-icon {
+    min-width: 16px;
+    max-width: 16px;
+    min-height: 16px;
+    max-height: 16px;
+  }
+
+  & .recent-activity-title {
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 900;
+    color: #1f2529;
+    text-transform: uppercase;
+  }
+
+  & .recent-activity-list {
+    gap: 1.5rem;
+  }
+
+  & .recent-activity-item {
+    gap: 0.65rem;
+  }
+
+  & .recent-activity-dot {
+    min-width: 8px;
+    max-width: 8px;
+    min-height: 8px;
+    max-height: 8px;
+    margin-top: 0.4rem;
+    border-radius: 50%;
+
+    &.processed {
+      background-color: #007088;
+    }
+
+    &.pending {
+      background-color: #a86200;
+    }
+
+    &.error {
+      background-color: #c91d1d;
+    }
+  }
+
+  & .recent-activity-name {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 800;
+    color: #1f2529;
+  }
+
+  & .recent-activity-time {
+    font-size: 13px;
+    line-height: 19px;
+    font-weight: 400;
+    color: #748189;
+    margin-top: 0.3rem !important;
+  }
+}

@@ -10,7 +10,7 @@ import ContractsSection from "modules/contracts/ContractsSection";
 import DriverContractForm from "modules/contracts/DriverContractForm";
 import DriverContractView from "modules/contracts/DriversContractView";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
-import { deleteDocument } from "database/deleteDocument";
+import deleteDocument from "database/deleteDocument";
 import InsuranceContractForm from "modules/contracts/InsuranceContractForm";
 import { useAddInsurance} from "context/contracts/useInsurance";
 import exportAuditExcel from "utils/exportAuditExcel"; 

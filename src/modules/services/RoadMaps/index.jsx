@@ -1,46 +1,20 @@
-// RoadMaps/index.jsx
-import "./styles.scss";
+// Components
+import Button from "components/common/Button";
+import FileIcon from "components/icons/file-icon";
+import TrashIcon from "components/icons/trash-icon";
 
 // Hooks
-import { useGetServices } from "context/services/useServices";
+import useRoadMaps from "./useRoadMaps";
+
+// Utils
+import isValidArray from "utils/isValidArray";
+import formatDate from "utils/format/formatDate";
+import formatFileSize from "utils/format/formatFileSize";
+import DownloadIcon from "components/icons/download-icon";
 
 export default function RoadMaps() {
-  const services = useGetServices();
-
-  const pendingFiles = services.filter(
-    (service) => service?.status === "pending"
-  );
-
-  const pendingText =
-    pendingFiles.length === 1
-      ? "1 Archivo pendiente"
-      : `${pendingFiles.length} Archivos pendientes`;
-
-  const formatDate = (date) => {
-    if (!date) return "-";
-
-    return new Intl.DateTimeFormat("en", {
-      month: "short",
-      day: "2-digit",
-      year: "numeric",
-    }).format(new Date(date));
-  };
-
-  const formatSize = (size) => {
-    if (!size) return "-";
-
-    return `${(size / 1024 / 1024).toFixed(1)} MB`;
-  };
-
-  const getStatusLabel = (status) => {
-    const statuses = {
-      pending: "Pendiente",
-      processed: "Procesado",
-      error: "Error",
-    };
-
-    return statuses[status] || "Pendiente";
-  };
+  const { services, pendingText, handleDownloadFile, handleDeleteService } =
+    useRoadMaps();
 
   return (
     <section className="road-maps">
@@ -54,40 +28,69 @@ export default function RoadMaps() {
       </header>
 
       <div className="road-maps-table">
-        <div className="road-maps-row road-maps-row-head d-flex align-items-center">
+        <div className="road-maps-row road-maps-row-head d-flex align-items-center column-gap-4">
           <div className="road-maps-cell road-maps-file">
             Nombre del archivo
           </div>
-          <div className="road-maps-cell road-maps-date">Fecha</div>
           <div className="road-maps-cell road-maps-size">Tamaño</div>
-          <div className="road-maps-cell road-maps-status text-center">Estado</div>
+          <div className="road-maps-cell road-maps-date">Fecha de subida</div>
+          <div className="road-maps-cell road-maps-last-modified">
+            Fecha de origen
+          </div>
+          <div className="road-maps-cell road-maps-actions">Acciones</div>
         </div>
+
+        {!isValidArray(services) && (
+          <div className="empty-message-box d-flex py-5 px-4 d-flex align-items-center justify-content-center">
+            <p className="empty-message text-center m-0 small">
+              Actualmente no hay archivos cargados para mostrar. Sube archivos
+              CSV o Excel para visualizar y gestionar las hojas de ruta
+              recientes....
+            </p>
+          </div>
+        )}
 
         {services.map((service) => (
           <div
             key={service?._id}
-            className="road-maps-row road-maps-row-body d-flex align-items-center"
+            className="road-maps-row road-maps-row-body d-flex align-items-center column-gap-4"
           >
             <div className="road-maps-cell road-maps-file d-flex align-items-center">
-              <div className={`road-maps-icon ${service?.status}`}>
-                <span>▤</span>
+              <div className="road-maps-icon d-flex align-items-center justify-content-center">
+                <FileIcon />
               </div>
 
-              <strong className="service-name text-break">{service?.fileName}</strong>
-            </div>
-
-            <div className="road-maps-cell road-maps-date">
-              {formatDate(service?.date)}
+              <strong className="text-break">{service?.fileName}</strong>
             </div>
 
             <div className="road-maps-cell road-maps-size">
-              {formatSize(service?.fileSize)}
+              {formatFileSize(service?.fileSize)}
             </div>
 
-            <div className="road-maps-cell road-maps-status">
-              <span className={`road-maps-status-tag ${service?.status}`}>
-                {getStatusLabel(service?.status)}
-              </span>
+            <div className="road-maps-cell road-maps-date text-break">
+              {formatDate(service?.date)}
+            </div>
+
+            <div className="road-maps-cell road-maps-last-modified text-break">
+              {formatDate(service?.lastModified)}
+            </div>
+
+            <div className="road-maps-cell road-maps-actions d-flex align-items-center column-gap-2">
+              <Button
+                icon={<DownloadIcon />}
+                aria-label="Descargar archivo"
+                className="road-maps-download-file"
+                titlePopup="Click to download this file"
+                onClick={() => handleDownloadFile(service?._id)}
+              />
+
+              <Button
+                icon={<TrashIcon />}
+                className="road-maps-delete"
+                aria-label="Eliminar archivo"
+                titlePopup="Click to remove this file"
+                onClick={() => handleDeleteService(service?._id)}
+              />
             </div>
           </div>
         ))}

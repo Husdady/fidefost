@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import saveDocument from "database/saveDocument";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
 import { useEffect } from "react";
-import { deleteDocument } from "database/deleteDocument";
+import deleteDocument from "database/deleteDocument";
 
 
 export default function DriverContractForm({ onHide, onSave, contractData }) {
