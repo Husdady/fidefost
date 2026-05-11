@@ -246,6 +246,10 @@ input[type="date"] {
   border-radius: 10px;
   cursor: pointer;
 }
+.btn-primary:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 .btn-secondary {
   background: transparent;

@@ -19,8 +19,19 @@ const formatMonthYear = (date) => {
 };
 
 function RapidUnitAudit({ title, children, className = "",  accent = "default", data = [], onEdit, onView }) {
-console.log(contractData.gpsId);
-  const [audits, setAudits] = useState([]);
+
+  const [audits, setAudits, ] = useState([]);
+  const [search, setSearch] =
+  useState("");
+
+  const filteredAudits =
+  audits.filter((item) =>
+    item.auditDriver
+      ?.toLowerCase()
+      .includes(
+        search.toLowerCase()
+      )
+  );
 
   useEffect(() => {
     setAudits(data); 
@@ -46,6 +57,15 @@ console.log(contractData.gpsId);
         
         </section>  
             <div className="rapid-unit-audit-list-table-wrapper">
+              <input
+                type="text"
+                placeholder="Buscar conductor..."
+                value={search}
+                onChange={(e) =>
+                  setSearch(e.target.value)
+                }
+                className="audit-search"
+              />
             <table className="rapid-unit-audit__body">
               <colgroup>
                 <col className="col-audit-driver" />
@@ -67,7 +87,7 @@ console.log(contractData.gpsId);
 
               <tbody>
                 {audits.length ? (
-                  audits.map((audit) => (
+                  filteredAudits.map((audit) => (
                     <tr key={audit?._id}>
                       <td>
                         <span className="audit-list-driver">
@@ -237,7 +257,7 @@ console.log(contractData.gpsId);
             </table>
           </div>
           <p className="audit-list-results mb-0">
-          Mostrando {audits.length} resultado
+          Mostrando {filteredAudits.length} resultado
           {audits.length === 1 ? "" : "s"}
           </p>
         </article>

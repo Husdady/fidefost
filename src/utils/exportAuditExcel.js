@@ -1,4 +1,5 @@
 import * as XLSX from "xlsx";
+import useGpsContractsStore from "context/contracts/gpsContractsStore";
 
 export default function exportAuditExcel(data, fileName = "auditoria") {
   const arrayData =
@@ -6,56 +7,81 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
       ? data
       : [data];
 
-  const excelData = arrayData.map((audit) => ({
+  const gpsContracts =
+  useGpsContractsStore.getState()
+    .gpsContracts;
 
-    Conductor:
-      audit.auditDriver,
+  const excelData = arrayData.map((audit) => {
 
-    Licencia:
-      audit.auditLicense,
-    
-    Fecha_Vencimiento:
-      audit.auditLicenseExpiration,
+  const gpsData =
+      gpsContracts.find(
+        (gps) =>
+          gps.id === audit.gpsId
+      );
 
-    Induccion:
-      audit.auditInductionStatus,
-
-    Fecha_Aprobacion_Induccion:
-      audit.auditInductionDate,
-
-    Inicio_Contrato:
-      audit.auditContract?.start,
-
-    Fin_Contrato:
-      audit.auditContract?.end,
-
-    Dias_Activos:
-      audit.auditContract?.days,
-    
-    Estado:
-      audit.auditOperationalStatus,
-    
-    Wifi:
-      audit.wifi ? "SI" : "NO",
-
-    GPS:
-      audit.gps ? "SI" : "NO",
-    
-    Check_Doc_Brevete:
-      audit.documentos?.brevete ? "SI" : "NO",
-    
-    Check_Doc_DNI:
-      audit.documentos?.dni ? "SI" : "NO",
-
-    Check_Doc_SCTR:
-      audit.documentos?.sctr ? "SI" : "NO",
-    
-    Check_Doc_Antecedentes_Penales:
-      audit.documentos?.antecedentesPenales ? "SI" : "NO",
+    return {
       
-    Check_Doc_Antecedentes_Policiales:
-      audit.documentos?.antecedentesPoliciales ? "SI" : "NO",
-  }));
+        Operador:
+          audit.operador,
+
+        Conductor:
+          audit.auditDriver,
+
+        Licencia:
+          audit.auditLicense,
+        
+        Fecha_Vencimiento:
+          audit.auditLicenseExpiration,
+
+        Induccion:
+          audit.auditInductionStatus,
+
+        Fecha_Aprobacion_Induccion:
+          audit.auditInductionDate,
+
+        Inicio_Contrato:
+          audit.auditContract?.start,
+
+        Fin_Contrato:
+          audit.auditContract?.end,
+
+        Dias_Activos:
+          audit.auditContract?.days,
+        
+        Estado:
+          audit.auditOperationalStatus,
+        
+        GPS:
+          audit.gps ? "SI" : "NO",
+        
+        ID_GPS:
+          audit.gpsId,
+        
+        Proveedor_GPS:
+          gpsData?.provider || "",
+
+        Link_GPS:
+          gpsData?.gpsLink || "",
+
+        Wifi:
+          audit.wifi ? "SI" : "NO",
+        
+        Check_Doc_Brevete:
+          audit.documentos?.brevete ? "SI" : "NO",
+        
+        Check_Doc_DNI:
+          audit.documentos?.dni ? "SI" : "NO",
+
+        Check_Doc_SCTR:
+          audit.documentos?.sctr ? "SI" : "NO",
+        
+        Check_Doc_Antecedentes_Penales:
+          audit.documentos?.antecedentesPenales ? "SI" : "NO",
+          
+        Check_Doc_Antecedentes_Policiales:
+          audit.documentos?.antecedentesPoliciales ? "SI" : "NO",
+      };
+});
 
   const worksheet =
     XLSX.utils.json_to_sheet(excelData);

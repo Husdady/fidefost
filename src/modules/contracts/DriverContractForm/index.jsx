@@ -9,6 +9,7 @@ import { deleteDocument } from "database/deleteDocument";
 
 
 export default function DriverContractForm({ onHide, onSave, contractData }) {
+
     const [selectedGps, setSelectedGps] = useState("");
     const getGpsStatus = (endDate) => {
     const today = new Date();
@@ -97,6 +98,7 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
       ...prev,
       operador: contractData.operador || "",
       conductor: contractData.auditDriver,
+      unidad: contractData.auditUnidad || "",
       gpsId: contractData.gpsId || "",
       licencia: contractData.auditLicense || "",
       fechaInicio: contractData.auditContract?.start,
@@ -202,6 +204,8 @@ const handleSubmit = () => {
 
     auditDriver: form.conductor,
 
+    auditUnidad: form.unidad,
+
     gpsId: form.gpsId,
 
     auditContract: {
@@ -226,6 +230,29 @@ const handleSubmit = () => {
 
   onSave(newAudit, !!contractData);
 };
+
+const isFormValid =
+
+  // CAMPOS
+  form.operador &&
+  form.unidad &&
+  form.conductor &&
+  form.licencia &&
+  form.fechaInicio &&
+  form.fechaFin &&
+  form.fechaInduccion &&
+  form.fechaVencimiento &&
+
+  // CHECKS
+  form.documentos.brevete &&
+  form.documentos.dni &&
+  form.documentos.sctr &&
+  form.documentos.antecedentesPenales &&
+  form.documentos.antecedentesPoliciales &&
+  form.documentos.induccion &&
+
+  // ARCHIVOS
+  form.archivos.length > 0;
 
   return createPortal(
     <div className="modal" onClick={onHide}>
@@ -258,8 +285,9 @@ const handleSubmit = () => {
             </select>
 
             <label className="label">UNIDAD (TRACTOR / PLACA)</label>
-            <select name="unidad" onChange={handleChange}>
-              <option>Seleccionar unidad...</option>
+            <select name="unidad" value={form.unidad || ""} onChange={handleChange}>
+              <option value="">Seleccionar unidad...</option>
+              <option>UNIDAD 01</option>
             </select>
 
             <label className="label">CHECKLIST DE DOCUMENTACIÓN</label>
@@ -496,6 +524,7 @@ const handleSubmit = () => {
             type="button"
             className="btn-primary" 
             onClick={handleSubmit}
+            disabled={!isFormValid}
           >
             {contractData ? "Actualizar Contrato" : "Guardar Contrato"}
           </button>

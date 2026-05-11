@@ -215,7 +215,7 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
         </table>
       </div>
       <p className="contracts-list-results mb-0">
-        Mostrando {insuranceContracts.length}{" "}
+        Mostrando {filteredContracts.length}{" "}
           {insuranceContracts.length === 1
             ? "resultado"
             : "resultados"}

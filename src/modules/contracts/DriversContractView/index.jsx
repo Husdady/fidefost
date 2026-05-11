@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import useGpsContractsStore from "context/contracts/gpsContractsStore";
 
 import DriverIcon from "./Icons/driver-icon";
 
@@ -9,6 +10,15 @@ export default function DriverContractView({
 }) {
   
   if (!contractData) return null;
+  const gpsContracts =
+  useGpsContractsStore(
+    (state) => state.gpsContracts
+  );
+  const selectedGps =
+  gpsContracts.find(
+    (gps) =>
+      gps.id === contractData.gpsId
+  );
 
   return createPortal(
     <div className="modal" onClick={onHide}>
@@ -115,7 +125,17 @@ export default function DriverContractView({
 
         {/* MAP */}
         <div className="contract-view-map">
-          Ubicación Actual: Km 124 Panamericana Sur
+            {selectedGps?.gpsLink ? (
+              <a
+                href={selectedGps.gpsLink}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Abrir Sistema GPS
+              </a>
+            ) : (
+              "Sin link GPS"
+            )}
         </div>
 
         {/* ACTION */}

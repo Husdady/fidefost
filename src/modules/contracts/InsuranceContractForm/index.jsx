@@ -43,26 +43,31 @@ export default function InsuranceContractForm({
     }));
   };
 
-  const handleSubmit = async () => {
-
-  const savedFiles =
-    await getDocumentsByRelation(
-      "insurance",
-      insuranceId
-    );
-
-  console.log(savedFiles);
+  const handleSubmit = () => {
 
   const newInsurance = {
     _id: insuranceId,
 
     ...form,
 
-    archivos: savedFiles,
+    archivos: files,
   };
 
   onSave(newInsurance);
 };
+
+const isFormValid =
+
+  // CAMPOS
+  form.proveedor &&
+  form.tipo &&
+  form.poliza &&
+  form.fechaInicio &&
+  form.fechaFin &&
+
+  // ARCHIVOS
+  files.length > 0
+
 
   return createPortal(
     <div className="modal" onClick={onHide}>
@@ -313,6 +318,7 @@ export default function InsuranceContractForm({
           <button
             className="btn-primary"
             onClick={handleSubmit}
+            disabled={!isFormValid}
           >
             Guardar Contrato
           </button>

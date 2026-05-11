@@ -10,6 +10,8 @@ export default function GpsContractForm({
   const [form, setForm] = useState({
   id: "",
   unit: "",
+  provider: "",
+  gpsLink: "",
   installationDate: "",
   endDate: "",
 });
@@ -24,7 +26,16 @@ export default function GpsContractForm({
 
   }, [editingGps]);
 
-  
+const isFormValid =
+
+  // CAMPOS
+  form.id &&
+  form.unit &&
+  form.provider &&
+  form.gpsLink &&
+  form.installationDate &&
+  form.endDate;
+
   if (!show) return null;
 
   return (
@@ -50,6 +61,36 @@ export default function GpsContractForm({
                 setForm({
                   ...form,
                   id: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="gps-modal__field">
+            <label>PROVEEDOR</label>
+
+            <input
+              type="text"
+              placeholder="Ej: Hunter, Tracklink..."
+              value={form.provider}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  provider: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="gps-modal__field">
+            <label>LINK SISTEMA GPS</label>
+
+            <input
+              type="text"
+              placeholder="https://..."
+              value={form.gpsLink}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  gpsLink: e.target.value,
                 })
               }
             />
@@ -122,6 +163,7 @@ export default function GpsContractForm({
           </button>
 
           <button
+            disabled={!isFormValid}
             onClick={() => {
               if (editingGps) {
 
@@ -139,6 +181,8 @@ export default function GpsContractForm({
               setForm({
                 id: "",
                 unit: "",
+                provider: "",
+                gpsLink: "",
                 installationDate: "",
                 endDate: "",
               });

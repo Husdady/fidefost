@@ -4,6 +4,7 @@ import JSZip from "jszip";
 
 import { saveAs } from "file-saver";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
+import useGpsContractsStore from "context/contracts/gpsContractsStore";
 
 export default async function exportAuditZip(
   audit
@@ -14,9 +15,21 @@ export default async function exportAuditZip(
   // ==========
   // EXCEL
   // ==========
+  const gpsContracts =
+  useGpsContractsStore.getState()
+    .gpsContracts;
+  
+  const gpsData =
+  gpsContracts.find(
+    (gps) =>
+      gps.id === audit.gpsId
+  );
 
   const excelData = [{
 
+    Operador:
+      audit.operador,
+      
     Conductor:
       audit.auditDriver,
 
@@ -43,12 +56,21 @@ export default async function exportAuditZip(
     
     Estado:
       audit.auditOperationalStatus,
+    
+    GPS:
+      audit.gps ? "SI" : "NO",
+    
+    ID_GPS:
+      audit.gpsId,
+
+    Proveedor_GPS:
+      gpsData?.provider || "",
+
+    Link_GPS:
+      gpsData?.gpsLink || "", 
 
     Wifi:
       audit.wifi ? "SI" : "NO",
-
-    GPS:
-      audit.gps ? "SI" : "NO",
     
     Check_Doc_Brevete:
       audit.documentos?.brevete ? "SI" : "NO",
