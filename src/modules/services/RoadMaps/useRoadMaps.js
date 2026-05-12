@@ -43,10 +43,8 @@ export default function useRoadMaps() {
       if (!isValidString(serviceId)) {
         throw new Error("Invalid service id");
       }
-console.log("SERVICE ID:", serviceId);
       // Get documents by service id
       const documents = await getDocumentsByRelation("services", serviceId);
-console.log("DOCUMENTS:", documents);
       const document = documents?.[0];
 
       if (!document) {
