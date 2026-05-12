@@ -10,8 +10,6 @@ import getDocumentsByRelation from "database/getDocumentsByRelation";
 
 // Utils
 import createValidArray from "utils/createValidArray";
-import resolveDocumentFile from "utils/files/resolveDocumentFile";
-
 /**
  * Hook for implements logic of ExportButton component
  */
@@ -35,13 +33,18 @@ export default function useExportButton() {
 
       const zip = new JSZip();
 
-      await Promise.allSettled(
-        documents.map(async (document, index) => {
-          const { blob, fileName } = await resolveDocumentFile(document, index);
+      documents.forEach((document, index) => {
 
-          zip.file(fileName, blob);
-        })
-      );
+        if (document?.blob) {
+
+          zip.file(
+            `${index + 1}-${document.name}`,
+            document.blob
+          );
+
+        }
+
+      });
 
       const zipBlob = await zip.generateAsync({ type: "blob" });
       const downloadUrl = URL.createObjectURL(zipBlob);

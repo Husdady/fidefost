@@ -32,31 +32,47 @@ export default function useExportReport() {
       "Fecha de origen": formatDate(service?.lastModified),
     }));
 
-    const summaryRows = [
-      {
-        Métrica: "Total de archivos subidos",
-        Valor: services.length,
-      },
-      {
-        Métrica: "Tamaño total",
-        Valor: formatFileSize(totalSize),
-      },
-      {
-        Métrica: "Tamaño total en bytes",
-        Valor: totalSize,
-      },
-      {
-        Métrica: "Fecha de generación del reporte",
-        Valor: formatDate(new Date()),
-      },
-    ];
+    const summaryData = [
+    [],
+    ["EXPORTACIÓN AUTOMATIZADA"],
+    [],
+    ["MÉTRICA", "VALOR"],
 
-    const workbook = XLSX.utils.book_new();
+    [
+    "Total de archivos subidos",
+      String(services.length),
+    ],
 
-    const summarySheet = XLSX.utils.json_to_sheet(summaryRows);
+    [
+      "Tamaño total",
+      String(formatFileSize(totalSize)),
+    ],
+
+    [
+      "Fecha de generación del reporte",
+      formatDate(new Date()),
+    ],
+  ];
+
+  const workbook =
+    XLSX.utils.book_new();
+
+  const summarySheet =
+    XLSX.utils.aoa_to_sheet(summaryData);
+  
+  summarySheet["!cols"] = [
+    { wch: 38 },
+    { wch: 20 },
+  ];
+
+  summarySheet["!merges"] = [
+    {
+      s: { r: 1, c: 0 },
+      e: { r: 1, c: 1 },
+    },
+  ];
+
     const reportSheet = XLSX.utils.json_to_sheet(reportRows);
-
-    summarySheet["!cols"] = [{ wch: 35 }, { wch: 35 }];
 
     reportSheet["!cols"] = [
       { wch: 8 },
@@ -72,7 +88,7 @@ export default function useExportReport() {
     XLSX.utils.book_append_sheet(workbook, reportSheet, "Archivos");
 
     XLSX.writeFile(workbook, "reporte_hojas_de_ruta.xlsx");
-  }, []);
+  }, [services]);
 
   return {
     handleDownloadReport,

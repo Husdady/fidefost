@@ -10,6 +10,7 @@ import createRoadMapFile from "../utils/createRoadMapFile";
 /**
  * Hook for upload Road Maps files
  */
+
 export default function useUploadFiles() {
   const fileInputRef = useRef(null);
   const addServices = useAddServices();
@@ -18,28 +19,39 @@ export default function useUploadFiles() {
    * Handles uploaded files
    * @param {FileList|File[]} files Uploaded files
    */
-  const handleFiles = (files) => {
-    const validFiles = Array.from(files || []).filter(isValidFile);
+  const handleFiles = async (files) => {
 
-    if (!validFiles.length) return;
+  const validFiles =
+    Array.from(files || []).filter(isValidFile);
 
-    const services = [];
+  if (!validFiles.length) return;
 
-    for (const file of files) {
-      const item = createRoadMapFile(file);
+  const services = [];
 
-      services.push(item);
+  for (const file of files) {
 
-      saveDocument({
-        file: file,
-        relatedId: item?._id,
-        category: "road-maps",
-        module: "services",
-      });
-    }
+    const serviceId =
+      crypto.randomUUID();
 
-    addServices(services);
-  };
+    const item = {
+      ...createRoadMapFile(file),
+      _id: serviceId,
+    };
+
+    console.log("ITEM:", item);
+
+    services.push(item);
+
+    await saveDocument({
+      file: file,
+      relatedId: serviceId,
+      category: "road-maps",
+      module: "services",
+    });
+  }
+
+  addServices(services);
+};
 
   /**
    * Handles input file change

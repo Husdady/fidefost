@@ -8,7 +8,6 @@ import getDocumentsByRelation from "database/getDocumentsByRelation";
 
 // Utils
 import isValidString from "utils/isValidString";
-import resolveDocumentFile from "utils/files/resolveDocumentFile";
 
 /**
  * Hook for RoadMaps component logic
@@ -40,12 +39,14 @@ export default function useRoadMaps() {
   // Callback for download file
   const handleDownloadFile = useCallback(async (serviceId) => {
     try {
+
       if (!isValidString(serviceId)) {
         throw new Error("Invalid service id");
       }
-
+console.log("SERVICE ID:", serviceId);
       // Get documents by service id
       const documents = await getDocumentsByRelation("services", serviceId);
+console.log("DOCUMENTS:", documents);
       const document = documents?.[0];
 
       if (!document) {
@@ -53,20 +54,18 @@ export default function useRoadMaps() {
       }
 
       // Get blob file from document
-      const item = await resolveDocumentFile(document);
+      const blob = document.blob;
 
-      if (!item) {
-        throw new Error("Invalid file");
-      }
+      const downloadUrl =
+        URL.createObjectURL(blob);
 
-      const blob = item instanceof Blob ? item : new Blob([item.blob]);
-
-      const downloadUrl = URL.createObjectURL(blob);
-
-      const link = window.document.createElement("a");
+      const link =
+        window.document.createElement("a");
 
       link.href = downloadUrl;
-      link.download = item.fileName || "service-file";
+
+      link.download =
+        document.name || "service-file";
 
       window.document.body.appendChild(link);
 

@@ -81,7 +81,7 @@ export default function RoadMaps() {
                 aria-label="Descargar archivo"
                 className="road-maps-download-file"
                 titlePopup="Click to download this file"
-                onClick={() => handleDownloadFile(service?._id)}
+                onClick={() => {console.log("SERVICE:", service); handleDownloadFile(service?._id)}}
               />
 
               <Button
