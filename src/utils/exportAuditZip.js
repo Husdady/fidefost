@@ -129,13 +129,13 @@ const documents =
   );
 
   
-    documents.forEach((doc) => {
+    documents.forEach((doc,i) => {
 
-    if (doc.blob) {
+    if (doc?.blob) {
 
         zip.file(
-        doc.name,
-        doc.blob
+        `${i + 1}-${doc.name}`,
+      doc.blob
         );
 
     }

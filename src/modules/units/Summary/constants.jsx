@@ -1,7 +1,7 @@
 import FleetIcon from "./icons/fleet-icon";
 import AlertsIcon from "./icons/alerts-icon";
 import  UpcomingExpirationsIcon from "./icons/upcoming-expirations-icon";
-import BarIcon from "./icons/bar-icon";
+//import BarIcon from "./icons/bar-icon";
 export const SUMMARY_ITEMS = [
   {
     id: "flota_total",
@@ -31,6 +31,5 @@ export const SUMMARY_ITEMS = [
     id: "reporte_cumplimiento",
     title: "Reporte de Cumplimiento",
     value:"94.2%",
-    accent: <BarIcon />,
   },
 ];
