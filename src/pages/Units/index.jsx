@@ -3,7 +3,7 @@ import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
 import UnitsSummary from "modules/units/Summary";
 import AddButton from "components/features/PageHeader/AddButton";
-
+import UnitForm from "modules/units/UnitForm"
 // Hooks
 import useShowModal from "hooks/useShowModal";
 
@@ -26,6 +26,10 @@ export default function Units() {
 
         <UnitsSummary />
       </aside>
+        <UnitForm
+          show={createUnitModal.isShowing}
+          onHide={createUnitModal.hide}
+        />
 
     </main>
   );
