@@ -4,6 +4,8 @@ import PageHeader from "components/features/PageHeader";
 import UnitsSummary from "modules/units/Summary";
 import AddButton from "components/features/PageHeader/AddButton";
 import UnitForm from "modules/units/UnitForm"
+import UnitsTable from "modules/units/UnitsTable";
+
 // Hooks
 import useShowModal from "hooks/useShowModal";
 
@@ -25,6 +27,7 @@ export default function Units() {
         </PageHeader>
 
         <UnitsSummary />
+        <UnitsTable />
       </aside>
         <UnitForm
           show={createUnitModal.isShowing}
