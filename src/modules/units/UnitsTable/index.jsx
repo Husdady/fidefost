@@ -3,13 +3,13 @@ export default function UnitsTable() {
   const units = [
     {
       placa: "ABC-982",
-      tipo: "TRACTOR",
+      marca: "TRACTOR",
       mtc: "104293881",
       empresa: "TransLog S.A.",
+      tarjeta:"",
       revision: "VENCE 12/2026",
       soat: "SOAT OK",
-      poliza: "Mapfre #993822",
-      circulacion: "TC-8839210-B"
+      poliza: "Mapfre #993822"
     }
   ];
 
@@ -46,7 +46,6 @@ export default function UnitsTable() {
             <th>MTC / PROPIEDAD</th>
             <th>REV. TÉCNICA</th>
             <th>SOAT / PÓLIZA</th>
-            <th>CIRCULACIÓN</th>
             <th>ACCIONES</th>
           </tr>
         </thead>
@@ -66,7 +65,7 @@ export default function UnitsTable() {
                   <div>
                     <strong>{unit.placa}</strong>
 
-                    <p>{unit.tipo}</p>
+                    <p>{unit.marca}</p>
                   </div>
 
                 </div>
@@ -78,7 +77,10 @@ export default function UnitsTable() {
                 </strong>
 
                 <p>
-                  TIT: {unit.empresa}
+                  E.T: {unit.empresa}
+                </p>
+                <p>
+                  T.P: {unit.tarjeta}
                 </p>
               </td>
 
@@ -94,10 +96,6 @@ export default function UnitsTable() {
                 </strong>
 
                 <p>{unit.poliza}</p>
-              </td>
-
-              <td>
-                {unit.circulacion}
               </td>
 
               <td>

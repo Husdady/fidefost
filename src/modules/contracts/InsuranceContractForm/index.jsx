@@ -128,21 +128,42 @@ const isFormValid =
 
         </div>
 
-        <div className="insurance-dates-grid">
+                {/* POLIZA */}
+        <div className="policy-section">
 
-          <div>
-            <label className="label">
-              NUMERO DE POLIZA
-            </label>
+          <label className="label">
+            {form.tipo === "SOAT"
+              ? "NUMERO"
+              : "NUMERO DE POLIZA"}
+          </label>
+
+          <div className="policy-row">
+
+            <span className="policy-label">
+              {form.tipo === "SOAT"
+              ? "SOAT-"
+              : "POLIZA-"}
+            </span>
 
             <input
+              className="policy-field"
               type="text"
-              name="poliza"
-              placeholder="Ej. ABC-9999"
               value={form.poliza}
-              onChange={handleChange}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  poliza: e.target.value
+                })
+              }
+              placeholder="INGRESAR"
             />
+
           </div>
+
+        </div>
+
+        {/* FECHAS */}
+        <div className="insurance-dates-grid">
 
           <div>
             <label className="label">

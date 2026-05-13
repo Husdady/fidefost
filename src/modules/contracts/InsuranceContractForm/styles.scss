@@ -26,17 +26,16 @@
   color: #9ca3af;
 }
 
-/* GRID FECHAS */
-.insurance-dates-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr;
-
-  gap: 16px;
-
-  margin-top: 18px;
-  margin-bottom: 20px;
+.policy-section{
+  margin-top:20px;
 }
-
+/* GRID FECHAS */
+.insurance-dates-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:20px;
+}
 /* UPLOAD */
 .insurance-modal .upload-box {
   padding: 40px 20px;
@@ -184,4 +183,39 @@
 
 .insurance-modal .btn-secondary {
   font-weight: 500;
+}
+
+.insurance-modal .grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.insurance-modal input,
+.insurance-modal select{
+  box-sizing:border-box;
+}
+
+.policy-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+}
+
+.policy-label{
+  font-size:14px;
+  font-weight:600;
+  color:#111827;
+  white-space:nowrap;
+}
+
+.policy-field{
+  flex:1;
+  height:48px;
+  border:none;
+  border-radius:14px;
+  background:#f1f5f9;
+  padding:0 16px;
+  box-sizing:border-box;
 }
