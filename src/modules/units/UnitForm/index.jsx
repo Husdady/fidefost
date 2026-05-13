@@ -268,9 +268,9 @@ const handleCheckbox = (name) => {
               />
               SOAT
             </label>
-
-
-            <label>
+            
+            <div className="check-item">
+               <label>
               <input
                 type="checkbox"
                 checked={form.documentos.tarjetaVehicularCheck}
@@ -280,20 +280,23 @@ const handleCheckbox = (name) => {
               />
               TARJETA DE IDENTIFICACION VEHICULAR
             </label>
-            <div className="property-card">
-                   <input
-                   className="small-date"
-                    type="text"
-                    value={form.documentos.tarjetaVehicularInfo}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
+                <input
+                  className="property-card-in"
+                  type="text"
+                  name="tarjetaVehicularInfo"
+                  value={form.documentos.tarjetaVehicularInfo || ""}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      documentos: {
+                        ...form.documentos,
                         tarjetaVehicularInfo: e.target.value
-                      })
-                    }
-                    placeholder="TARJETA DE IDENTIFICACION VEHICULAR"
-                  />
-            </div>  
+                      }
+                    })
+                  }
+                  placeholder="TARJET DE IDENTIFICACION VEHICULAR"
+                />
+            </div>
 
             <label>
               <input
