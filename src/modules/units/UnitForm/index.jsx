@@ -270,7 +270,7 @@ const handleCheckbox = (name) => {
             </label>
             
             <div className="check-item">
-               <label>
+             <label className="check-row">
               <input
                 type="checkbox"
                 checked={form.documentos.tarjetaVehicularCheck}
@@ -294,7 +294,7 @@ const handleCheckbox = (name) => {
                       }
                     })
                   }
-                  placeholder="TARJET DE IDENTIFICACION VEHICULAR"
+                  placeholder="TARJETA DE IDENTIFICACION VEHICULAR"
                 />
             </div>
 
