@@ -1,11 +1,14 @@
 import { createPortal } from "react-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import { useGetInsurance } from "context/contracts/useInsurance";
 import saveDocument from "database/saveDocument";
 import deleteDocument from "database/deleteDocument";
 
 
 export default function UnitForm({ show, onHide }) {
+
+  const insuranceContracts = useGetInsurance();
 
   const [unitId] = useState(
   () => Date.now().toString()
@@ -16,8 +19,8 @@ export default function UnitForm({ show, onHide }) {
   partida: "",
   revisionFecha: "",
   mtc: "",
-  polizaFecha: "",
-  soatFecha: "",
+  poliza: "",
+  soat: "",
 
   documentos: {
     mtcCheck: false,
@@ -153,7 +156,7 @@ const handleCheckbox = (name) => {
             />
 
             <label className="label">
-              REVISION TECNICA
+              REVISION TECNICA (FECHA VENCIMIENTO)
             </label>
 
             <input
@@ -189,34 +192,57 @@ const handleCheckbox = (name) => {
             />
 
             <label className="label">
-              POLIZA (FECHA DE VENCIMIENTO)
+              POLIZA
             </label>
-
-            <input
-              type="date"
-              value={form.fecha}
-              onChange={(e) =>
-                setForm({
+            <select name="poliza" value={form.poliza || ""} onChange={(e)=>
+               setForm({
                   ...form,
-                  fecha: e.target.value
+                  poliza: e.target.value
                 })
               }
-            />
+            >
+              <option value="">Seleccionar poliza...</option>
+              
+              {insuranceContracts
+                  .filter((insurance) =>
+                      insurance.poliza?.startsWith("POLIZA-")
+                  )
+                  .map((insurance) => (
+                    <option
+                      key={insurance._id}
+                      value={insurance.poliza}
+                    >
+                      {insurance.poliza}
+                    </option>
+              ))}
+            </select>
 
             <label className="label">
-              SOAT (FECHA DE VENCIMIENTO)
+              SOAT
             </label>
 
-            <input
-              type="date"
-              value={form.soatFecha}
-              onChange={(e) =>
-                setForm({
+            <select name="soat" value={form.soat || ""} onChange={(e)=>
+               setForm({
                   ...form,
-                  soatFecha: e.target.value
+                  soat: e.target.value
                 })
               }
-            />
+            >
+              <option value="">Seleccionar SOAT...</option>
+                
+                {insuranceContracts
+                     .filter((insurance) =>
+                      insurance.poliza?.startsWith("SOAT-")
+                    )
+                     .map((insurance) => (
+                      <option
+                        key={insurance._id}
+                        value={insurance.poliza}
+                      >
+                        {insurance.poliza}
+                      </option>
+              ))}
+            </select>
 
           </div>
         </div>

@@ -50,6 +50,8 @@ export default function InsuranceContractForm({
 
     ...form,
 
+    poliza: `${policyPrefix}${form.poliza}`,
+
     archivos: files,
   };
 
@@ -67,6 +69,11 @@ const isFormValid =
 
   // ARCHIVOS
   files.length > 0
+
+  const policyPrefix =
+  form.tipo === "SOAT"
+    ? "SOAT-"
+    : "POLIZA-";
 
 
   return createPortal(
@@ -140,9 +147,7 @@ const isFormValid =
           <div className="policy-row">
 
             <span className="policy-label">
-              {form.tipo === "SOAT"
-              ? "SOAT-"
-              : "POLIZA-"}
+              {policyPrefix}
             </span>
 
             <input
