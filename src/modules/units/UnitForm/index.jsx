@@ -29,6 +29,7 @@ export default function UnitForm({ show, onHide }) {
     recTecnTractorCheck: false,
     recTecnCarretaCheck: false,
     soatCheck: false,
+    polizaCheck: false,
     tarjetaVehicularCheck: false,
     tarjetaVehicularInfo:"",
     permisoMunicipalCheck: false,
@@ -117,6 +118,99 @@ const handleSubmit = () => {
 
   onHide();
 };
+
+const handleInsuranceSelect = (
+  type,
+  value
+) => {
+
+  const selectedInsurance =
+    insuranceContracts.find((item) => {
+
+      if (type === "poliza") {
+        return (
+          item.tipo !== "SOAT" &&
+          item.poliza === value
+        );
+      }
+
+      if (type === "soat") {
+        return (
+          item.tipo === "SOAT" &&
+          item.poliza === value
+        );
+      }
+
+      return false;
+    });
+
+  if (!selectedInsurance) {
+    return;
+  }
+
+  setForm((prev) => {
+
+    // ELIMINAR ARCHIVOS ANTERIORES
+    const filteredFiles =
+      prev.archivos.filter((file) => {
+
+        // si viene de SOAT
+        if (
+          type === "soat" &&
+          file.insuranceType === "SOAT"
+        ) {
+          return false;
+        }
+
+        // si viene de POLIZA
+        if (
+          type === "poliza" &&
+          file.insuranceType === "POLIZA"
+        ) {
+          return false;
+        }
+
+        return true;
+      });
+
+    // NUEVOS ARCHIVOS
+    const newFiles =
+      selectedInsurance.archivos.map((file) => ({
+        ...structuredClone(file),
+
+        insuranceType:
+          type === "soat"
+            ? "SOAT"
+            : "POLIZA"
+      }));
+      
+    return {
+      ...prev,
+
+      [type]: value,
+
+      archivos: [
+        ...filteredFiles,
+        ...newFiles
+      ],
+
+      documentos: {
+        ...prev.documentos,
+
+        soatCheck:
+          type === "soat"
+            ? true
+            : prev.documentos.soatCheck,
+
+        mtcCheck:
+          type === "poliza"
+            ? true
+            : prev.documentos.polizaCheck
+      }
+    };
+  });
+};
+
 
   if (!show) return null;
 
@@ -233,12 +327,14 @@ const handleSubmit = () => {
             <label className="label">
               POLIZA
             </label>
-            <select name="poliza" value={form.poliza || ""} onChange={(e)=>
-               setForm({
-                  ...form,
-                  poliza: e.target.value
-                })
-              }
+            <select name="poliza" 
+                    value={form.poliza || ""} 
+                    onChange={(e)=>
+                      handleInsuranceSelect(
+                        "poliza",
+                        e.target.value
+                      )
+                    }
             >
               <option value="">Seleccionar poliza...</option>
               
@@ -260,12 +356,14 @@ const handleSubmit = () => {
               SOAT
             </label>
 
-            <select name="soat" value={form.soat || ""} onChange={(e)=>
-               setForm({
-                  ...form,
-                  soat: e.target.value
-                })
-              }
+            <select name="soat" 
+                    value={form.soat || ""} 
+                    onChange={(e)=>
+                       handleInsuranceSelect(
+                          "soat",
+                          e.target.value
+                        )
+                      }
             >
               <option value="">Seleccionar SOAT...</option>
                 
@@ -333,6 +431,17 @@ const handleSubmit = () => {
               />
               SOAT
             </label>
+
+            <label>
+              <input
+                type="checkbox"
+                checked={form.documentos.polizaCheck}
+                onChange={() =>
+                  handleCheckbox("polizaCheck")
+                }
+              />
+              POLIZA
+            </label>
             
             <div className="check-item">
              <label className="check-row">
@@ -379,6 +488,7 @@ const handleSubmit = () => {
           <div className="upload">
             DOCUMENTACION LEGAL (SUBE LOS DOCUMENTOS CHECKEADOS)
             <label className="upload-box">
+              
               <input
                 type="file"
                 multiple
@@ -389,6 +499,52 @@ const handleSubmit = () => {
                 <p>Subir archivos</p>
               </div>
             </label>
+            {form.archivos.length > 0 && (
+                  <div className="unit-file-list">
+
+                    {form.archivos.map((file, index) => (
+                      <div
+                        key={index}
+                        className="unit-file-row"
+                      >
+
+                        <div className="unit-file-info">
+
+                          <div className="unit-file-icon">
+                            📄
+                          </div>
+
+                          <div className="unit-file-text">
+
+                            <p className="unit-file-name">
+                              {file.name}
+                            </p>
+
+                            <span className="unit-file-size">
+                              {(
+                                (file.blob?.size || file.size || 0) /
+                                1024 /
+                                1024
+                              ).toFixed(1)} MB
+                            </span>
+
+                          </div>
+
+                        </div>
+
+                        <button
+                          type="button"
+                          className="unit-file-delete"
+                          onClick={() => removeFile(file.id)}
+                        >
+                          ✕
+                        </button>
+
+                      </div>
+                    ))}
+
+                  </div>
+                )}
           </div>
 
         {/* ACTIONS */}

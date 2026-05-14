@@ -169,3 +169,63 @@ input[type="checkbox"]{
   max-height:90vh;
   overflow-y:auto;
 }
+
+.unit-file-list{
+  margin-top:16px;
+
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.unit-file-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:14px 16px;
+
+  background:#f8fafc;
+  border-radius:14px;
+}
+
+.unit-file-info{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.unit-file-icon{
+  font-size:20px;
+}
+
+.unit-file-text{
+  display:flex;
+  flex-direction:column;
+}
+
+.unit-file-name{
+  margin:0;
+
+  font-size:14px;
+  font-weight:600;
+  color:#0f172a;
+}
+
+.unit-file-size{
+  font-size:11px;
+  color:#94a3b8;
+}
+
+.unit-file-delete{
+  width:32px;
+  height:32px;
+
+  border:none;
+  border-radius:8px;
+
+  background:#fee2e2;
+  color:#dc2626;
+
+  cursor:pointer;
+}

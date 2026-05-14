@@ -212,20 +212,23 @@ const isFormValid =
                 const uploadedFiles =
                   Array.from(e.target.files);
 
-                setFiles((prev) => [
-                  ...prev,
-                  ...uploadedFiles
-                ]);
+                const savedFiles = [];
 
                 for (const file of uploadedFiles) {
 
-                  await saveDocument({
+                  const saved = await saveDocument({
                     file,
                     module: "insurance",
                     relatedId: insuranceId,
                   });
 
+                  savedFiles.push(saved);
                 }
+
+                setFiles((prev) => [
+                  ...prev,
+                  ...savedFiles
+                ]);
 
               }}
             />

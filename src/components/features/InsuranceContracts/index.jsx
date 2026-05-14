@@ -7,6 +7,7 @@ import {useGetInsurance} from "context/contracts/useInsurance"
 import DateRange from "../DateRange";
 import {useState} from "react";
 import { useDeleteInsurance } from "context/contracts/useInsurance";
+import deleteDocument from "database/deleteDocument";
 
 function InsuranceContracts({ title, datefilter, className = "",  accent = "default" 
 }) {
@@ -190,8 +191,21 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
                       </button>
 
                       <button
+                        type="button"
                         className="contracts-delete-btn"
-                        onClick={() => {
+                        onClick={async () => {
+
+                          // ELIMINAR ARCHIVOS INDEXEDDB
+                          for (const file of insurance.archivos || []) {
+
+                            if (!file.id) {
+                              continue;
+                            }
+
+                            await deleteDocument(file.id);
+                          }
+
+                          // ELIMINAR CONTRATO ZUSTAND
                           deleteInsurance(insurance._id);
                         }}
                       >
