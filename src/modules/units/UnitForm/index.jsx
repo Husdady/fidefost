@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
+import {useAddUnit} from "context/units/useUnits";
 import { useGetInsurance } from "context/contracts/useInsurance";
 import saveDocument from "database/saveDocument";
 import deleteDocument from "database/deleteDocument";
@@ -8,6 +9,7 @@ import deleteDocument from "database/deleteDocument";
 
 export default function UnitForm({ show, onHide }) {
 
+  const addUnit = useAddUnit();
   const insuranceContracts = useGetInsurance();
 
   const [unitId] = useState(
@@ -50,25 +52,30 @@ const handleCheckbox = (name) => {
   };
 
   const handleFiles = async (e) => {
-    const files = Array.from(e.target.files);
-    const savedFiles = [];
+  const files = Array.from(e.target.files);
 
-    for (const file of files) {
-      const saved = await saveDocument({
-        file,
-        module: "units",
-        relatedId: contractId, 
-        category: "legal"
-      });
+  const savedFiles = [];
 
-      savedFiles.push(saved);
-    }
+  for (const file of files) {
 
-    setForm((prev) => ({
-      ...prev,
-      archivos: [...prev.archivos, ...savedFiles]
-    }));
-  };
+    const saved = await saveDocument({
+      file,
+      module: "units",
+      relatedId: unitId,
+      category: "legal"
+    });
+
+    savedFiles.push(saved);
+  }
+
+  setForm((prev) => ({
+    ...prev,
+    archivos: [
+      ...prev.archivos,
+      ...savedFiles
+    ]
+  }));
+};
 
   const removeFile = async (fileId) => {
   await deleteDocument(fileId);
@@ -77,6 +84,38 @@ const handleCheckbox = (name) => {
     ...prev,
     archivos: prev.archivos.filter(f => f.id !== fileId)
   }));
+};
+
+const handleSubmit = () => {
+
+  const newUnit = {
+    _id: unitId,
+
+    // UNIDAD
+    placa: form.placa,
+    marca: form.marca,
+
+    // MTC / PROPIEDAD
+    mtc: form.mtc,
+    tarjetaVehicularInfo:
+      form.documentos.tarjetaVehicularInfo,
+
+    // REVISION
+    revisionFecha: form.revisionFecha,
+
+    // SEGUROS
+    soat: form.soat,
+    poliza: form.poliza,
+
+    // EXTRA
+    partida: form.partida,
+    archivos: form.archivos,
+    documentos: form.documentos,
+  };
+
+  addUnit(newUnit);
+
+  onHide();
 };
 
   if (!show) return null;
@@ -361,7 +400,9 @@ const handleCheckbox = (name) => {
             Cancelar
           </button>
 
-          <button className="btn-primary">
+          <button className="btn-primary"
+                  onClick={handleSubmit}
+          >
             Guardar Unidad
           </button>
         </div>

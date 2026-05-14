@@ -1,17 +1,9 @@
+import { useGetUnits } from "context/units/useUnits";
+
+
 export default function UnitsTable() {
 
-  const units = [
-    {
-      placa: "ABC-982",
-      marca: "TRACTOR",
-      mtc: "104293881",
-      empresa: "TransLog S.A.",
-      tarjeta:"",
-      revision: "VENCE 12/2026",
-      soat: "SOAT OK",
-      poliza: "Mapfre #993822"
-    }
-  ];
+  const units = useGetUnits();
 
   return (
     <div className="units-table-container">
@@ -52,8 +44,8 @@ export default function UnitsTable() {
 
         <tbody>
 
-          {units.map((unit, index) => (
-            <tr key={index}>
+          {units.map((unit) => (
+            <tr key={unit._id}>
 
               <td>
                 <div className="unit-info">
@@ -61,10 +53,10 @@ export default function UnitsTable() {
                   <div className="unit-icon">
                     🚚
                   </div>
+                  
 
                   <div>
                     <strong>{unit.placa}</strong>
-
                     <p>{unit.marca}</p>
                   </div>
 
@@ -75,24 +67,20 @@ export default function UnitsTable() {
                 <strong>
                   MTC: {unit.mtc}
                 </strong>
-
                 <p>
-                  E.T: {unit.empresa}
-                </p>
-                <p>
-                  T.P: {unit.tarjeta}
+                  T.P: {unit.tarjetaVehicularInfo}
                 </p>
               </td>
 
               <td>
                 <span className="badge-success">
-                  {unit.revision}
+                  {unit.revisionFecha}
                 </span>
               </td>
 
               <td>
                 <strong className="soat-ok">
-                  ● {unit.soat}
+                  {unit.soat}
                 </strong>
 
                 <p>{unit.poliza}</p>
