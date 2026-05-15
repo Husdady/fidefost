@@ -52,12 +52,14 @@ const handleCheckbox = (name) => {
     setForm({ ...form, [name]: !form[name] });
   };
 
-  const handleFiles = async (e) => {
-  const files = Array.from(e.target.files);
+const handleFiles = async (e) => {
+
+  const uploadedFiles =
+    Array.from(e.target.files);
 
   const savedFiles = [];
 
-  for (const file of files) {
+  for (const file of uploadedFiles) {
 
     const saved = await saveDocument({
       file,

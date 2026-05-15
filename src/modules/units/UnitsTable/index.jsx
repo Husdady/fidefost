@@ -97,6 +97,10 @@ export default function UnitsTable() {
 
       </table>
 
+      <p className="units-results">
+        Mostrando 1-{units.length} unidades
+      </p>
+
     </div>
   );
 }
