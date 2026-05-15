@@ -46,6 +46,19 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
 
     return true;
   });
+
+  const formatDate = (dateString) => {
+
+  if (!dateString) {
+    return "-";
+  }
+
+  const [year, month, day] =
+    dateString.split("-");
+
+  return `${day}/${month}/${year}`;
+};
+
   return (
         <article
           className={classnames([
@@ -110,40 +123,57 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
 
                   <td>
                     <span className="contracts-list-date">
-                      {insurance.fechaInicio}
+                      {formatDate(insurance.fechaInicio)}
                       {" - "}
-                      {insurance.fechaFin}
+                      {formatDate(insurance.fechaFin)}
                     </span>
                   </td>
 
                   <td>
                     {(() => {
 
+                      const millisecondsPerDay =
+                        1000 * 60 * 60 * 24;
+
+                      // FECHA ACTUAL
                       const today = new Date();
 
-                      const endDate = new Date(
-                        insurance.fechaFin
-                      );
+                      const todayString =
+                        `${today.getFullYear()}-${
+                          String(today.getMonth() + 1).padStart(2, "0")
+                        }-${
+                          String(today.getDate()).padStart(2, "0")
+                        }`;
 
-                      const diffTime =
-                        endDate - today;
+                      // TIMESTAMPS
+                      const currentDate =
+                        new Date(todayString).getTime();
 
+                      const endDate =
+                        new Date(insurance.fechaFin).getTime();
+
+                      // DIFERENCIA
                       const diffDays =
-                        Math.ceil(
-                          diffTime / (1000 * 60 * 60 * 24)
+                        Math.trunc(
+                          (endDate - currentDate) /
+                          millisecondsPerDay
                         );
 
                       let status = "ACTIVO";
                       let statusClass = "active";
 
+                      // EXPIRADO
                       if (diffDays < 0) {
+
                         status = "EXPIRADO";
                         statusClass = "expired";
+
+                      // PROXIMO A VENCER
                       } else if (diffDays <= 59) {
+
                         status = "PROX. EXPIRAR";
                         statusClass = "warning";
                       }
-
                       return (
                         <span
                           className={`contracts-list-status ${statusClass}`}

@@ -34,37 +34,46 @@ export default function UpcomingRenewals() {
             return unit.poliza === insurance.poliza;
           });
 
-          // STATUS
-          const today = new Date();
+        const millisecondsPerDay =
+          1000 * 60 * 60 * 24;
 
-          const endDate = new Date(
-            insurance.fechaFin
+        // FECHA ACTUAL
+        const today = new Date();
+
+        const todayString =
+          `${today.getFullYear()}-${
+            String(today.getMonth() + 1).padStart(2, "0")
+          }-${
+            String(today.getDate()).padStart(2, "0")
+          }`;
+
+        // TIMESTAMPS LIMPIOS
+        const currentDate =
+          new Date(todayString).getTime();
+
+        const endDate =
+          new Date(insurance.fechaFin).getTime();
+
+        // DIFERENCIA REAL
+        const diffDays =
+          Math.trunc(
+            (endDate - currentDate) /
+            millisecondsPerDay
           );
 
-          const diffTime =
-            endDate - today;
+        let status = "ACTIVO";
+        let statusClass = "renewal-success";
 
-          const diffDays =
-            Math.floor(
-              diffTime / (1000 * 60 * 60 * 24)
-            );
+        if (diffDays < 0) {
 
-          let status = "ACTIVO";
-          let statusClass = "renewal-success";
+          status = "EXPIRADO";
+          statusClass = "renewal-danger";
 
-          // YA VENCIO
-          if (diffDays < 0) {
+        } else if (diffDays <= 59) {
 
-            status = "EXPIRADO";
-            statusClass = "renewal-danger";
-
-          // DENTRO DE LOS 60 DIAS
-          } else if (diffDays <= 60) {
-
-            status = "PROX. EXPIRAR";
-            statusClass = "renewal-warning";
-          }
-
+          status = "PROX. EXPIRAR";
+          statusClass = "renewal-warning";
+        }
           return (
             <div
               key={insurance._id}
