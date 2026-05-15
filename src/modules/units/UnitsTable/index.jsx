@@ -4,10 +4,14 @@ import UnitForm from "../UnitForm";
 import { useDeleteUnit } from "context/units/useUnits";
 import deleteDocument from "database/deleteDocument";
 
+//export 
+import exportUnitsExcel from "utils/exportUnitsExcel";
+import exportUnitsZip from "utils/exportUnitsZip";
 
 //icons
 import EditIcon from "./icons/edit-icon";
 import DeleteIcon from "./icons/delete-icon";
+import ExportIcon from "./icons/export-icon";
 
 export default function UnitsTable() {
 
@@ -37,7 +41,10 @@ const [selectedUnit, setSelectedUnit] =
 
           <input type="date" />
 
-          <button className="export-btn">
+          <button 
+               onClick={() => exportUnitsExcel(units)}
+               className="export-btn"
+          >
             Exportar Data
           </button>
 
@@ -103,8 +110,8 @@ const [selectedUnit, setSelectedUnit] =
               </td>
 
               <td>
-                <div className="contracts-gps-item__column">
-                  <span className="contracts-gps-item__label">
+                <div>
+                  <span>
                     <button
                       onClick={() => {
                         setSelectedUnit(unit);
@@ -115,7 +122,7 @@ const [selectedUnit, setSelectedUnit] =
                     </button>
                   </span>
 
-                  <span className="contracts-gps-item__label">
+                  <span>
                     <button
                       onClick={async () => {
 
@@ -136,6 +143,17 @@ const [selectedUnit, setSelectedUnit] =
                       <DeleteIcon />
                     </button>
                   </span>
+
+                  <span>
+                    <button
+                    onClick={() =>
+                      exportUnitsZip(unit)
+                    }
+                    >
+                      <ExportIcon />
+                    </button>
+                  </span>
+                  
                 </div>
               </td>
 

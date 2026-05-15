@@ -1,0 +1,98 @@
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+
+export default function exportUnitsExcel(units) {
+
+  const data = units.map((unit) => ({
+
+    // UNIDAD
+    PLACA: unit.placa,
+    MARCA: unit.marca,
+
+    // MTC / PROPIEDAD
+    MTC: unit.mtc,
+
+    TARJETA_VEHICULAR:
+      unit.tarjetaVehicularInfo,
+
+    // REVISION
+    F_VENCIMIENTO_REVISION_TECNICA:
+      unit.revisionFecha,
+
+    // SEGUROS
+    SOAT: unit.soat,
+
+    POLIZA: unit.poliza,
+
+    // EXTRA
+    PARTIDA: unit.partida,
+
+    // CHECKS
+    DOCUMENTACION_MTC:
+      unit.documentos?.mtcCheck
+        ? "SI"
+        : "NO",
+
+    DOCUMENTACION_SOAT:
+      unit.documentos?.soatCheck
+        ? "SI"
+        : "NO",
+
+    DOCUMENTACION_POLIZA:
+      unit.documentos?.polizaCheck
+        ? "SI"
+        : "NO",
+
+    DOCUMENTACION_TARJETA_VEHICULAR:
+      unit.documentos?.tarjetaVehicularCheck
+        ? "SI"
+        : "NO",
+    DOCUMENTACION_REC_TECN_TRACTOR_BAL_929:
+        unit.documentos?.recTecnTractorCheck 
+        ? "SI"
+        : "NO",
+    DOCUMENTACION_REC_TECN_TRACTOR_BAL_C3E_970:
+        unit.documentos?.recTecnCarretaCheck 
+        ? "SI"
+        : "NO",
+    DOCUMENTACION_PERMISO_MUNICIPAL:
+        unit.documentos?.permisoMunicipalCheck
+        ? "SI"
+        : "NO",
+  }));
+
+  // SHEET
+  const worksheet =
+    XLSX.utils.json_to_sheet(data);
+
+  // WORKBOOK
+  const workbook =
+    XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    "UNIDADES"
+  );
+
+  // BUFFER
+  const excelBuffer =
+    XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+  // FILE
+  const fileData = new Blob(
+    [excelBuffer],
+    {
+      type:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+    }
+  );
+
+  saveAs(
+    fileData,
+    "UNIDADES.xlsx"
+  );
+}

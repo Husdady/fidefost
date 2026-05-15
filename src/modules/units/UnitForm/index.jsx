@@ -71,7 +71,7 @@ const handleFiles = async (e) => {
     const saved = await saveDocument({
       file,
       module: "units",
-      relatedId: unitId,
+      relatedId: String(unitId),
       category: "legal"
     });
 
@@ -133,7 +133,7 @@ const handleSubmit = () => {
   onHide();
 };
 
-const handleInsuranceSelect = (
+const handleInsuranceSelect = async (
   type,
   value
 ) => {
@@ -162,13 +162,42 @@ const handleInsuranceSelect = (
     return;
   }
 
+  // =========================
+  // GUARDAR ARCHIVOS EN INDEXEDDB
+  // =========================
+
+  const savedFiles =
+  (selectedInsurance.archivos || []).map(
+    (file) => ({
+      id: file.id,
+
+      name: file.name,
+
+      size: file.size,
+
+      type: file.type,
+
+      blob: file.blob,
+
+      insuranceFileId: file.id,
+
+      insuranceType:
+        type === "soat"
+          ? "SOAT"
+          : "POLIZA"
+    })
+  );
+
+  // =========================
+  // ACTUALIZAR FORM
+  // =========================
+
   setForm((prev) => {
 
     // ELIMINAR ARCHIVOS ANTERIORES
     const filteredFiles =
       prev.archivos.filter((file) => {
 
-        // si viene de SOAT
         if (
           type === "soat" &&
           file.insuranceType === "SOAT"
@@ -176,7 +205,6 @@ const handleInsuranceSelect = (
           return false;
         }
 
-        // si viene de POLIZA
         if (
           type === "poliza" &&
           file.insuranceType === "POLIZA"
@@ -187,17 +215,6 @@ const handleInsuranceSelect = (
         return true;
       });
 
-    // NUEVOS ARCHIVOS
-    const newFiles =
-      selectedInsurance.archivos.map((file) => ({
-        ...structuredClone(file),
-
-        insuranceType:
-          type === "soat"
-            ? "SOAT"
-            : "POLIZA"
-      }));
-      
     return {
       ...prev,
 
@@ -205,7 +222,7 @@ const handleInsuranceSelect = (
 
       archivos: [
         ...filteredFiles,
-        ...newFiles
+        ...savedFiles
       ],
 
       documentos: {
@@ -216,7 +233,7 @@ const handleInsuranceSelect = (
             ? true
             : prev.documentos.soatCheck,
 
-        mtcCheck:
+        polizaCheck:
           type === "poliza"
             ? true
             : prev.documentos.polizaCheck
