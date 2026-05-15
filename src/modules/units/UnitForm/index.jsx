@@ -1,21 +1,28 @@
 import { createPortal } from "react-dom";
 import { useState } from "react";
+import { useEffect } from "react";
 
 import {useAddUnit} from "context/units/useUnits";
 import { useGetInsurance } from "context/contracts/useInsurance";
+import { useUpdateUnit } from "context/units/useUnits";
+
 import saveDocument from "database/saveDocument";
 import deleteDocument from "database/deleteDocument";
 
 
-export default function UnitForm({ show, onHide }) {
+export default function UnitForm({ show, onHide, initialData = null,
+  isEdit = false }) {
 
   const addUnit = useAddUnit();
+  const updateUnit = useUpdateUnit();
   const insuranceContracts = useGetInsurance();
 
   const [unitId] = useState(
   () => Date.now().toString()
 );
-  const [form, setForm] = useState({
+  const [form, setForm] = useState(
+  
+  initialData || {
   marca: "",
   placa: "",
   partida: "",
@@ -91,32 +98,37 @@ const handleFiles = async (e) => {
 
 const handleSubmit = () => {
 
-  const newUnit = {
-    _id: unitId,
+  const unitData = {
+    _id: initialData?._id || unitId,
 
-    // UNIDAD
     placa: form.placa,
     marca: form.marca,
 
-    // MTC / PROPIEDAD
     mtc: form.mtc,
+
     tarjetaVehicularInfo:
       form.documentos.tarjetaVehicularInfo,
 
-    // REVISION
     revisionFecha: form.revisionFecha,
 
-    // SEGUROS
     soat: form.soat,
     poliza: form.poliza,
 
-    // EXTRA
     partida: form.partida,
+
     archivos: form.archivos,
+
     documentos: form.documentos,
   };
 
-  addUnit(newUnit);
+  if (isEdit) {
+
+    updateUnit(unitData);
+
+  } else {
+
+    addUnit(unitData);
+  }
 
   onHide();
 };
@@ -213,6 +225,15 @@ const handleInsuranceSelect = (
   });
 };
 
+useEffect(() => {
+
+  if (initialData) {
+
+    setForm(initialData);
+  }
+
+}, [initialData]);
+
 
   if (!show) return null;
 
@@ -227,11 +248,15 @@ const handleInsuranceSelect = (
         <div className="modal-header-custom">
           <div>
             <h2 className="title">
-              Registrar Nueva Unidad
+              {isEdit
+                ? "Editar Unidad"
+                : "Registrar Nueva Unidad"}
             </h2>
 
             <p className="subtitle">
-              Configure los parámetros técnicos y legales.
+              {isEdit
+                ? "Actualice la información técnica y legal."
+                : "Configure los parámetros técnicos y legales."}
             </p>
           </div>
         </div>
@@ -558,10 +583,13 @@ const handleInsuranceSelect = (
             Cancelar
           </button>
 
-          <button className="btn-primary"
-                  onClick={handleSubmit}
+          <button
+            className="btn-primary"
+            onClick={handleSubmit}
           >
-            Guardar Unidad
+            {isEdit
+              ? "Actualizar Unidad"
+              : "Guardar Unidad"}
           </button>
         </div>
 

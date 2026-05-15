@@ -18,6 +18,15 @@ const useUnitsStore = create(
             (unit) => unit._id !== id
           ),
         })),
+      
+      updateUnit: (updatedUnit) =>
+        set((state) => ({
+          units: state.units.map((unit) =>
+            unit._id === updatedUnit._id
+              ? updatedUnit
+              : unit
+          )
+        })),
 
     }),
     {
@@ -34,3 +43,6 @@ export const useAddUnit = () =>
 
 export const useDeleteUnit = () =>
   useUnitsStore((state) => state.deleteUnit);
+
+export const useUpdateUnit = () =>
+  useUnitsStore((state) => state.updateUnit);

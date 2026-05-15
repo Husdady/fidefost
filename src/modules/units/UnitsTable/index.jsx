@@ -1,7 +1,23 @@
 import { useGetUnits } from "context/units/useUnits";
+import { useState } from "react";
+import UnitForm from "../UnitForm";
+import { useDeleteUnit } from "context/units/useUnits";
+import deleteDocument from "database/deleteDocument";
 
+
+//icons
+import EditIcon from "./icons/edit-icon";
+import DeleteIcon from "./icons/delete-icon";
 
 export default function UnitsTable() {
+
+const deleteUnit = useDeleteUnit();
+
+const [editModal, setEditModal] =
+  useState(false);
+
+const [selectedUnit, setSelectedUnit] =
+  useState(null);
 
   const units = useGetUnits();
 
@@ -87,7 +103,40 @@ export default function UnitsTable() {
               </td>
 
               <td>
-                ⋮
+                <div className="contracts-gps-item__column">
+                  <span className="contracts-gps-item__label">
+                    <button
+                      onClick={() => {
+                        setSelectedUnit(unit);
+                        setEditModal(true);
+                      }}
+                    >
+                      <EditIcon />
+                    </button>
+                  </span>
+
+                  <span className="contracts-gps-item__label">
+                    <button
+                      onClick={async () => {
+
+                        // ELIMINAR ARCHIVOS INDEXEDDB
+                        for (const file of unit.archivos || []) {
+
+                          if (!file.id) {
+                            continue;
+                          }
+
+                          await deleteDocument(file.id);
+                        }
+
+                        // ELIMINAR UNIDAD ZUSTAND
+                        deleteUnit(unit._id);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </button>
+                  </span>
+                </div>
               </td>
 
             </tr>
@@ -96,6 +145,18 @@ export default function UnitsTable() {
         </tbody>
 
       </table>
+
+      <UnitForm
+        show={editModal}
+        onHide={() => {
+
+          setEditModal(false);
+
+          setSelectedUnit(null);
+        }}
+        initialData={selectedUnit}
+        isEdit={true}
+      />
 
       <p className="units-results">
         Mostrando 1-{units.length} unidades
