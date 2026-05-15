@@ -107,9 +107,14 @@ export default function UpcomingRenewals() {
 
               </div>
 
-              <button className="renewal-btn">
-                GESTIONAR
-              </button>
+              {(
+                status === "PROX. EXPIRAR" ||
+                status === "EXPIRADO"
+              ) && (
+                <button className="renewal-card-button">
+                  Gestionar
+                </button>
+              )}
 
             </div>
           );
