@@ -102,3 +102,38 @@
 
   cursor:pointer;
 }
+
+.renewal-success{
+  border-left:4px solid #16a34a;
+}
+
+.renewal-success .renewal-icon{
+  background:#dcfce7;
+  color:#16a34a;
+}
+
+.renewal-warning{
+  border-left:4px solid #d97706;
+}
+
+.renewal-warning .renewal-icon{
+  background:#fef3c7;
+  color:#d97706;
+}
+
+.renewal-danger{
+  border-left:4px solid #dc2626;
+}
+
+.renewal-danger .renewal-icon{
+  background:#fee2e2;
+  color:#dc2626;
+}
+
+.renewal-status{
+  display:inline-block;
+  margin-top:6px;
+
+  font-size:11px;
+  font-weight:700;
+}

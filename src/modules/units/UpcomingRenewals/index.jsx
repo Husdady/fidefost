@@ -34,10 +34,41 @@ export default function UpcomingRenewals() {
             return unit.poliza === insurance.poliza;
           });
 
+          // STATUS
+          const today = new Date();
+
+          const endDate = new Date(
+            insurance.fechaFin
+          );
+
+          const diffTime =
+            endDate - today;
+
+          const diffDays =
+            Math.floor(
+              diffTime / (1000 * 60 * 60 * 24)
+            );
+
+          let status = "ACTIVO";
+          let statusClass = "renewal-success";
+
+          // YA VENCIO
+          if (diffDays < 0) {
+
+            status = "EXPIRADO";
+            statusClass = "renewal-danger";
+
+          // DENTRO DE LOS 60 DIAS
+          } else if (diffDays <= 60) {
+
+            status = "PROX. EXPIRAR";
+            statusClass = "renewal-warning";
+          }
+
           return (
             <div
               key={insurance._id}
-              className="renewal-card"
+              className={`renewal-card ${statusClass}`}
             >
 
               <div className="renewal-card-left">
@@ -59,6 +90,9 @@ export default function UpcomingRenewals() {
                     {" • "}
                     Vence el {insurance.fechaFin}
                   </p>
+                  <span className="renewal-status">
+                    {status}
+                  </span>
 
                 </div>
 
