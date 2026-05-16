@@ -20,6 +20,11 @@ export default function UnitForm({ show, onHide, initialData = null,
   const [unitId] = useState(
   () => Date.now().toString()
 );
+
+ const [deletedFiles, setDeletedFiles] = useState([]);
+
+ const [originalFiles, setOriginalFiles] = useState([]);
+
   const [form, setForm] = useState(
   
   initialData || {
@@ -59,47 +64,85 @@ const handleCheckbox = (name) => {
     setForm({ ...form, [name]: !form[name] });
   };
 
-const handleFiles = async (e) => {
+const handleFiles = (e) => {
 
   const uploadedFiles =
     Array.from(e.target.files);
-
-  const savedFiles = [];
-
-  for (const file of uploadedFiles) {
-
-    const saved = await saveDocument({
-      file,
-      module: "units",
-      relatedId: String(unitId),
-      category: "legal"
-    });
-
-    savedFiles.push(saved);
-  }
 
   setForm((prev) => ({
     ...prev,
     archivos: [
       ...prev.archivos,
-      ...savedFiles
+      ...uploadedFiles
     ]
   }));
 };
 
-  const removeFile = async (fileId) => {
-  await deleteDocument(fileId);
+  const removeFile = (fileId) => {
 
+  const fileToDelete =
+    form.archivos.find(
+      (f) => f.id === fileId
+    );
+
+  // SI YA EXISTE EN INDEXEDDB
+  if (fileToDelete?.id) {
+
+    setDeletedFiles((prev) => [
+      ...prev,
+      fileToDelete.id
+    ]);
+  }
+
+  // SOLO ELIMINAR DEL FORM
   setForm((prev) => ({
     ...prev,
-    archivos: prev.archivos.filter(f => f.id !== fileId)
+    archivos: prev.archivos.filter(
+      (f) => f.id !== fileId
+    )
   }));
 };
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
+
+  // ELIMINAR DEFINITIVAMENTE
+  // SOLO AL ACTUALIZAR
+  if (isEdit) {
+
+    for (const fileId of deletedFiles) {
+
+      await deleteDocument(fileId);
+    }
+  }
+
+  const storedFiles = [];
+
+  for (const file of form.archivos) {
+
+    // YA EXISTE EN INDEXEDDB
+    if (file.id) {
+
+      storedFiles.push(file);
+
+      continue;
+    }
+
+    // NUEVO ARCHIVO
+    const saved = await saveDocument({
+      file,
+      module: "units",
+      relatedId:
+        initialData?._id || unitId,
+      category: "legal"
+    });
+
+    storedFiles.push(saved);
+  }
 
   const unitData = {
-    _id: initialData?._id || unitId,
+
+    _id:
+      initialData?._id || unitId,
 
     placa: form.placa,
     marca: form.marca,
@@ -109,14 +152,15 @@ const handleSubmit = () => {
     tarjetaVehicularInfo:
       form.documentos.tarjetaVehicularInfo,
 
-    revisionFecha: form.revisionFecha,
+    revisionFecha:
+      form.revisionFecha,
 
     soat: form.soat,
     poliza: form.poliza,
 
     partida: form.partida,
 
-    archivos: form.archivos,
+    archivos: storedFiles,
 
     documentos: form.documentos,
   };
@@ -247,15 +291,35 @@ useEffect(() => {
   if (initialData) {
 
     setForm(initialData);
+
+    setOriginalFiles(
+      initialData.archivos || []
+    );
   }
 
 }, [initialData]);
 
 
+const handleClose = () => {
+
+  // RESTAURAR SI CANCELA
+  if (isEdit) {
+
+    setForm((prev) => ({
+      ...prev,
+      archivos: originalFiles
+    }));
+
+    setDeletedFiles([]);
+  }
+
+  onHide();
+};
+
   if (!show) return null;
 
   return createPortal(
-    <div className="modal" onClick={onHide}>
+    <div className="modal" onClick={handleClose}>
       <div
         className="modal-content unit-form-modal"
         onClick={(e) => e.stopPropagation()}
@@ -595,7 +659,7 @@ useEffect(() => {
         <div className="actions">
           <button
             className="btn-secondary"
-            onClick={onHide}
+            onClick={handleClose}
           >
             Cancelar
           </button>

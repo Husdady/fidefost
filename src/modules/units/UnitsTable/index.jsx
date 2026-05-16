@@ -15,6 +15,17 @@ import ExportIcon from "./icons/export-icon";
 
 export default function UnitsTable() {
 
+const [currentPage, setCurrentPage] =
+  useState(0);
+
+const itemsPerPage = 10;
+
+  const startIndex =
+  currentPage * itemsPerPage;
+
+const endIndex =
+  startIndex + itemsPerPage;
+
 const deleteUnit = useDeleteUnit();
 
 const [editModal, setEditModal] =
@@ -177,7 +188,19 @@ const [selectedUnit, setSelectedUnit] =
       />
 
       <p className="units-results">
-        Mostrando 1-{units.length} unidades
+         Mostrando {
+          units.length === 0
+            ? 0
+            : startIndex + 1
+        }
+        -
+        {
+          Math.min(
+            endIndex,
+            units.length
+          )
+        }
+        unidades
       </p>
 
     </div>
