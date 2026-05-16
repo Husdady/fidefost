@@ -80,6 +80,11 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
   : null;
 
   const [contractId] = useState(() => contractData?._id || Date.now().toString());
+  
+  const [deletedFiles, setDeletedFiles] = useState([]);
+
+  const [originalFiles, setOriginalFiles] = useState([]);
+
   const operators = useGetClients();
   const calculateDays = (start, end) => {
   if (!start || !end) return 0;
@@ -118,9 +123,11 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
     const files = await getDocumentsByRelation("contracts", contractId);
 
     setForm((prev) => ({
-      ...prev,
-      archivos: files
-    }));
+  ...prev,
+  archivos: files
+}));
+
+setOriginalFiles(files);
   };
 
   loadFiles();
@@ -145,47 +152,87 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
     setForm({ ...form, [name]: !form[name] });
   };
 
-  const handleFiles = async (e) => {
-    const files = Array.from(e.target.files);
-    const savedFiles = [];
+  const handleFiles = (e) => {
 
-    for (const file of files) {
-      const saved = await saveDocument({
-        file,
-        module: "contracts",
-        relatedId: contractId, 
-        category: "legal"
-      });
-
-      savedFiles.push(saved);
-    }
-
-    setForm((prev) => ({
-      ...prev,
-      archivos: [...prev.archivos, ...savedFiles]
-    }));
-  };
-
-  const removeFile = async (fileId) => {
-  await deleteDocument(fileId);
+  const uploadedFiles =
+    Array.from(e.target.files);
 
   setForm((prev) => ({
     ...prev,
-    archivos: prev.archivos.filter(f => f.id !== fileId)
+    archivos: [
+      ...prev.archivos,
+      ...uploadedFiles
+    ]
   }));
 };
 
-const handleSubmit = () => {
+  const removeFile = (file) => {
+
+  // marcar para eliminar después
+  if (file.id) {
+
+    setDeletedFiles((prev) => [
+      ...prev,
+      file.id
+    ]);
+  }
+
+  // solo quitar visualmente
+  setForm((prev) => ({
+    ...prev,
+    archivos: prev.archivos.filter(
+      (f) => f !== file
+    )
+  }));
+};
+
+const handleSubmit = async () => {
+
+  // eliminar definitivos
+  // solo al actualizar
+  if (contractData) {
+
+    for (const fileId of deletedFiles) {
+
+      await deleteDocument(fileId);
+    }
+  }
+
+  const storedFiles = [];
+
+  for (const file of form.archivos) {
+
+    // ya existe en indexeddb
+    if (file.id) {
+
+      storedFiles.push(file);
+
+      continue;
+    }
+
+    // guardar nuevos archivos
+    const saved = await saveDocument({
+      file,
+      module: "contracts",
+      relatedId: contractId,
+      category: "legal"
+    });
+
+    storedFiles.push(saved);
+  }
+
   const dias = calculateDays(
     form.fechaInicio,
     form.fechaFin
   );
 
-  // calcular vigencia inducción
-  const inductionDate = new Date(form.fechaInduccion);
+  const inductionDate =
+    new Date(form.fechaInduccion);
+
   const today = new Date();
 
-  const diffTime = today - inductionDate;
+  const diffTime =
+    today - inductionDate;
 
   const diffDays =
     diffTime / (1000 * 60 * 60 * 24);
@@ -196,6 +243,7 @@ const handleSubmit = () => {
       : "Inducción Pendiente";
 
   const newAudit = {
+
     ...contractData,
 
     _id: contractId,
@@ -208,24 +256,33 @@ const handleSubmit = () => {
 
     gpsId: form.gpsId,
 
+    archivos: storedFiles,
+
     auditContract: {
       start: form.fechaInicio,
       end: form.fechaFin,
       days: dias
     },
+
     documentos: form.documentos,
+
     wifi: form.wifi,
+
     gps: form.gps,
 
     auditLicense: form.licencia,
 
-    auditInductionDate: form.fechaInduccion,
+    auditInductionDate:
+      form.fechaInduccion,
 
-    auditInductionStatus: inductionStatus,
+    auditInductionStatus:
+      inductionStatus,
 
-    auditLicenseExpiration: form.fechaVencimiento,
+    auditLicenseExpiration:
+      form.fechaVencimiento,
 
-    auditOperationalStatus: "EN RUTA"
+    auditOperationalStatus:
+      "EN RUTA"
   };
 
   onSave(newAudit, !!contractData);
@@ -254,8 +311,24 @@ const isFormValid =
   // ARCHIVOS
   form.archivos.length > 0;
 
+  const handleClose = () => {
+
+  // restaurar archivos originales
+  if (contractData) {
+
+    setForm((prev) => ({
+      ...prev,
+      archivos: originalFiles
+    }));
+
+    setDeletedFiles([]);
+  }
+
+  onHide();
+};
+
   return createPortal(
-    <div className="modal" onClick={onHide}>
+    <div className="modal" onClick={handleClose}>
       <div
         className="modal-content"
         onClick={(e) => e.stopPropagation()}
@@ -474,7 +547,10 @@ const isFormValid =
                   console.log("FILE ID:", file.id);
 
                   return(
-                  <div key={file.id} className="file-row">
+                  <div
+                    key={file.id || `${file.name}-${index}`}
+                    className="file-row"
+                  >
                     
                     <div className="file-left">
                       <span className="file-icon">📄</span>
@@ -491,7 +567,7 @@ const isFormValid =
                       className="file-delete"
                       onClick={(e) => {
                         e.stopPropagation();
-                        removeFile(file.id);
+                        removeFile(file);
                       }}
                     >
                       <svg
@@ -519,7 +595,7 @@ const isFormValid =
 
         {/* ACTIONS */}
         <div className="actions">
-          <button className="btn-secondary" onClick={onHide}>Cancelar</button>
+          <button className="btn-secondary" onClick={handleClose}>Cancelar</button>
           <button 
             type="button"
             className="btn-primary" 
