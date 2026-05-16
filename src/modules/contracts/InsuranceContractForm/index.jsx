@@ -21,6 +21,10 @@ export default function InsuranceContractForm({
 
   const [files, setFiles] = useState([]);
 
+  const [originalFiles, setOriginalFiles] = useState([]);
+
+  const [deletedFiles, setDeletedFiles] = useState([]);
+
   const updateInsurance = useUpdateInsurance();
 
   const [form, setForm] = useState(
@@ -60,6 +64,8 @@ export default function InsuranceContractForm({
       );
 
     setFiles(savedFiles);
+
+    setOriginalFiles(savedFiles);
   };
 
   loadFiles();
@@ -79,27 +85,38 @@ if (!show) return null;
   };
 
   const handleSubmit = async () => {
-  
-  const storedFiles = [];
 
-for (const file of files) {
+  // eliminar definitivamente
+  // solo al actualizar
+  if (isEdit) {
 
-  // si ya existe en indexeddb
-  if (file.id) {
+    for (const fileId of deletedFiles) {
 
-    storedFiles.push(file);
-
-    continue;
+      await deleteDocument(fileId);
+    }
   }
 
-  const saved = await saveDocument({
-    file,
-    module: "insurance",
-    relatedId: insuranceId,
-  });
+  const storedFiles = [];
 
-  storedFiles.push(saved);
-}
+  for (const file of files) {
+
+    // si ya existe en indexeddb
+    if (file.id) {
+
+      storedFiles.push(file);
+
+      continue;
+    }
+
+    // guardar nuevos archivos
+    const saved = await saveDocument({
+      file,
+      module: "insurance",
+      relatedId: insuranceId,
+    });
+
+    storedFiles.push(saved);
+  }
 
   const newInsurance = {
 
@@ -113,18 +130,20 @@ for (const file of files) {
     archivos: storedFiles,
   };
 
+  // EDITAR
   if (isEdit) {
 
-  updateInsurance(
-    initialData._id,
-    newInsurance
-  );
+    updateInsurance(
+      initialData._id,
+      newInsurance
+    );
 
-  onHide();
+    onHide();
 
-  return;
-}
+    return;
+  }
 
+  // CREAR
   onSave(newInsurance);
 };
 
@@ -145,9 +164,23 @@ const isFormValid =
     ? "SOAT-"
     : "POLIZA-";
 
+  const handleClose = () => {
+
+    // restaurar archivos originales
+    // si cancela edición
+    if (isEdit) {
+
+      setFiles(originalFiles);
+
+      setDeletedFiles([]);
+    }
+
+    onHide();
+  };
+
 
   return createPortal(
-    <div className="modal" onClick={onHide}>
+    <div className="modal" onClick={handleClose}>
       <div
         className="modal-content insurance-modal"
         onClick={(e) => e.stopPropagation()}
@@ -359,24 +392,24 @@ const isFormValid =
                     <button
                       type="button"
                       className="insurance-file-delete"
-                      onClick={async () => {
+                      onClick={() => {
 
-                        const fileToDelete = files[index];
+  const fileToDelete = files[index];
 
-                        // eliminar de indexeddb
-                        // solo si ya existe guardado
-                        if (fileToDelete.id) {
+  // guardar ids eliminados temporalmente
+  if (fileToDelete.id) {
 
-                          await deleteDocument(
-                            fileToDelete.id
-                          );
-                        }
+    setDeletedFiles((prev) => [
+      ...prev,
+      fileToDelete.id
+    ]);
+  }
 
-                        // eliminar del estado local
-                        setFiles((prev) =>
-                          prev.filter((_, i) => i !== index)
-                        );
-                      }}
+  // solo quitar del form visualmente
+  setFiles((prev) =>
+    prev.filter((_, i) => i !== index)
+  );
+}}
                     >
                       <svg
                         width="18"
@@ -404,7 +437,7 @@ const isFormValid =
 
           <button
             className="btn-secondary"
-            onClick={onHide}
+            onClick={handleClose}
           >
             Cancelar
           </button>
