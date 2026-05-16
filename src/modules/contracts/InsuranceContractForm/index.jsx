@@ -4,35 +4,70 @@ import deleteDocument from "database/deleteDocument";
 import { createPortal } from "react-dom";
 import { useState, useEffect } from "react";
 
+import { useUpdateInsurance } from "context/contracts/useInsurance";
+
 export default function InsuranceContractForm({
+  show,
   onHide,
   onSave,
+  initialData = null,
+  isEdit = false
 }) {
-  const [insuranceId] = useState(() =>
-  crypto.randomUUID()
+
+  
+  const [insuranceId] = useState(
+  () => initialData?._id || crypto.randomUUID()
 );
+
   const [files, setFiles] = useState([]);
-  const [form, setForm] = useState({
+
+  const updateInsurance = useUpdateInsurance();
+
+  const [form, setForm] = useState(
+
+  initialData || {
+
     proveedor: "",
-    tipo: "",
     poliza: "",
+    tipo: "",
     fechaInicio: "",
     fechaFin: "",
-  });
+    archivos: []
+  }
+);
 
   useEffect(() => {
+
+  if (initialData) {
+
+    setForm({
+      ...initialData,
+
+      // quitar prefijo visualmente
+      poliza:
+        initialData.poliza
+          ?.replace("SOAT-", "")
+          ?.replace("POLIZA-", "")
+    });
+  }
+
   const loadFiles = async () => {
+
     const savedFiles =
       await getDocumentsByRelation(
         "insurance",
-        insuranceId
+        initialData?._id || insuranceId
       );
 
     setFiles(savedFiles);
   };
 
   loadFiles();
-}, [insuranceId]);
+
+}, [initialData, insuranceId]);
+
+
+if (!show) return null;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,17 +78,52 @@ export default function InsuranceContractForm({
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+  
+  const storedFiles = [];
+
+for (const file of files) {
+
+  // si ya existe en indexeddb
+  if (file.id) {
+
+    storedFiles.push(file);
+
+    continue;
+  }
+
+  const saved = await saveDocument({
+    file,
+    module: "insurance",
+    relatedId: insuranceId,
+  });
+
+  storedFiles.push(saved);
+}
 
   const newInsurance = {
+
     _id: insuranceId,
 
     ...form,
 
-    poliza: `${policyPrefix}${form.poliza}`,
+    poliza:
+      `${policyPrefix}${form.poliza}`,
 
-    archivos: files,
+    archivos: storedFiles,
   };
+
+  if (isEdit) {
+
+  updateInsurance(
+    initialData._id,
+    newInsurance
+  );
+
+  onHide();
+
+  return;
+}
 
   onSave(newInsurance);
 };
@@ -68,7 +138,7 @@ const isFormValid =
   form.fechaFin &&
 
   // ARCHIVOS
-  files.length > 0
+  files.length > 0;
 
   const policyPrefix =
   form.tipo === "SOAT"
@@ -83,7 +153,9 @@ const isFormValid =
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="insurance-form-title">
-          Nuevo Contrato de seguro
+          {isEdit
+            ? "Editar Seguro"
+            : "Registrar Seguro"}
         </h2>
 
         <div className="grid">
@@ -207,30 +279,17 @@ const isFormValid =
             <input
               type="file"
               multiple
-              onChange={async (e) => {
+              onChange={(e) => {
 
-                const uploadedFiles =
-                  Array.from(e.target.files);
+              const uploadedFiles =
+                Array.from(e.target.files);
 
-                const savedFiles = [];
+              setFiles((prev) => [
+                ...prev,
+                ...uploadedFiles
+              ]);
 
-                for (const file of uploadedFiles) {
-
-                  const saved = await saveDocument({
-                    file,
-                    module: "insurance",
-                    relatedId: insuranceId,
-                  });
-
-                  savedFiles.push(saved);
-                }
-
-                setFiles((prev) => [
-                  ...prev,
-                  ...savedFiles
-                ]);
-
-              }}
+            }}
             />
 
             <div className="upload-content">
@@ -301,17 +360,22 @@ const isFormValid =
                       type="button"
                       className="insurance-file-delete"
                       onClick={async () => {
+
                         const fileToDelete = files[index];
 
-                        await deleteDocument(fileToDelete.id);
+                        // eliminar de indexeddb
+                        // solo si ya existe guardado
+                        if (fileToDelete.id) {
 
-                        const updatedFiles =
-                          await getDocumentsByRelation(
-                            "insurance",
-                            insuranceId
+                          await deleteDocument(
+                            fileToDelete.id
                           );
+                        }
 
-                        setFiles(updatedFiles);
+                        // eliminar del estado local
+                        setFiles((prev) =>
+                          prev.filter((_, i) => i !== index)
+                        );
                       }}
                     >
                       <svg
@@ -350,7 +414,9 @@ const isFormValid =
             onClick={handleSubmit}
             disabled={!isFormValid}
           >
-            Guardar Contrato
+            {isEdit
+              ? "Actualizar Seguro"
+              : "Guardar Seguro"}
           </button>
 
         </div>

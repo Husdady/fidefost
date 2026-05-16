@@ -1,13 +1,23 @@
+import { useState } from "react";
 import { useGetInsurance } from "context/contracts/useInsurance";
 import { useGetUnits } from "context/units/useUnits";
 
+import InsuranceContractForm from "modules/contracts/InsuranceContractForm";
 
 export default function UpcomingRenewals() {
 
   const insuranceContracts = useGetInsurance();
   const units = useGetUnits();
 
+  const [editModal, setEditModal] =
+  useState(false);
+
+const [selectedInsurance, setSelectedInsurance] =
+  useState(null);
+
   return (
+    <>
+    
     <article className="upcoming-renewals">
 
       <div className="upcoming-renewals__header">
@@ -111,7 +121,15 @@ export default function UpcomingRenewals() {
                 status === "PROX. EXPIRAR" ||
                 status === "EXPIRADO"
               ) && (
-                <button className="renewal-card-button">
+                <button
+                  className="renewal-card-button"
+                  onClick={() => {
+
+                    setSelectedInsurance(insurance);
+
+                    setEditModal(true);
+                  }}
+                >
                   Gestionar
                 </button>
               )}
@@ -121,6 +139,22 @@ export default function UpcomingRenewals() {
         })}
 
       </div>
+
     </article>
+
+            <InsuranceContractForm
+              show={editModal}
+              onHide={() => {
+
+                setEditModal(false);
+
+                setSelectedInsurance(null);
+              }}
+              initialData={selectedInsurance}
+              isEdit={true}
+            />
+        </>
   );
+
+
 }

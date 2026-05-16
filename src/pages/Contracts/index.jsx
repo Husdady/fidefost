@@ -19,6 +19,9 @@ import GpsContractForm from "modules/contracts/GpsContractForm";
 import useShowModal from "hooks/useShowModal";
 
 export default function Contracts() {
+
+  const [selectedInsurance, setSelectedInsurance] =
+  useState(null);
   const [viewContract, setViewContract] = useState(null);
   const [refresh, setRefresh] = useState(0);
   const updateContract = useUpdateContract();
@@ -68,7 +71,12 @@ export default function Contracts() {
         >
           <div className="d-flex align-items-center column-gap-3">
             <AddButton
-              onClick={insuranceModal.show}
+              onClick={() => {
+
+                setSelectedInsurance(null);
+
+                insuranceModal.show();
+              }}
               title="Crear Contrato de Seguro"
             />
 
@@ -131,15 +139,28 @@ export default function Contracts() {
     )}
 
       {insuranceModal.isShowing && (
-       <InsuranceContractForm
-          onHide={insuranceModal.hide}
-          onSave={(data) => {
-            addInsurance(data);
+          <InsuranceContractForm
+            show={insuranceModal.isShowing}
 
-            insuranceModal.hide();
-          }}
-        />
-      )}
+            onHide={() => {
+
+              insuranceModal.hide();
+
+              setSelectedInsurance(null);
+            }}
+
+            initialData={selectedInsurance}
+
+            isEdit={!!selectedInsurance}
+
+            onSave={(data) => {
+
+              addInsurance(data);
+
+              insuranceModal.hide();
+            }}
+          />
+        )}
 
         </main>
       );
