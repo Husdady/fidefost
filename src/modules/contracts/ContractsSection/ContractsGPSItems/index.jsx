@@ -27,14 +27,14 @@ export default function ContractsGPSItems({
     diffTime / (1000 * 60 * 60 * 24)
   );
 
-  if (diffDays <= 0) {
+  if (diffDays < 0) {
     return {
       text: "SIST. GPS VENCIDO",
       color: "#e53935",
     };
   }
 
-  if (diffDays <= 30) {
+  if (diffDays < 30) {
     return {
       text: "SIST. GPS POR VENCER",
       color: "#ff9800",
