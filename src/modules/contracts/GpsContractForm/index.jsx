@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+
 export default function GpsContractForm({
   show,
   onHide,
@@ -7,6 +8,8 @@ export default function GpsContractForm({
   onUpdate,
   editingGps,
 }) {
+  
+
   const [form, setForm] = useState({
   id: "",
   unit: "",
@@ -110,18 +113,7 @@ const isFormValid =
               <option value="">
                 Seleccionar unidad
               </option>
-
-              <option value="unidad-1">
-                Unidad 001
-              </option>
-
-              <option value="unidad-2">
-                Unidad 002
-              </option>
-
-              <option value="unidad-3">
-                Unidad 003
-              </option>
+             
             </select>
           </div>
 

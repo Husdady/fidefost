@@ -6,10 +6,12 @@ import saveDocument from "database/saveDocument";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
 import { useEffect } from "react";
 import deleteDocument from "database/deleteDocument";
+import { useGetUnits } from "context/units/useUnits";
 
 
 export default function DriverContractForm({ onHide, onSave, contractData }) {
 
+    const units = useGetUnits();
     const [selectedGps, setSelectedGps] = useState("");
     const getGpsStatus = (endDate) => {
     const today = new Date();
@@ -360,7 +362,14 @@ const isFormValid =
             <label className="label">UNIDAD (TRACTOR / PLACA)</label>
             <select name="unidad" value={form.unidad || ""} onChange={handleChange}>
               <option value="">Seleccionar unidad...</option>
-              <option>UNIDAD 01</option>
+              {units.map((unit) => (
+                <option
+                  key={unit._id}
+                  value={unit.placa}
+                >
+                  {unit.placa} - {unit.marca}
+                </option>
+              ))}
             </select>
 
             <label className="label">CHECKLIST DE DOCUMENTACIÓN</label>
