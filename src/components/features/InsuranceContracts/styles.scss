@@ -41,9 +41,10 @@
 }
  .insurance-contracts-list-table-wrapper {
     overflow-x: auto;
+    overflow-y: auto;
+    max-height: 420px;
     border-radius: 14px;
     background: #ffffff;
-    overflow-y: hidden;
     padding-bottom: 4px;
     scrollbar-width: thin;
     scrollbar-color: #9a9a9a #eef2f5;

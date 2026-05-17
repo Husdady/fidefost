@@ -122,3 +122,30 @@
 
   font-weight:500;
 }
+
+.units-table-wrapper {
+  max-height: 500px;
+
+  overflow-y: auto;
+  overflow-x: auto;
+
+  border-radius: 16px;
+
+  scrollbar-width: thin;
+  scrollbar-color: #9a9a9a #eef2f5;
+}
+
+.units-table-wrapper::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.units-table-wrapper::-webkit-scrollbar-track {
+  background: #eef2f5;
+  border-radius: 999px;
+}
+
+.units-table-wrapper::-webkit-scrollbar-thumb {
+  background: #8f8f8f;
+  border-radius: 999px;
+}

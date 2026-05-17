@@ -27,6 +27,7 @@ const [selectedInsurance, setSelectedInsurance] =
         </h2>
 
       </div>
+      <div className="renewal-cards-wrapper">
 
       <div className="renewal-cards">
 
@@ -138,6 +139,7 @@ const [selectedInsurance, setSelectedInsurance] =
           );
         })}
 
+      </div>
       </div>
 
     </article>

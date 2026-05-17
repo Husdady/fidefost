@@ -89,7 +89,9 @@ const filteredUnits = units.filter((unit) => {
       </div>
 
       {/* TABLE */}
-      <table className="units-table">
+      <div className="units-table-wrapper">
+
+       <table className="units-table">
 
         <thead>
           <tr>
@@ -198,6 +200,7 @@ const filteredUnits = units.filter((unit) => {
         </tbody>
 
       </table>
+      </div>
 
       <UnitForm
         show={editModal}
