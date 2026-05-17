@@ -544,7 +544,7 @@ const isFormValid =
                 </>
               ) : (
                 <>
-                 <p>Click para agregar más archivos</p>
+                 <p>Click aquí para agregar más archivos</p>
                 </>
               )}
 
