@@ -15,17 +15,6 @@ import ExportIcon from "./icons/export-icon";
 
 export default function UnitsTable() {
 
-const [currentPage, setCurrentPage] =
-  useState(0);
-
-const itemsPerPage = 10;
-
-  const startIndex =
-  currentPage * itemsPerPage;
-
-const endIndex =
-  startIndex + itemsPerPage;
-
 const deleteUnit = useDeleteUnit();
 
 const [editModal, setEditModal] =
@@ -34,7 +23,38 @@ const [editModal, setEditModal] =
 const [selectedUnit, setSelectedUnit] =
   useState(null);
 
-  const units = useGetUnits();
+const [search, setSearch] =
+  useState("");
+
+const units = useGetUnits();
+
+const query =
+    search.toLowerCase();
+
+const filteredUnits = units.filter((unit) => {
+
+  return (
+    unit.placa
+      ?.toLowerCase()
+      .includes(query) ||
+
+    unit.marca
+      ?.toLowerCase()
+      .includes(query) ||
+
+    unit.soat
+      ?.toLowerCase()
+      .includes(query) ||
+
+    unit.poliza
+      ?.toLowerCase()
+      .includes(query) ||
+
+    unit.mtc
+      ?.toLowerCase()
+      .includes(query)
+  );
+});
 
   return (
     <div className="units-table-container">
@@ -48,9 +68,14 @@ const [selectedUnit, setSelectedUnit] =
 
         <div className="units-table-filters">
 
-          <input type="date" />
-
-          <input type="date" />
+          <input
+            type="text"
+            placeholder="Buscar placa, SOAT, póliza..."
+            value={search}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+          />
 
           <button 
                onClick={() => exportUnitsExcel(units)}
@@ -78,7 +103,8 @@ const [selectedUnit, setSelectedUnit] =
 
         <tbody>
 
-          {units.map((unit) => (
+          {filteredUnits.map((unit) => (
+            
             <tr key={unit._id}>
 
               <td>
@@ -122,7 +148,6 @@ const [selectedUnit, setSelectedUnit] =
 
               <td>
                 <div>
-                  <span>
                     <button
                       onClick={() => {
                         setSelectedUnit(unit);
@@ -131,9 +156,7 @@ const [selectedUnit, setSelectedUnit] =
                     >
                       <EditIcon />
                     </button>
-                  </span>
-
-                  <span>
+                  
                     <button
                       onClick={async () => {
 
@@ -149,13 +172,14 @@ const [selectedUnit, setSelectedUnit] =
 
                         // ELIMINAR UNIDAD ZUSTAND
                         deleteUnit(unit._id);
+            
                       }}
                     >
                       <DeleteIcon />
                     </button>
-                  </span>
+                  
 
-                  <span>
+                  
                     <button
                     onClick={() =>
                       exportUnitsZip(unit)
@@ -163,7 +187,7 @@ const [selectedUnit, setSelectedUnit] =
                     >
                       <ExportIcon />
                     </button>
-                  </span>
+                  
                   
                 </div>
               </td>
@@ -189,18 +213,8 @@ const [selectedUnit, setSelectedUnit] =
 
       <p className="units-results">
          Mostrando {
-          units.length === 0
-            ? 0
-            : startIndex + 1
-        }
-        -
-        {
-          Math.min(
-            endIndex,
-            units.length
-          )
-        }
-        unidades
+          filteredUnits.length
+        } resultados
       </p>
 
     </div>

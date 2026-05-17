@@ -1,6 +1,5 @@
 import { createPortal } from "react-dom";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import {useAddUnit} from "context/units/useUnits";
 import { useGetInsurance } from "context/contracts/useInsurance";
@@ -13,21 +12,17 @@ import deleteDocument from "database/deleteDocument";
 export default function UnitForm({ show, onHide, initialData = null,
   isEdit = false }) {
 
+  const [isSaving, setIsSaving] = useState(false);
+  const savingRef = useRef(false);
   const addUnit = useAddUnit();
   const updateUnit = useUpdateUnit();
   const insuranceContracts = useGetInsurance();
-
-  const [unitId] = useState(
-  () => Date.now().toString()
-);
 
  const [deletedFiles, setDeletedFiles] = useState([]);
 
  const [originalFiles, setOriginalFiles] = useState([]);
 
-  const [form, setForm] = useState(
-  
-  initialData || {
+ const emptyForm = {
   marca: "",
   placa: "",
   partida: "",
@@ -35,7 +30,6 @@ export default function UnitForm({ show, onHide, initialData = null,
   mtc: "",
   poliza: "",
   soat: "",
-
   documentos: {
     mtcCheck: false,
     recTecnTractorCheck: false,
@@ -43,12 +37,15 @@ export default function UnitForm({ show, onHide, initialData = null,
     soatCheck: false,
     polizaCheck: false,
     tarjetaVehicularCheck: false,
-    tarjetaVehicularInfo:"",
+    tarjetaVehicularInfo: "",
     permisoMunicipalCheck: false,
   },
-
   archivos: []
-});
+};
+
+const [form, setForm] = useState(
+  initialData || emptyForm
+);
 
 const handleCheckbox = (name) => {
     setForm({
@@ -66,27 +63,40 @@ const handleCheckbox = (name) => {
 
 const handleFiles = (e) => {
 
-  const uploadedFiles =
-    Array.from(e.target.files);
+  const uploadedFiles = Array.from(e.target.files);
 
-  setForm((prev) => ({
-    ...prev,
-    archivos: [
-      ...prev.archivos,
-      ...uploadedFiles
-    ]
-  }));
+  const filesWithId = uploadedFiles.map((file) => ({
+  blob: file,
+
+  tempId: crypto.randomUUID(),
+
+  savedInDb: false,
+
+  name: file.name,
+  size: file.size,
+  type: file.type
+}));
+
+setForm((prev) => ({
+  ...prev,
+
+  archivos: [
+    ...prev.archivos,
+    ...filesWithId
+  ]
+}));
 };
 
-  const removeFile = (fileId) => {
+const removeFile = (fileId) => {
 
   const fileToDelete =
     form.archivos.find(
-      (f) => f.id === fileId
+      (f) =>
+        (f.id || f.tempId) === fileId
     );
 
-  // SI YA EXISTE EN INDEXEDDB
-  if (fileToDelete?.id) {
+  // SOLO SI YA ESTÁ EN DB
+  if (fileToDelete?.savedInDb) {
 
     setDeletedFiles((prev) => [
       ...prev,
@@ -94,87 +104,135 @@ const handleFiles = (e) => {
     ]);
   }
 
-  // SOLO ELIMINAR DEL FORM
   setForm((prev) => ({
     ...prev,
     archivos: prev.archivos.filter(
-      (f) => f.id !== fileId
+      (f) =>
+        (f.id || f.tempId) !== fileId
     )
   }));
 };
 
 const handleSubmit = async () => {
 
-  // ELIMINAR DEFINITIVAMENTE
-  // SOLO AL ACTUALIZAR
-  if (isEdit) {
+  // BLOQUEAR DOBLE CLICK
+  if (savingRef.current) return;
 
-    for (const fileId of deletedFiles) {
+  savingRef.current = true;
 
-      await deleteDocument(fileId);
+  setIsSaving(true);
+
+  try {
+
+    // NUEVO ID SIEMPRE
+    const currentUnitId =
+      initialData?._id || crypto.randomUUID();
+
+    // ELIMINAR ARCHIVOS
+    if (isEdit) {
+
+      for (const fileId of deletedFiles) {
+
+        await deleteDocument(fileId);
+      }
     }
-  }
 
-  const storedFiles = [];
+    const storedFiles = [];
 
-  for (const file of form.archivos) {
+    for (const file of form.archivos) {
 
-    // YA EXISTE EN INDEXEDDB
-    if (file.id) {
+      // ARCHIVO YA GUARDADO
+      if (file.savedInDb) {
 
-      storedFiles.push(file);
+  storedFiles.push({
+    id: file.id,
 
-      continue;
+    name: file.name,
+
+    size: file.size,
+
+    type: file.type,
+
+    blob: file.blob,
+
+    insuranceFileId:
+      file.insuranceFileId,
+
+    insuranceType:
+      file.insuranceType,
+
+    savedInDb: true
+  });
+
+  continue;
+}
+
+      // NUEVO ARCHIVO
+      const saved = await saveDocument({
+        file: file.blob || file,
+        module: "units",
+        relatedId: currentUnitId,
+        category: "legal"
+      });
+
+      storedFiles.push({
+        ...saved,
+        savedInDb: true
+      });
     }
 
-    // NUEVO ARCHIVO
-    const saved = await saveDocument({
-      file,
-      module: "units",
-      relatedId:
-        initialData?._id || unitId,
-      category: "legal"
-    });
+    const unitData = {
 
-    storedFiles.push(saved);
+      _id: currentUnitId,
+
+      placa: form.placa,
+      marca: form.marca,
+
+      mtc: form.mtc,
+
+      tarjetaVehicularInfo:
+        form.documentos.tarjetaVehicularInfo,
+
+      revisionFecha:
+        form.revisionFecha,
+
+      soat: form.soat,
+      poliza: form.poliza,
+
+      partida: form.partida,
+
+      archivos: storedFiles,
+
+      documentos: form.documentos,
+    };
+
+    if (isEdit) {
+
+      updateUnit(unitData);
+
+    } else {
+
+      addUnit(unitData);
+    }
+
+    // LIMPIAR
+    setForm(emptyForm);
+
+    setDeletedFiles([]);
+    setOriginalFiles([]);
+
+    onHide();
+
+  } catch (error) {
+
+    console.error(error);
+
+  } finally {
+
+    setIsSaving(false);
+
+    savingRef.current = false;
   }
-
-  const unitData = {
-
-    _id:
-      initialData?._id || unitId,
-
-    placa: form.placa,
-    marca: form.marca,
-
-    mtc: form.mtc,
-
-    tarjetaVehicularInfo:
-      form.documentos.tarjetaVehicularInfo,
-
-    revisionFecha:
-      form.revisionFecha,
-
-    soat: form.soat,
-    poliza: form.poliza,
-
-    partida: form.partida,
-
-    archivos: storedFiles,
-
-    documentos: form.documentos,
-  };
-
-  if (isEdit) {
-
-    updateUnit(unitData);
-
-  } else {
-
-    addUnit(unitData);
-  }
-
-  onHide();
 };
 
 const handleInsuranceSelect = async (
@@ -210,28 +268,32 @@ const handleInsuranceSelect = async (
   // GUARDAR ARCHIVOS EN INDEXEDDB
   // =========================
 
-  const savedFiles =
-  (selectedInsurance.archivos || []).map(
-    (file) => ({
-      id: file.id,
+const savedFiles =
+(selectedInsurance.archivos || []).map(
+  (file) => ({
 
-      name: file.name,
+    id: file.id,
 
-      size: file.size,
+    tempId: crypto.randomUUID(),
 
-      type: file.type,
+    savedInDb: true,
 
-      blob: file.blob,
+    name: file.name,
 
-      insuranceFileId: file.id,
+    size: file.size,
 
-      insuranceType:
-        type === "soat"
-          ? "SOAT"
-          : "POLIZA"
-    })
-  );
+    type: file.type,
 
+    blob: file.blob,
+
+    insuranceFileId: file.id,
+
+    insuranceType:
+      type === "soat"
+        ? "SOAT"
+        : "POLIZA"
+  })
+);  
   // =========================
   // ACTUALIZAR FORM
   // =========================
@@ -290,7 +352,20 @@ useEffect(() => {
 
   if (initialData) {
 
-    setForm(initialData);
+    setForm({
+  ...initialData,
+
+  archivos:
+    (initialData.archivos || []).map(
+      (file) => ({
+        ...file,
+        tempId:
+          crypto.randomUUID(),
+
+        savedInDb: true
+      })
+    )
+});
 
     setOriginalFiles(
       initialData.archivos || []
@@ -299,6 +374,28 @@ useEffect(() => {
 
 }, [initialData]);
 
+const isFormValid =
+ // CAMPOS
+  form.placa &&
+  form.marca &&
+  form.mtc &&
+  form.revisionFecha &&
+  form.soat &&
+  form.poliza &&
+  form.partida &&
+
+  form.documentos.tarjetaVehicularInfo &&
+
+  // CHECKS
+  form.documentos.recTecnCarretaCheck &&
+  form.documentos.recTecnTractorCheck &&
+  form.documentos.soatCheck &&
+  form.documentos.polizaCheck &&
+  form.documentos.tarjetaVehicularCheck &&
+  form.documentos.permisoMunicipalCheck &&
+  form.documentos.mtcCheck &&
+// ARCHIVOS
+  form.archivos.length > 2;
 
 const handleClose = () => {
 
@@ -610,9 +707,9 @@ const handleClose = () => {
             {form.archivos.length > 0 && (
                   <div className="unit-file-list">
 
-                    {form.archivos.map((file, index) => (
+                    {form.archivos.map((file) => (
                       <div
-                        key={index}
+                        key={file.id || file.tempId}
                         className="unit-file-row"
                       >
 
@@ -643,7 +740,9 @@ const handleClose = () => {
                         <button
                           type="button"
                           className="unit-file-delete"
-                          onClick={() => removeFile(file.id)}
+                          onClick={() =>
+                            removeFile(file.id || file.tempId)
+                          }
                         >
                           ✕
                         </button>
@@ -667,10 +766,12 @@ const handleClose = () => {
           <button
             className="btn-primary"
             onClick={handleSubmit}
+            disabled={!isFormValid || isSaving}
           >
             {isEdit
               ? "Actualizar Unidad"
               : "Guardar Unidad"}
+              
           </button>
         </div>
 

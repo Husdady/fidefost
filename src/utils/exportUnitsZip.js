@@ -113,13 +113,24 @@ const unitDocuments =
 
 for (const document of unitDocuments) {
 
-  if (!document.blob) {
+  const fileData =
+    document.blob || document.file || document;
+
+  // VALIDAR
+  if (
+    !(fileData instanceof Blob)
+  ) {
+    console.warn(
+      "Archivo inválido:",
+      document
+    );
+
     continue;
   }
 
   documentsFolder.file(
-    document.name,
-    document.blob
+    document.name || "archivo",
+    fileData
   );
 }
 
@@ -129,7 +140,6 @@ for (const document of unitDocuments) {
 
 for (const file of unit.archivos || []) {
 
-  // SOLO archivos referenciados
   if (!file.insuranceFileId) {
     continue;
   }
@@ -139,7 +149,19 @@ for (const file of unit.archivos || []) {
       file.insuranceFileId
     );
 
-  if (!insuranceDocument?.blob) {
+  const fileData =
+    insuranceDocument?.blob ||
+    insuranceDocument?.file;
+
+  // VALIDAR
+  if (
+    !(fileData instanceof Blob)
+  ) {
+    console.warn(
+      "Seguro inválido:",
+      insuranceDocument
+    );
+
     continue;
   }
 
@@ -153,11 +175,11 @@ for (const file of unit.archivos || []) {
   }
 
   documentsFolder.file(
-    insuranceDocument.name,
-    insuranceDocument.blob
+    insuranceDocument.name ||
+      "seguro",
+    fileData
   );
 }
-
 
   // =========================
   // GENERAR ZIP

@@ -348,9 +348,9 @@ const isFormValid =
              {files.length > 0 && (
               <div className="insurance-file-list">
 
-                {files.map((file, index) => (
+                {files.map((file) => (
                   <div
-                    key={index}
+                    key={file.id || file.name}
                     className="insurance-file-row">
 
                     <div className="insurance-file-info">
