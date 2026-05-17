@@ -12,7 +12,6 @@ export default function GpsContractForm({
 
   const [form, setForm] = useState({
   id: "",
-  unit: "",
   provider: "",
   gpsLink: "",
   installationDate: "",
@@ -33,7 +32,6 @@ const isFormValid =
 
   // CAMPOS
   form.id &&
-  form.unit &&
   form.provider &&
   form.gpsLink &&
   form.installationDate &&
@@ -100,24 +98,6 @@ const isFormValid =
           </div>
 
           <div className="gps-modal__field">
-            <label>UNIDAD</label>
-
-            <select
-            value={form.unit}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                unit: e.target.value,
-              })
-            }>
-              <option value="">
-                Seleccionar unidad
-              </option>
-             
-            </select>
-          </div>
-
-          <div className="gps-modal__field">
             <label>Fecha inicio contrato</label>
 
             <input
@@ -172,7 +152,6 @@ const isFormValid =
 
               setForm({
                 id: "",
-                unit: "",
                 provider: "",
                 gpsLink: "",
                 installationDate: "",

@@ -365,7 +365,7 @@ const isFormValid =
               {units.map((unit) => (
                 <option
                   key={unit._id}
-                  value={unit.placa}
+                  value={`${unit.placa} - ${unit.marca}`}
                 >
                   {unit.placa} - {unit.marca}
                 </option>

@@ -28,7 +28,7 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
           audit.auditDriver,
 
         Unidad:
-          "",  //ingresar propiedad de la UNIDAD "PENDIENTE"
+          audit.auditUnidad,
 
         Licencia:
           audit.auditLicense,
@@ -69,19 +69,19 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
         Wifi:
           audit.wifi ? "SI" : "NO",
         
-        Check_Doc_Brevete:
+        Doc_Brevete:
           audit.documentos?.brevete ? "SI" : "NO",
         
-        Check_Doc_DNI:
+        Doc_DNI:
           audit.documentos?.dni ? "SI" : "NO",
 
-        Check_Doc_SCTR:
+        Doc_SCTR:
           audit.documentos?.sctr ? "SI" : "NO",
         
-        Check_Doc_Antecedentes_Penales:
+        Doc_Antecedentes_Penales:
           audit.documentos?.antecedentesPenales ? "SI" : "NO",
           
-        Check_Doc_Antecedentes_Policiales:
+        Doc_Antecedentes_Policiales:
           audit.documentos?.antecedentesPoliciales ? "SI" : "NO",
       };
 });

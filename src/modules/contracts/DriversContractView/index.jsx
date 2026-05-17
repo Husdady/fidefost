@@ -1,6 +1,5 @@
 import { createPortal } from "react-dom";
 import useGpsContractsStore from "context/contracts/gpsContractsStore";
-
 import DriverIcon from "./Icons/driver-icon";
 
 export default function DriverContractView({
@@ -73,9 +72,8 @@ export default function DriverContractView({
               UNIDAD ASIGNADA
             </p>
 
-            <h3>Volvo FH16 - PLACA: V6X-992</h3>
+            <h3>{contractData.auditUnidad}</h3>
 
-            <small>Modelo 2023</small>
           </div>
 
           <div>
