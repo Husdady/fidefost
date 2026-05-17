@@ -2,9 +2,12 @@
 import SummaryCard from "components/features/SummaryCard";
 
 // Constants
-import { SUMMARY_ITEMS } from "./constants";
+import useSummaryUnits from "./constants";
 
 export default function UnitsSummary() {
+
+  const SUMMARY_ITEMS = useSummaryUnits();
+
   return (
     <section className="units-summary">
       <div className="units-summary__grid">
