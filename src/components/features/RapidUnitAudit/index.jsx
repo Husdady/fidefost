@@ -87,6 +87,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                 <col className="col-audit-driver" />
                 <col className="col-audit-contract" />
                 <col className="col-audit-license" />
+                <col className="col-audit-inductions" />
                 <col className="col-audit-operationalStatus" />
                 <col className="col-audit-actions" />
               </colgroup>
@@ -95,7 +96,8 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                 <tr>
                   <th>CONDUCTOR</th>
                   <th>CONTRATO</th>
-                  <th>LICENCIA/INDUCCION</th>
+                  <th>LICENCIA</th>
+                  <th>INDUCCIONES</th>
                   <th>ESTADO OPERATIVO</th>
                   <th>ACCIONES</th>
                 </tr>
@@ -127,25 +129,12 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                       <td>
                         <span className="audit-list-license">
                           {audit?.auditLicense || "-"}
+                        </span>
+                      </td>
 
-                          {audit?.auditInductionStatus && (
-                            <>
-                              {" / "}
-                              <span
-                                style={{
-                                  color:
-                                    audit.auditInductionStatus === "Inducción OK"
-                                      ? "#16a34a"
-                                      : "#dc2626",
-
-                                  fontWeight: 600,
-                                  fontSize: 11,
-                                }}
-                              >
-                                {audit.auditInductionStatus}
-                              </span>
-                            </>
-                          )}
+                      <td>
+                        <span className="audit-list-inductions">
+                          {audit?.auditInductions || "-"}
                         </span>
                       </td>
                       

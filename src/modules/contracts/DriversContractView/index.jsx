@@ -58,7 +58,7 @@ export default function DriverContractView({
                         </>
                       )}
               </span>
-              <span>{contractData.auditInductionStatus}</span>
+              <span>{contractData.auditInductions}</span>
             </div>
           </div>
 

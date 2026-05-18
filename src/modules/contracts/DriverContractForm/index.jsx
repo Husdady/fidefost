@@ -49,7 +49,7 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
     conductor: "",
     gpsId: "",
     licencia: "",
-    fechaInduccion: "",
+    inducciones: "",
     fechaVencimiento: "",
     unidad: "",
     fechaInicio: "",
@@ -110,7 +110,7 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
       licencia: contractData.auditLicense || "",
       fechaInicio: contractData.auditContract?.start,
       fechaFin: contractData.auditContract?.end,
-      fechaInduccion: contractData.auditInductionDate || "",
+      inducciones: contractData.auditInductions || "",
       fechaVencimiento: contractData.auditLicenseExpiration || "",
       documentos: contractData.documentos || prev.documentos,
       wifi: contractData.wifi ?? prev.wifi,
@@ -258,8 +258,8 @@ const handleSubmit = async () => {
 
     auditLicense: form.licencia,
 
-    auditInductionDate:
-      form.fechaInduccion,
+    auditInductions:
+      form.inducciones,
 
     auditLicenseExpiration:
       form.fechaVencimiento,
@@ -280,7 +280,7 @@ const isFormValid =
   form.licencia &&
   form.fechaInicio &&
   form.fechaFin &&
-  form.fechaInduccion &&
+  form.inducciones &&
   form.fechaVencimiento &&
 
   // CHECKS
@@ -377,8 +377,8 @@ const isFormValid =
                 <input
         
                   type="text"
-                  name="fechaInduccion"
-                  value={form.fechaInduccion || ""}
+                  name="inducciones"
+                  value={form.inducciones || ""}
                   placeholder="Ej: Inducción1, Inducción2..."
                   onChange={handleChange}
                 />
