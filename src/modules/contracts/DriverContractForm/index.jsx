@@ -131,6 +131,8 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
   const [deletedFiles, setDeletedFiles] = useState([]);
 
   const [originalFiles, setOriginalFiles] = useState([]);
+  
+  const [errorMessage, setErrorMessage] = useState("");
 
   const operators = useGetClients();
   const calculateDays = (start, end) => {
@@ -233,6 +235,38 @@ setOriginalFiles(files);
 };
 
 const handleSubmit = async () => {
+  const driverAlreadyExists = contracts.some(
+    (contract) => {
+
+      // SI ESTÁ EDITANDO
+      // IGNORAR EL MISMO CONTRATO
+      if (
+        contractData &&
+        contract._id === contractData._id
+      ) {
+        return false;
+      }
+
+      return (
+        contract.auditDriver
+          ?.trim()
+          .toLowerCase() ===
+        form.conductor
+          ?.trim()
+          .toLowerCase()
+      );
+    }
+  );
+
+  if (driverAlreadyExists) {
+
+   setErrorMessage(
+      "INGRESAR OTRO NOMBRE, Este conductor ya se encuentra registrado."
+    );
+
+    return;
+  }
+  setErrorMessage("");
 
   // eliminar definitivos
   // solo al actualizar
@@ -613,6 +647,12 @@ const isFormValid =
             )}
 
           </div>
+
+          {errorMessage && (
+            <div className="form-error-message">
+              {errorMessage}
+            </div>
+          )}
 
         {/* ACTIONS */}
         <div className="actions">
