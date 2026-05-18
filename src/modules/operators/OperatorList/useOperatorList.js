@@ -3,6 +3,7 @@ import { useMemo, useState, useCallback } from "react";
 import { useGetClients } from "context/clients/useClients";
 
 import useEditOperator from "./hooks/useEditOperator";
+import useDeleteOperator from "./hooks/useDeleteOperator";
 import useDownloadDocuments from "./hooks/useDownloadDocuments";
 import useToggleOperatorStatus from "./hooks/useToggleOperatorStatus";
 
@@ -13,6 +14,7 @@ export default function useOperatorList() {
   const operators = useGetClients();
   const [search, setSearch] = useState("");
   const editOperatorData = useEditOperator();
+  const deleteOperatorData = useDeleteOperator();
   const downloadData = useDownloadDocuments(editOperatorData);
   const toggleOperatorStatus = useToggleOperatorStatus();
 
@@ -60,6 +62,7 @@ export default function useOperatorList() {
   return {
     ...downloadData,
     ...editOperatorData,
+    ...deleteOperatorData,
 
     search,
     filteredOperators,

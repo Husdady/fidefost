@@ -84,7 +84,7 @@
 
   .operator-list-table {
     width: 100%;
-    min-width: 960px;
+    min-width: 1100px;
     table-layout: fixed;
     border-collapse: collapse;
 
@@ -101,11 +101,11 @@
     }
 
     .col-created-at {
-      width: 21%;
+      width: 19%;
     }
 
     .col-actions {
-      width: 33%;
+      width: 35%;
     }
 
     thead {
@@ -188,12 +188,24 @@
     color: #007d97;
     font-size: 12px;
     font-weight: 700;
-    line-height: 1.2;
     cursor: pointer;
     opacity: 1 !important;
 
     &.secondary {
       color: #1877f2 !important;
+    }
+
+    &.btn-delete {
+      gap: 4px;
+      color: #e63535;
+
+      & svg {
+        min-width: 14px;
+        max-width: 14px;
+        min-height: 14px;
+        max-height: 14px;
+        fill: #e63535;
+      }
     }
   }
 

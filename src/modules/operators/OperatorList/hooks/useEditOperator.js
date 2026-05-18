@@ -21,9 +21,7 @@ export default function useEditOperator() {
   const [selectedOperator, setSelectedOperator] = useState({});
   const [isEditingOperator, setIsEditingOperator] = useState(false);
 
-  /**
-   * Callback for show edit operator form
-   */
+  // Callback for show edit operator form
   const handleShowEditOperatorForm = useCallback(
     (operator) => {
       setSelectedOperator(operator || {});
@@ -32,9 +30,7 @@ export default function useEditOperator() {
     [editOperatorForm.show]
   );
 
-  /**
-   * Callback for validate and normalize operator documents
-   */
+  // Callback for validate and normalize operator documents
   const normalizeDocuments = useCallback(
     (documents) => {
       const currentDocuments = Array.isArray(selectedOperator?.documents)
@@ -67,9 +63,7 @@ export default function useEditOperator() {
     [selectedOperator]
   );
 
-  /**
-   * Callback for edit operator information
-   */
+  // Callback for edit operator information
   const handleEditOperator = useCallback(
     async ({ _id, ruc, operatorName, files }) => {
       try {

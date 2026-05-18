@@ -28,13 +28,5 @@ export const SUMMARY_ITEMS = [
     description: "Requieren atención",
     accent: "warning",
     icon: <PendingIcon />,
-  },
-  {
-    id: "expired",
-    title: "VENCIDOS",
-    value: 0,
-    description: "Bloqueo operativo",
-    accent: "danger",
-    icon: <ExpiredIcon />,
-  },
+  }
 ];

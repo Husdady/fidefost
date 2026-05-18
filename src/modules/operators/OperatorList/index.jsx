@@ -3,6 +3,7 @@ import { memo } from "react";
 
 // Components
 import OperatorForm from "../OperatorForm";
+import TrashIcon from "components/icons/trash-icon";
 
 // Hooks
 import useOperatorList from "./useOperatorList";
@@ -25,6 +26,7 @@ function OperatorList() {
 
     handleSearch,
     handleEditOperator,
+    handleDeleteOperator,
     handleDownloadDocuments,
     handleShowEditOperatorForm,
   } = useOperatorList();
@@ -134,6 +136,7 @@ function OperatorList() {
                       <button
                         type="button"
                         className="operator-list-action-btn"
+                        title="Click para editar la información del operador"
                         onClick={() => handleShowEditOperatorForm(operator)}
                       >
                         <span className="operator-list-action-icon">
@@ -166,6 +169,7 @@ function OperatorList() {
 
                       <button
                         type="button"
+                        title="Click para descargar los documentos"
                         className="operator-list-action-btn secondary"
                         onClick={() => handleDownloadDocuments(operator)}
                         disabled={
@@ -207,6 +211,19 @@ function OperatorList() {
                         </span>
 
                         <span>Descargar documentos</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        title="Click para eliminar al operador"
+                        className="operator-list-action-btn btn-delete"
+                        onClick={() => handleDeleteOperator(operator)}
+                      >
+                        <span className="operator-list-action-icon">
+                          <TrashIcon />
+                        </span>
+
+                        <span>Eliminar</span>
                       </button>
                     </div>
                   </td>
