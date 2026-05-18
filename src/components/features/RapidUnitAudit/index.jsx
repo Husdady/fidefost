@@ -155,7 +155,9 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                         <div className="audit-list-actions-edit"
                              onClick={() => onEdit(audit)}
                         >
-                          <span className="audit-list-actions-icon">
+                          <span 
+                          className="audit-list-actions-icon"
+                          style={{ color: "#16a34a" }}>
                           <svg
                             width="16"
                             height="16"
@@ -180,7 +182,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                           </svg>
                           </span>
 
-                          <span>Editar</span>
+                          <span style={{ color: "#16a34a" }}>Editar</span>
                         </div>
 
                         <div className="audit-list-actions-visual"
@@ -198,7 +200,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                             </svg>
                           </span>
 
-                          <span>Visualizar</span>
+                          <span> Visualizar</span>
                         </div>
                         <div
                           className="audit-list-actions-export"
@@ -209,8 +211,9 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                           }
                         >
 
-                          <span className="audit-list-actions-icon">
-
+                          <span 
+                          className="audit-list-actions-icon"
+                          style={{ color: "#1877f2" }} >
                             <svg
                               width="18"
                               height="18"
@@ -219,14 +222,14 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                             >
                               <path
                                 d="M12 3V15"
-                                stroke="#6E797E"
+                                stroke="currentColor"
                                 strokeWidth="1.8"
                                 strokeLinecap="round"
                               />
 
                               <path
                                 d="M7 10L12 15L17 10"
-                                stroke="#6E797E"
+                                stroke="currentColor"
                                 strokeWidth="1.8"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -234,7 +237,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
 
                               <path
                                 d="M5 21H19"
-                                stroke="#6E797E"
+                                stroke="currentColor"
                                 strokeWidth="1.8"
                                 strokeLinecap="round"
                               />
@@ -242,7 +245,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
 
                           </span>
 
-                          <span>Exportar</span>
+                          <span style={{ color: "#1877f2" }}>Exportar</span>
 
                         </div>
 
