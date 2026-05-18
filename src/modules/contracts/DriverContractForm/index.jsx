@@ -93,6 +93,29 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
     return !usedGpsIds.includes(gps.id);
   });
 
+  //SELECT UNIDADES UNICAS
+  const usedUnits = contracts
+  .filter((contract) => contract.auditUnidad)
+  .map((contract) => contract.auditUnidad);
+
+  const availableUnits = units.filter((unit) => {
+
+  const unitValue =
+    `${unit.placa} - ${unit.marca}`;
+
+  // SI ESTÁ EDITANDO
+  // DEJAR SU UNIDAD ACTUAL
+  if (
+    contractData &&
+    unitValue === contractData.auditUnidad
+  ) {
+    return true;
+  }
+
+  // OCULTAR UNIDADES YA USADAS
+  return !usedUnits.includes(unitValue);
+});
+
   const gpsSelectedData = gpsContracts.find(
     (gps) => gps.id === form.gpsId
   );
@@ -350,7 +373,7 @@ const isFormValid =
             <label className="label">UNIDAD (TRACTOR / PLACA)</label>
             <select name="unidad" value={form.unidad || ""} onChange={handleChange}>
               <option value="">Seleccionar unidad...</option>
-              {units.map((unit) => (
+              {availableUnits.map((unit) => (
                 <option
                   key={unit._id}
                   value={`${unit.placa} - ${unit.marca}`}
