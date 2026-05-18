@@ -1,5 +1,6 @@
 import { useGetClients } from "context/clients/useClients";
 import useGpsContractsStore from "context/contracts/gpsContractsStore";
+import { useGetContracts } from "context/contracts/useContracts";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import saveDocument from "database/saveDocument";
@@ -45,7 +46,6 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
     };
   };
    const [form, setForm] = useState({
-    operador: "",
     conductor: "",
     gpsId: "",
     licencia: "",
@@ -70,6 +70,28 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
   const gpsContracts = useGpsContractsStore(
     (state) => state.gpsContracts
   );
+
+  const contracts = useGetContracts();
+
+  //SELECT GPS UNICO
+  const usedGpsIds = contracts
+  .filter((contract) => contract.gpsId)
+  .map((contract) => contract.gpsId);
+
+  const availableGps = gpsContracts.filter((gps) => {
+
+    // SI ESTÁ EDITANDO
+    // DEJAR SU GPS ACTUAL
+    if (
+      contractData &&
+      gps.id === contractData.gpsId
+    ) {
+      return true;
+    }
+
+    // OCULTAR GPS YA UTILIZADOS
+    return !usedGpsIds.includes(gps.id);
+  });
 
   const gpsSelectedData = gpsContracts.find(
     (gps) => gps.id === form.gpsId
@@ -103,7 +125,6 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
 
     setForm((prev) => ({
       ...prev,
-      operador: contractData.operador || "",
       conductor: contractData.auditDriver,
       unidad: contractData.auditUnidad || "",
       gpsId: contractData.gpsId || "",
@@ -234,8 +255,6 @@ const handleSubmit = async () => {
 
     _id: contractId,
 
-    operador: form.operador,
-
     auditDriver: form.conductor,
 
     auditUnidad: form.unidad,
@@ -274,7 +293,6 @@ const handleSubmit = async () => {
 const isFormValid =
 
   // CAMPOS
-  form.operador &&
   form.unidad &&
   form.conductor &&
   form.licencia &&
@@ -328,17 +346,6 @@ const isFormValid =
 
           {/* IZQUIERDA */}
           <div className="col">
-
-            <label className="label">EMPRESA OPERADORA</label>
-            <select name="operador" value={form.operador} onChange={handleChange}>
-              <option value="">Seleccionar operador...</option>
-
-              {operators.map((op) => (
-                <option key={op._id} value={op.operatorName}>
-                  {op.operatorName}
-                </option>
-              ))}
-            </select>
 
             <label className="label">UNIDAD (TRACTOR / PLACA)</label>
             <select name="unidad" value={form.unidad || ""} onChange={handleChange}>
@@ -483,7 +490,7 @@ const isFormValid =
                   Seleccionar GPS
                 </option>
 
-                {gpsContracts.map((gps) => (
+                {availableGps.map((gps) => (
                   <option
                     key={gps.id}
                     value={gps.id}
