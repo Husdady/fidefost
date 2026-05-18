@@ -228,22 +228,6 @@ const handleSubmit = async () => {
     form.fechaFin
   );
 
-  const inductionDate =
-    new Date(form.fechaInduccion);
-
-  const today = new Date();
-
-  const diffTime =
-    today - inductionDate;
-
-  const diffDays =
-    diffTime / (1000 * 60 * 60 * 24);
-
-  const inductionStatus =
-    diffDays <= 365
-      ? "Inducción OK"
-      : "Inducción Pendiente";
-
   const newAudit = {
 
     ...contractData,
@@ -276,9 +260,6 @@ const handleSubmit = async () => {
 
     auditInductionDate:
       form.fechaInduccion,
-
-    auditInductionStatus:
-      inductionStatus,
 
     auditLicenseExpiration:
       form.fechaVencimiento,
@@ -390,14 +371,15 @@ const isFormValid =
               <label><input type="checkbox" checked={form.documentos.sctr} onChange={() => handleCheckbox("sctr")} /> SCTR Vincula</label>
               <label><input type="checkbox" checked={form.documentos.antecedentesPenales} onChange={() => handleCheckbox("antecedentesPenales")} /> Antecedentes Penales</label>
               <label><input type="checkbox" checked={form.documentos.antecedentesPoliciales} onChange={() => handleCheckbox("antecedentesPoliciales")} /> Antecedentes Policiales</label>
-              <label><input type="checkbox" checked={form.documentos.induccion} onChange={() => handleCheckbox("induccion")} /> Inducción</label>
-              <div className="approval-date">
-                <p className="approval-label">Fecha de aprobación</p>
+              <label><input type="checkbox" checked={form.documentos.induccion} onChange={() => handleCheckbox("induccion")} /> Inducciones</label>
+              <div className="label">
+                <p className="label">Agregar Inducciones</p>
                 <input
-                  className="small-date"
-                  type="date"
+        
+                  type="text"
                   name="fechaInduccion"
                   value={form.fechaInduccion || ""}
+                  placeholder="Ej: Inducción1, Inducción2..."
                   onChange={handleChange}
                 />
               </div>
@@ -413,7 +395,7 @@ const isFormValid =
               type="text"
               name="conductor"
               value={form.conductor}
-              placeholder="Seleccionar conductor..."
+              placeholder="Agregar conductor..."
               onChange={handleChange}
             />
 
