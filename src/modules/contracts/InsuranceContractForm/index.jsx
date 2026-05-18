@@ -34,6 +34,7 @@ export default function InsuranceContractForm({
   const insuranceContracts = useGetInsurance();
   
   const [form, setForm] = useState(
+    
 
   initialData || {
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import useGpsContractsStore from "context/contracts/gpsContractsStore";
 
 
 export default function GpsContractForm({
@@ -8,15 +9,22 @@ export default function GpsContractForm({
   onUpdate,
   editingGps,
 }) {
-  
 
+  const gpsContracts = useGpsContractsStore(
+  (state) => state.gpsContracts
+);
+  
   const [form, setForm] = useState({
+  
   id: "",
   provider: "",
   gpsLink: "",
   installationDate: "",
   endDate: "",
 });
+
+const [showDuplicateMessage, setShowDuplicateMessage] =
+  useState(false);
 
  useEffect(() => {
 
@@ -129,6 +137,12 @@ const isFormValid =
 
         </div>
 
+        {showDuplicateMessage && (
+          <div className="duplicate-message">
+            INGRESAR OTRO, Este GPS ya se encuentra registrado
+          </div>
+        )}
+
         <div className="gps-modal__actions">
           <button onClick={onHide}>
             Cancelar
@@ -137,6 +151,37 @@ const isFormValid =
           <button
             disabled={!isFormValid}
             onClick={() => {
+              const alreadyExists =
+              gpsContracts.some((gps) => {
+
+                // permitir editar el mismo
+                if (
+                  editingGps &&
+                  gps.id === editingGps.id
+                ) {
+                  return false;
+                }
+
+                return (
+                  gps.id
+                    ?.toLowerCase()
+                    .trim() ===
+                  form.id
+                    .toLowerCase()
+                    .trim()
+                );
+              });
+
+            if (alreadyExists) {
+
+              setShowDuplicateMessage(true);
+
+              setTimeout(() => {
+                setShowDuplicateMessage(false);
+              }, 3000);
+
+              return;
+            }
               if (editingGps) {
 
                 onUpdate(form);
