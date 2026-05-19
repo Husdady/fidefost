@@ -19,7 +19,7 @@ const formatMonthYear = (date) => {
 };
 
 function RapidUnitAudit({ title, children, className = "",  accent = "default", data = [], onEdit, onView }) {
-
+  
   const [audits, setAudits, ] = useState([]);
   const [search, setSearch] =
   useState("");
@@ -99,7 +99,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                 <tr>
                   <th>CONDUCTOR</th>
                   <th>CONTRATO</th>
-                  <th>LICENCIA</th>
+                  <th>LICENCIA/F.V</th>
                   <th>INDUCCIONES</th>
                   <th>ESTADO OPERATIVO</th>
                   <th>ACCIONES</th>
@@ -130,9 +130,58 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                       </td>
 
                       <td>
-                        <span className="audit-list-license">
-                          {audit?.auditLicense || "-"}
-                        </span>
+                        {(() => {
+                          const millisecondsPerDay = 1000 * 60 * 60 * 24;
+
+                          // HOY SIN HORAS
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0);
+
+                          // FECHA VENCIMIENTO
+                          const expirationDate = audit.auditLicenseExpiration
+                            ? new Date(audit.auditLicenseExpiration + "T00:00:00")
+                            : null;
+
+                          if (expirationDate) {
+                            expirationDate.setHours(0, 0, 0, 0);
+                          }
+
+                          const diffDays = expirationDate
+                            ? Math.floor(
+                                (expirationDate.getTime() - today.getTime()) /
+                                millisecondsPerDay
+                              )
+                            : null;
+
+                          let statusClass = "active";
+                          let statusText = "VIGENTE";
+
+                          if (diffDays < 0) {
+                            statusClass = "expired";
+                            statusText = "VENCIDA";
+                          } else if (diffDays < 60) {
+                            statusClass = "warning";
+                            statusText = "PROX. VENCER";
+                          }
+
+                          const fullDate = expirationDate
+                            ? expirationDate.toLocaleDateString("es-PE")
+                            : "-";
+
+                          return (
+                            
+                            <div className="license-status">
+                              <p className="license-title">
+                                LICENCIA 
+                              </p>
+                              <span>{audit.auditLicense || "-"}</span>
+
+                              <p className={`license-badge ${statusClass}`}>
+                                {statusText}  {fullDate}
+                              </p>
+                            </div>
+                          );
+                        })()}
                       </td>
 
                       <td>
