@@ -172,7 +172,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                             
                             <div className="license-status">
                               <p className="license-title">
-                                LICENCIA 
+                                Licencia 
                               </p>
                               <span>{audit.auditLicense || "-"}</span>
 
