@@ -11,6 +11,41 @@ export default function DriverContractView({
   onHide, 
   onDelete,
 }) {
+   const expirationDate = contractData.auditLicenseExpiration
+  ? new Date(contractData.auditLicenseExpiration + "T00:00:00")
+  : null;
+  
+   const today = new Date();
+
+  const todayString = `${today.getFullYear()}-${String(
+    today.getMonth() + 1
+  ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+  const currentDate = new Date(todayString).getTime();
+
+  //status license
+  const millisecondsPerDay = 1000 * 60 * 60 * 24;
+
+  const diffDays = expirationDate
+    ? Math.trunc((expirationDate.getTime() - currentDate) / millisecondsPerDay)
+    : null;
+
+  // estado visual
+  let licenseStatusClass = "active";
+  let licenseTextStatus = "VIGENTE";
+
+  if (diffDays < 0) {
+    licenseStatusClass = "expired";
+    licenseTextStatus = "VENCIDA";
+  } else if (diffDays < 60) {
+    licenseStatusClass = "warning";
+    licenseTextStatus = "PROX. VENCER";
+  }
+
+  const fullExpirationDate = expirationDate
+  ? expirationDate.toLocaleDateString("es-PE")
+  : "";
+
   const [placa, marca] = (contractData.auditUnidad || "").split("-");
   
   if (!contractData) return null;
@@ -23,6 +58,14 @@ export default function DriverContractView({
     (gps) =>
       gps.id === contractData.gpsId
   );
+
+
+  const isLicenseExpired =
+  contractData.auditLicenseExpiration &&
+  new Date(contractData.auditLicenseExpiration) < new Date();
+  
+  
+ 
 
   return createPortal(
     <div className="modal" onClick={onHide}>
@@ -50,19 +93,16 @@ export default function DriverContractView({
             <h2>{contractData.auditDriver}</h2>
 
             <div className="contract-view-tags">
-              <span>  Lic-{contractData.auditLicense || "-"}
-
-                      {contractData.auditLicenseExpiration && (
-                        <>
-                          {" "}
-                          (Vence{" "}
-                          {new Date(
-                            contractData.auditLicenseExpiration
-                          ).getFullYear()}
-                          )
-                        </>
-                      )}
+              <span className={`license-status ${licenseStatusClass}`}>
+                Lic-{contractData.auditLicense || "-"}{" "}
+                
+                {expirationDate && (
+                  <>
+                    ({licenseTextStatus} {fullExpirationDate})
+                  </>
+                )}
               </span>
+
               <span>INDUCCION:{" "}{contractData.auditInductions}</span>
             </div>
           </div>
