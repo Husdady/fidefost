@@ -48,10 +48,9 @@ export default function ContractsGPSItems({
   };
 };
   return (
-    <>
     
-    <div className="contracts-gps__list">
-      <div className="contracts-gps__search">
+    <>
+    <div className="contracts-gps__search">
       <input
         type="text"
         placeholder="Buscar por ID GPS..."
@@ -61,6 +60,8 @@ export default function ContractsGPSItems({
         }
       />
     </div>
+    
+    <div className="contracts-gps__list">
 
       {filteredItems.map((item, index) => {
 
