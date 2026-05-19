@@ -139,6 +139,7 @@
     }
   }
   .audit-list-contracts strong{
+    margin: 0;
     display: block;
     font-weight: 600;
     font-size: 14px;
@@ -149,6 +150,14 @@
     font-weight: 600;
     color: #4f4f4f;
   }
+  .audit-list-driver{
+    max-width: 180px;
+
+    word-break: break-word;
+    overflow-wrap: anywhere;
+
+    white-space: normal;
+  }
   .audit-list-driver,
   .audit-list-license,
   .audit-list-operationalStatus{
@@ -157,6 +166,16 @@
     font-weight: 600;
     color: #4f4f4f;
   }
+  .audit-list-inductions {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4f4f4f;
+    max-width: 180px;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
   .audit-list-actions-edit {
   display: flex;
   align-items: center;
@@ -248,31 +267,37 @@
 .license-status {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  gap: 4px;
+}
+.license-status p {
+  margin: 0;
 }
 
-.license-title,
-.audit-list-inductions {
+.license-title {
   margin: 0;
   font-size: 13px;
   font-weight: 600;
   color: #4f4f4f;
+  line-height: 1.1;
+  text-align: center;
 }
 
 .license-badge {
-  width: fit-content;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
+  width: fit-content;
+
   margin: 0;
-  padding: 5px 10px;
+  padding: 4px 10px;
 
   border-radius: 999px;
 
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
+  line-height: 1.1;
 
   text-align: center;
 }
@@ -293,4 +318,8 @@
 .license-badge.expired {
   background: #fee2e2;
   color: #dc2626;
+}
+
+.rapid-unit-audit__body td {
+  vertical-align: middle;
 }

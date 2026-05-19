@@ -86,8 +86,11 @@ const diffDays = expirationDate
         </button>
 
         {/* HEADER */}
+        
         <div className="contract-view-header">
-           <DriverIcon />
+           <div className="contract-view-icon-driver">
+              {<DriverIcon />}
+           </div>
 
           <div>
             <p className="contract-view-label">
@@ -106,9 +109,10 @@ const diffDays = expirationDate
                   </>
                 )}
               </span>
-
-              <span>INDUCCION:{" "}{contractData.auditInductions}</span>
+              <span>INDUCCIONES:{" "} <p>{contractData.auditInductions}</p></span>
+                  
             </div>
+
           </div>
 
         </div>
