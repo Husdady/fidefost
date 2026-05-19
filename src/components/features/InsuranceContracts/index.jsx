@@ -70,15 +70,15 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
             <div className="insurance-contracts__info">
               <h1 className="insurance-contracts__title mb-0">{title}</h1>
               <p className="insurance-contracts__description mb-0">{datefilter}</p>
+                     <DateRange
+                        desde={desde}
+                        hasta={hasta}
+                        setDesde={setDesde}
+                        setHasta={setHasta}
+                      />
             </div>
           </div>
       <div className="insurance-contracts-list-table-wrapper">
-         <DateRange
-            desde={desde}
-            hasta={hasta}
-            setDesde={setDesde}
-            setHasta={setHasta}
-          />
         <table className="insurance-contracts__body">
           <colgroup>
             <col className="col-contracts-supplier" />
