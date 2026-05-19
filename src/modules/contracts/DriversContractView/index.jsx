@@ -11,24 +11,28 @@ export default function DriverContractView({
   onHide, 
   onDelete,
 }) {
-   const expirationDate = contractData.auditLicenseExpiration
-  ? new Date(contractData.auditLicenseExpiration + "T00:00:00")
-  : null;
-  
-   const today = new Date();
-
-  const todayString = `${today.getFullYear()}-${String(
-    today.getMonth() + 1
-  ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-
-  const currentDate = new Date(todayString).getTime();
-
-  //status license
+   
   const millisecondsPerDay = 1000 * 60 * 60 * 24;
 
-  const diffDays = expirationDate
-    ? Math.trunc((expirationDate.getTime() - currentDate) / millisecondsPerDay)
-    : null;
+// HOY SIN HORAS
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+// FECHA VENCIMIENTO SIN HORAS
+const expirationDate = contractData.auditLicenseExpiration
+  ? new Date(contractData.auditLicenseExpiration + "T00:00:00")
+  : null;
+
+if (expirationDate) {
+  expirationDate.setHours(0, 0, 0, 0);
+}
+
+const diffDays = expirationDate
+  ? Math.floor(
+      (expirationDate.getTime() - today.getTime()) /
+      millisecondsPerDay
+    )
+  : null;
 
   // estado visual
   let licenseStatusClass = "active";
