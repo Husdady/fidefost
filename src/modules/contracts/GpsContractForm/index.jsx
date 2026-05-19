@@ -48,8 +48,10 @@ const isFormValid =
   if (!show) return null;
 
   return (
-    <div className="gps-modal">
-      <div className="gps-modal__content">
+    <div className="gps-modal"
+          onClick={onHide}>
+      <div className="gps-modal__content"
+           onClick={(e) => e.stopPropagation()}>
 
         <h2 className="gps-modal__title">
           {editingGps
@@ -144,11 +146,14 @@ const isFormValid =
         )}
 
         <div className="gps-modal__actions">
-          <button onClick={onHide}>
+          <button 
+            className="btn-secondary"
+            onClick={onHide}>
             Cancelar
           </button>
 
           <button
+            className="btn-primary"
             disabled={!isFormValid}
             onClick={() => {
               const alreadyExists =
