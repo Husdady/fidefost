@@ -64,24 +64,27 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
           <div className="rapid-unit-audit__header d-flex align-items-start justify-content-between">
             <div className="rapid-unit-audit__info">
               <h1 className="rapid-unit-audit__title mb-0">{title}</h1>
+              <div className="rapid-unit-audit__search">           
+                 <input
+                  type="text"
+                  placeholder="Buscar conductor..."
+                  value={search}
+                  onChange={(e) =>
+                    setSearch(e.target.value)
+                  }
+                  className="audit-search"
+                />
+              </div>
             </div>
           
             <div className="rapid-unit-audit__actions d-flex align-items-center">
             {children}
-            </div>
+            </div>          
+           
           </div>
         
         </section>  
             <div className="rapid-unit-audit-list-table-wrapper">
-              <input
-                type="text"
-                placeholder="Buscar conductor..."
-                value={search}
-                onChange={(e) =>
-                  setSearch(e.target.value)
-                }
-                className="audit-search"
-              />
             <table className="rapid-unit-audit__body">
               <colgroup>
                 <col className="col-audit-driver" />
