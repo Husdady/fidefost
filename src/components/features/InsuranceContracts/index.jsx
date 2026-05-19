@@ -85,6 +85,7 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
             <col className="col-contracts-type" />
             <col className="col-contracts-date" />
             <col className="col-contracts-status" />
+            <col className="col-contracts-actions" />
           </colgroup>
 
           <thead>
@@ -248,7 +249,7 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
               ))
             ) : (
               <tr>
-                <td colSpan="4">
+                <td colSpan="5">
                   <div className="contracts-list-empty">
                     No se encontraron contratos de seguro.
                   </div>

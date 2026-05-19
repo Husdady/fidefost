@@ -1,5 +1,6 @@
 .insurance-contracts {
   min-height: 176px;
+  width: 100%;
   padding: 18px 20px 24px;
   border-radius: 20px;
   background-color: #ffffff;
@@ -40,39 +41,29 @@
   }
 }
  .insurance-contracts-list-table-wrapper {
-    overflow-x: auto;
-    overflow-y: auto;
-    max-height: 420px;
-    border-radius: 14px;
-    background: #ffffff;
-    padding-bottom: 4px;
-    scrollbar-width: thin;
-    scrollbar-color: #9a9a9a #eef2f5;
+  max-height: 580px;
+  overflow-x: overlay;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
 
     &::-webkit-scrollbar {
-      height: 10px;
+      height: 8px;
     }
 
     &::-webkit-scrollbar-track {
-      background: #eef2f5;
-      border-radius: 999px;
-      margin: 0 12px;
+      background:  transparent;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: #8f8f8f;
+      background: #c7ccd1;
       border-radius: 999px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: #7a7a7a;
     }
   }
     .insurance-contracts__body{
-    width: 100%;
-    min-width: 960px;
-    table-layout: fixed;
-    border-collapse: collapse;
+      width: 100%;
+      min-width: 900px;
+      border-collapse: collapse;
+
 
     .col-contracts-supplier {
       width: 18%;
@@ -88,6 +79,9 @@
 
     .col-contracts-status {
       width: 21%;
+    }
+    .col-contracts-actions {
+      width: 20%;
     }
 
     thead {
@@ -214,6 +208,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: nowrap;
 }
 
 .contracts-delete-btn {
