@@ -13,8 +13,11 @@
   }
 
   &__info {
-    min-width: 0;
-    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-bottom: 20px;
+   
   }
 
   &__title {
@@ -40,6 +43,12 @@
     margin-top: 26px;
   }
 }
+.contracts-date-filter {
+  margin-top: 8px;
+}
+.contracts-date-filter input {
+  height: 20px;
+}
  .insurance-contracts-list-table-wrapper {
   max-height: 480px;
   overflow-x: overlay;
@@ -63,7 +72,6 @@
       width: 100%;
       min-width: 900px;
       border-collapse: collapse;
-
 
     .col-contracts-supplier {
       width: 18%;
