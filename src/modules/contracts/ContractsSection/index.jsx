@@ -43,7 +43,7 @@ export default function ContractsSection() {
       <div className="contracts-section__grid">
         <ContractsGPS
           icon={<GpsIcon />}
-          title="Contratos GPS"
+          title="Contratos GPS  "
           summarygps={<ContractsGPSItems 
                 items={gpsContracts} 
                 onEdit={(gps) => {
