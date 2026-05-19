@@ -183,8 +183,18 @@ setOriginalFiles(files);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+
+     let newValue = value;
+
+  // SOLO LETRAS Y MAYUSCULAS PARA CONDUCTOR
+  if (name === "conductor") {
+    newValue = value
+      .replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, "")
+      .toUpperCase();
+  }
+    setForm({ ...form, [name]: newValue });
   };
+  
 
   const handleCheckbox = (name) => {
     setForm({
