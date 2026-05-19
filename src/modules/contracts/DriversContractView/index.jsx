@@ -1,12 +1,17 @@
 import { createPortal } from "react-dom";
 import useGpsContractsStore from "context/contracts/gpsContractsStore";
 import DriverIcon from "./Icons/driver-icon";
+import UnitIcon from "./Icons/unit-icon";
+import GpsIcon from "./Icons/gps-icon";
+import WifiIcon from "./Icons/wifi-icon";
+import DateIcon from "./Icons/date-icon";
 
 export default function DriverContractView({
   contractData,
   onHide, 
   onDelete,
 }) {
+  const [placa, marca] = (contractData.auditUnidad || "").split("-");
   
   if (!contractData) return null;
   const gpsContracts =
@@ -58,7 +63,7 @@ export default function DriverContractView({
                         </>
                       )}
               </span>
-              <span>{contractData.auditInductions}</span>
+              <span>INDUCCION:{" "}{contractData.auditInductions}</span>
             </div>
           </div>
 
@@ -72,7 +77,16 @@ export default function DriverContractView({
               UNIDAD ASIGNADA
             </p>
 
-            <h3>{contractData.auditUnidad}</h3>
+            <div className="contract-unit">
+              <div className="contract-unit__icon">
+                <UnitIcon />
+              </div>
+
+              <div className="contract-unit__info">
+                <h3>{placa}</h3>
+                <p>{marca}</p>
+              </div>
+            </div>
 
           </div>
 
@@ -80,13 +94,18 @@ export default function DriverContractView({
             <p className="contract-view-label">
               PERIODO ASIGNACIÓN
             </p>
+        
+            <div className="contract-dates">
+              <div className="contract-dates__icon">
+                <DateIcon />
+              </div>
 
-            <h3>
-              {contractData.auditContract?.start}
-              {" - "}
-              {contractData.auditContract?.end}
-            </h3>
-
+              <div className="contract-dates__content">
+                <p>{contractData.auditContract?.start}</p>
+                <p>{contractData.auditContract?.end}</p>
+              </div>
+            </div>
+  
             <small>
               Activo por {contractData.auditContract?.days} días
             </small>
@@ -105,13 +124,13 @@ export default function DriverContractView({
 
                 {contractData.wifi && (
                   <span>
-                    WIFI ✅
+                    WIFI <WifiIcon/>
                   </span>
                 )}
 
                 {contractData.gps && (
                   <span>
-                    GPS ✅
+                    GPS <GpsIcon/>
                   </span>
                 )}
 

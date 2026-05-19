@@ -28,7 +28,7 @@
 }
 
 .contract-view-grid h3 {
-  font-size: 14px;
+  font-size: 15px;
 }
 .contract-view-grid small {
   font-size: 11px;
@@ -43,8 +43,8 @@
 }
 
 .contract-view-label {
-  font-size: 11px;
-  color: #6b7280;
+  font-size: 15px;
+  color: #212529;
   font-weight: 700;
   margin-bottom: 5px;
 }
@@ -107,4 +107,45 @@
   border-radius: 14px;
   cursor: pointer;
   font-weight: 600;
+}
+.contract-dates {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contract-dates__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contract-dates__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contract-dates__content p {
+  font-size: 15px; 
+  margin: 0;
+}
+.contract-unit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contract-unit__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.contract-unit__info h3{
+  margin: 0;
+  font-size: 15px;
+}
+.contract-unit__info p {
+  margin: 0;
+  font-size: 13px;
 }
