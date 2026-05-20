@@ -69,12 +69,16 @@
 }
 
 .units-table tbody td{
+  text-align: left;
   padding:18px 0;
   color:#0f172a;
   font-size:14px;
 }
 .units-table tbody td p{
   margin: 0;
+}
+.col-seguros p{
+  text-align: left;
 }
 
 /* UNIT INFO */
@@ -132,7 +136,7 @@
   overflow-y: auto;
   overflow-x: auto;
 
-  border-radius: 16px;
+  border-radius: 0px;
 
   scrollbar-width: thin;
   scrollbar-color: #9a9a9a #eef2f5;

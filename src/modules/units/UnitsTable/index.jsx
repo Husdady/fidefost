@@ -140,7 +140,7 @@ const filteredUnits = units.filter((unit) => {
                 </span>
               </td>
 
-              <td>
+              <td className="col-seguros">
                 <strong className="soat">
                   {unit.soat}
                 </strong>
