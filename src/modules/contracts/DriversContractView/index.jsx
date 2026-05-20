@@ -68,7 +68,17 @@ const diffDays = expirationDate
   contractData.auditLicenseExpiration &&
   new Date(contractData.auditLicenseExpiration) < new Date();
   
-  
+  const formatDate = (dateString) => {
+
+  if (!dateString) {
+    return "-";
+  }
+
+  const [year, month, day] =
+    dateString.split("-");
+
+  return `${day}/${month}/${year}`;
+};
  
 
   return createPortal(
@@ -149,8 +159,13 @@ const diffDays = expirationDate
               </div>
 
               <div className="contract-dates__content">
-                <p>{contractData.auditContract?.start}</p>
-                <p>{contractData.auditContract?.end}</p>
+                <p>
+                  {formatDate(contractData.auditContract?.start)}
+                </p>
+
+                <p>
+                  {formatDate(contractData.auditContract?.end)}
+                </p>
               </div>
             </div>
   
