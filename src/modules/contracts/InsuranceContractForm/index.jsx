@@ -273,7 +273,7 @@ const isFormValid =
               </option>
 
               <option>Polizas de Carga y Contenedor</option>
-              <option>Endosos</option>
+              <option>Endoso</option>
               <option>Poliza Vehicular</option>
               <option>SOAT</option>
             </select>
