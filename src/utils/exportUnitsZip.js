@@ -15,54 +15,59 @@ export default async function exportUnitZip(unit) {
 
   const data = [
     {
-      PLACA: unit.placa,
-      MARCA: unit.marca,
+          // UNIDAD
+    MARCA: unit.marca,
+    PLACA_UNIDAD: unit.placa,
+    PLACA_TRACTOR: unit.placaTractor,
+    PLACA_CARRETA: unit.placaCarreta,
 
-      MTC: unit.mtc,
+    // MTC / PROPIEDAD
+    MTC: unit.mtc,
 
-      TARJETA_VEHICULAR:
-        unit.tarjetaVehicularInfo,
+    TARJETA_VEHICULAR:
+      unit.tarjetaVehicularInfo,
 
-      F_VENCIMIENTO_REVISION_TECNICA:
-        unit.revisionFecha,
+    // REVISION
+    F_VENCIMIENTO_REVISION_TECNICA:
+      unit.revisionFecha,
 
-      SOAT: unit.soat,
+    // SEGUROS
+    SOAT: unit.soat,
 
-      POLIZA: unit.poliza,
+    POLIZA_VEHICULAR: unit.polizaVehicular,
 
-      PARTIDA: unit.partida,
+    POLIZAS_CARGA_CONTENEDOR: unit.polizaCarga,
 
-      DOCUMENTACION_MTC:
+    POLIZA_ENDOSO: unit.polizaEndoso,
+
+    // CHECKS
+    DOCUMENTACION_MTC:
       unit.documentos?.mtcCheck
         ? "SI"
         : "NO",
 
-        DOCUMENTACION_SOAT:
-        unit.documentos?.soatCheck
-            ? "SI"
-            : "NO",
+    DOCUMENTACION_SOAT:
+      unit.documentos?.soatCheck
+        ? "SI"
+        : "NO",
 
-        DOCUMENTACION_POLIZA:
-        unit.documentos?.polizaCheck
-            ? "SI"
-            : "NO",
+    DOCUMENTACION_POLIZAS:
+      unit.documentos?.polizaCheck
+        ? "SI"
+        : "NO",
 
-        DOCUMENTACION_TARJETA_VEHICULAR:
-        unit.documentos?.tarjetaVehicularCheck
-            ? "SI"
-            : "NO",
-        DOCUMENTACION_REC_TECN_TRACTOR_BAL_929:
-            unit.documentos?.recTecnTractorCheck 
-            ? "SI"
-            : "NO",
-        DOCUMENTACION_REC_TECN_TRACTOR_BAL_C3E_970:
-            unit.documentos?.recTecnCarretaCheck 
-            ? "SI"
-            : "NO",
-        DOCUMENTACION_PERMISO_MUNICIPAL:
-            unit.documentos?.permisoMunicipalCheck
-            ? "SI"
-            : "NO",
+    DOCUMENTACION_TARJETA_VEHICULAR:
+      unit.documentos?.tarjetaVehicularCheck
+        ? "SI"
+        : "NO",
+    DOCUMENTACION_REVISION_TEC:
+        unit.documentos?.revisionTecnicaCheck 
+        ? "SI"
+        : "NO",
+    DOCUMENTACION_PERMISO_MUNICIPAL:
+        unit.documentos?.permisoMunicipalCheck
+        ? "SI"
+        : "NO",
     }
   ];
 

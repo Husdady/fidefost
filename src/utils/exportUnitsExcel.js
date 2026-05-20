@@ -6,8 +6,10 @@ export default function exportUnitsExcel(units) {
   const data = units.map((unit) => ({
 
     // UNIDAD
-    PLACA: unit.placa,
     MARCA: unit.marca,
+    PLACA_UNIDAD: unit.placa,
+    PLACA_TRACTOR: unit.placaTractor,
+    PLACA_CARRETA: unit.placaCarreta,
 
     // MTC / PROPIEDAD
     MTC: unit.mtc,
@@ -22,10 +24,11 @@ export default function exportUnitsExcel(units) {
     // SEGUROS
     SOAT: unit.soat,
 
-    POLIZA: unit.poliza,
+    POLIZA_VEHICULAR: unit.polizaVehicular,
 
-    // EXTRA
-    PARTIDA: unit.partida,
+    POLIZAS_CARGA_CONTENEDOR: unit.polizaCarga,
+
+    POLIZA_ENDOSO: unit.polizaEndoso,
 
     // CHECKS
     DOCUMENTACION_MTC:
@@ -38,7 +41,7 @@ export default function exportUnitsExcel(units) {
         ? "SI"
         : "NO",
 
-    DOCUMENTACION_POLIZA:
+    DOCUMENTACION_POLIZAS:
       unit.documentos?.polizaCheck
         ? "SI"
         : "NO",
@@ -47,12 +50,8 @@ export default function exportUnitsExcel(units) {
       unit.documentos?.tarjetaVehicularCheck
         ? "SI"
         : "NO",
-    DOCUMENTACION_REC_TECN_TRACTOR_BAL_929:
-        unit.documentos?.recTecnTractorCheck 
-        ? "SI"
-        : "NO",
-    DOCUMENTACION_REC_TECN_TRACTOR_BAL_C3E_970:
-        unit.documentos?.recTecnCarretaCheck 
+    DOCUMENTACION_REVISION_TEC:
+        unit.documentos?.revisionTecnicaCheck 
         ? "SI"
         : "NO",
     DOCUMENTACION_PERMISO_MUNICIPAL:
