@@ -2,6 +2,7 @@ import { createPortal } from "react-dom";
 import { useState, useEffect, useRef } from "react";
 
 import {useAddUnit} from "context/units/useUnits";
+import { useGetUnits } from "context/units/useUnits";
 import { useGetInsurance } from "context/contracts/useInsurance";
 import { useUpdateUnit } from "context/units/useUnits";
 
@@ -17,6 +18,16 @@ export default function UnitForm({ show, onHide, initialData = null,
   const addUnit = useAddUnit();
   const updateUnit = useUpdateUnit();
   const insuranceContracts = useGetInsurance();
+  const units = useGetUnits();
+  const usedVehicularPolicies = units
+  .filter(
+    (unit) =>
+      unit._id !== initialData?._id
+  )
+  .map(
+    (unit) => unit.polizaVehicular
+  )
+  .filter(Boolean);
 
  const [deletedFiles, setDeletedFiles] = useState([]);
 
@@ -607,7 +618,15 @@ const handleClose = () => {
                   {insuranceContracts
                     .filter(
                       (insurance) =>
-                        insurance.tipo?.toLowerCase().includes("vehicular")
+                        insurance.tipo
+                          ?.toLowerCase()
+                          .includes("vehicular")
+                    )
+                    .filter(
+                      (insurance) =>
+                        !usedVehicularPolicies.includes(
+                          insurance.poliza
+                        )
                     )
                     .map((insurance) => (
                       <option
