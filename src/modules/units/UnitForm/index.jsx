@@ -549,7 +549,11 @@ const handleClose = () => {
             />
 
             <label className="label">
-              POLIZAS
+              POLIZAS:
+            </label>
+            <div>
+            <label className="label">
+              POLIZA VEHICULAR
             </label>
             <select name="poliza" 
                     value={form.poliza || ""} 
@@ -575,6 +579,64 @@ const handleClose = () => {
                     </option>
               ))}
             </select>
+            <label className="label">
+              POLIZA CARGA Y CONTENEDOR
+            </label>
+            <select name="poliza" 
+                    value={form.poliza || ""} 
+                    onChange={(e)=>
+                      handleInsuranceSelect(
+                        "poliza",
+                        e.target.value
+                      )
+                    }
+            >
+              <option value="">Seleccionar poliza...</option>
+              
+              {insuranceContracts
+                  .filter((insurance) =>
+                      insurance.poliza?.startsWith("POLIZA-")
+                  )
+                  .map((insurance) => (
+                    <option
+                      key={insurance._id}
+                      value={insurance.poliza}
+                    >
+                      {insurance.poliza}
+                    </option>
+              ))}
+            </select>
+
+            <label className="label">
+              POLIZA ENDOSO
+            </label>
+            <select name="poliza" 
+                    value={form.poliza || ""} 
+                    onChange={(e)=>
+                      handleInsuranceSelect(
+                        "poliza",
+                        e.target.value
+                      )
+                    }
+            >
+              <option value="">Seleccionar poliza...</option>
+              
+              {insuranceContracts
+                  .filter((insurance) =>
+                      insurance.poliza?.startsWith("POLIZA-")
+                  )
+                  .map((insurance) => (
+                    <option
+                      key={insurance._id}
+                      value={insurance.poliza}
+                    >
+                      {insurance.poliza}
+                    </option>
+              ))}
+            </select>
+            </div>
+
+          
 
             <label className="label">
               SOAT
