@@ -141,11 +141,24 @@ const filteredUnits = units.filter((unit) => {
               </td>
 
               <td>
-                <strong className="soat-ok">
+                <strong className="soat">
                   {unit.soat}
                 </strong>
 
-                <p>{unit.poliza}</p>
+                <p>
+                  P.V:{" "}
+                  {unit.polizaVehicular?.split("-")[1] || "-"}
+                </p>
+
+                <p>
+                  P.C.C:{" "}
+                  {unit.polizaCarga?.split("-")[1] || "-"}
+                </p>
+
+                <p>
+                  P.E:{" "}
+                  {unit.polizaEndoso?.split("-")[1] || "-"}
+                </p>
               </td>
 
               <td>
