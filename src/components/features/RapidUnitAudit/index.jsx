@@ -19,7 +19,7 @@ const formatMonthYear = (date) => {
 };
 
 function RapidUnitAudit({ title, children, className = "",  accent = "default", data = [], onEdit, onView }) {
-
+  
   const [audits, setAudits, ] = useState([]);
   const [search, setSearch] =
   useState("");
@@ -64,29 +64,33 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
           <div className="rapid-unit-audit__header d-flex align-items-start justify-content-between">
             <div className="rapid-unit-audit__info">
               <h1 className="rapid-unit-audit__title mb-0">{title}</h1>
+              <div className="rapid-unit-audit__search">           
+                 <input
+                  type="text"
+                  placeholder="Buscar conductor..."
+                  value={search}
+                  onChange={(e) =>
+                    setSearch(e.target.value)
+                  }
+                  className="audit-search"
+                />
+              </div>
             </div>
           
             <div className="rapid-unit-audit__actions d-flex align-items-center">
             {children}
-            </div>
+            </div>          
+           
           </div>
         
         </section>  
             <div className="rapid-unit-audit-list-table-wrapper">
-              <input
-                type="text"
-                placeholder="Buscar conductor..."
-                value={search}
-                onChange={(e) =>
-                  setSearch(e.target.value)
-                }
-                className="audit-search"
-              />
             <table className="rapid-unit-audit__body">
               <colgroup>
                 <col className="col-audit-driver" />
                 <col className="col-audit-contract" />
                 <col className="col-audit-license" />
+                <col className="col-audit-inductions" />
                 <col className="col-audit-operationalStatus" />
                 <col className="col-audit-actions" />
               </colgroup>
@@ -95,7 +99,8 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                 <tr>
                   <th>CONDUCTOR</th>
                   <th>CONTRATO</th>
-                  <th>LICENCIA/INDUCCION</th>
+                  <th>LICENCIA/F.V</th>
+                  <th>INDUCCIONES</th>
                   <th>ESTADO OPERATIVO</th>
                   <th>ACCIONES</th>
                 </tr>
@@ -125,27 +130,63 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                       </td>
 
                       <td>
-                        <span className="audit-list-license">
-                          {audit?.auditLicense || "-"}
+                        {(() => {
+                          const millisecondsPerDay = 1000 * 60 * 60 * 24;
 
-                          {audit?.auditInductionStatus && (
-                            <>
-                              {" / "}
-                              <span
-                                style={{
-                                  color:
-                                    audit.auditInductionStatus === "Inducción OK"
-                                      ? "#16a34a"
-                                      : "#dc2626",
+                          // HOY SIN HORAS
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0);
 
-                                  fontWeight: 600,
-                                  fontSize: 11,
-                                }}
-                              >
-                                {audit.auditInductionStatus}
-                              </span>
-                            </>
-                          )}
+                          // FECHA VENCIMIENTO
+                          const expirationDate = audit.auditLicenseExpiration
+                            ? new Date(audit.auditLicenseExpiration + "T00:00:00")
+                            : null;
+
+                          if (expirationDate) {
+                            expirationDate.setHours(0, 0, 0, 0);
+                          }
+
+                          const diffDays = expirationDate
+                            ? Math.floor(
+                                (expirationDate.getTime() - today.getTime()) /
+                                millisecondsPerDay
+                              )
+                            : null;
+
+                          let statusClass = "active";
+                          let statusText = "VIGENTE";
+
+                          if (diffDays < 0) {
+                            statusClass = "expired";
+                            statusText = "VENCIDA";
+                          } else if (diffDays < 60) {
+                            statusClass = "warning";
+                            statusText = "PROX. VENCER";
+                          }
+
+                          const fullDate = expirationDate
+                            ? expirationDate.toLocaleDateString("es-PE")
+                            : "-";
+
+                          return (
+                            
+                            <div className="license-status">
+                              <p className="license-title">
+                                Licencia 
+                              </p>
+                              <span>{audit.auditLicense || "-"}</span>
+
+                              <p className={`license-badge ${statusClass}`}>
+                                {statusText}  {fullDate}
+                              </p>
+                            </div>
+                          );
+                        })()}
+                      </td>
+
+                      <td>
+                        <span className="audit-list-inductions">
+                          {audit?.auditInductions || "-"}
                         </span>
                       </td>
                       
@@ -166,7 +207,9 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                         <div className="audit-list-actions-edit"
                              onClick={() => onEdit(audit)}
                         >
-                          <span className="audit-list-actions-icon">
+                          <span 
+                          className="audit-list-actions-icon"
+                          style={{ color: "#16a34a" }}>
                           <svg
                             width="16"
                             height="16"
@@ -191,7 +234,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                           </svg>
                           </span>
 
-                          <span>Editar</span>
+                          <span style={{ color: "#16a34a" }}>Editar</span>
                         </div>
 
                         <div className="audit-list-actions-visual"
@@ -209,7 +252,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                             </svg>
                           </span>
 
-                          <span>Visualizar</span>
+                          <span> Visualizar</span>
                         </div>
                         <div
                           className="audit-list-actions-export"
@@ -220,8 +263,9 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                           }
                         >
 
-                          <span className="audit-list-actions-icon">
-
+                          <span 
+                          className="audit-list-actions-icon"
+                          style={{ color: "#1877f2" }} >
                             <svg
                               width="18"
                               height="18"
@@ -230,14 +274,14 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                             >
                               <path
                                 d="M12 3V15"
-                                stroke="#6E797E"
+                                stroke="currentColor"
                                 strokeWidth="1.8"
                                 strokeLinecap="round"
                               />
 
                               <path
                                 d="M7 10L12 15L17 10"
-                                stroke="#6E797E"
+                                stroke="currentColor"
                                 strokeWidth="1.8"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -245,7 +289,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
 
                               <path
                                 d="M5 21H19"
-                                stroke="#6E797E"
+                                stroke="currentColor"
                                 strokeWidth="1.8"
                                 strokeLinecap="round"
                               />
@@ -253,7 +297,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
 
                           </span>
 
-                          <span>Exportar</span>
+                          <span style={{ color: "#1877f2" }}>Exportar</span>
 
                         </div>
 

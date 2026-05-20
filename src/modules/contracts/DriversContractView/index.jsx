@@ -1,12 +1,56 @@
 import { createPortal } from "react-dom";
 import useGpsContractsStore from "context/contracts/gpsContractsStore";
 import DriverIcon from "./Icons/driver-icon";
+import UnitIcon from "./Icons/unit-icon";
+import GpsIcon from "./Icons/gps-icon";
+import WifiIcon from "./Icons/wifi-icon";
+import DateIcon from "./Icons/date-icon";
 
 export default function DriverContractView({
   contractData,
   onHide, 
   onDelete,
 }) {
+   
+  const millisecondsPerDay = 1000 * 60 * 60 * 24;
+
+// HOY SIN HORAS
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+// FECHA VENCIMIENTO SIN HORAS
+const expirationDate = contractData.auditLicenseExpiration
+  ? new Date(contractData.auditLicenseExpiration + "T00:00:00")
+  : null;
+
+if (expirationDate) {
+  expirationDate.setHours(0, 0, 0, 0);
+}
+
+const diffDays = expirationDate
+  ? Math.floor(
+      (expirationDate.getTime() - today.getTime()) /
+      millisecondsPerDay
+    )
+  : null;
+
+  // estado visual
+  let licenseStatusClass = "active";
+  let licenseTextStatus = "VIGENTE";
+
+  if (diffDays < 0) {
+    licenseStatusClass = "expired";
+    licenseTextStatus = "VENCIDA";
+  } else if (diffDays < 60) {
+    licenseStatusClass = "warning";
+    licenseTextStatus = "PROX. VENCER";
+  }
+
+  const fullExpirationDate = expirationDate
+  ? expirationDate.toLocaleDateString("es-PE")
+  : "";
+
+  const [placa, marca] = (contractData.auditUnidad || "").split("-");
   
   if (!contractData) return null;
   const gpsContracts =
@@ -18,6 +62,24 @@ export default function DriverContractView({
     (gps) =>
       gps.id === contractData.gpsId
   );
+
+
+  const isLicenseExpired =
+  contractData.auditLicenseExpiration &&
+  new Date(contractData.auditLicenseExpiration) < new Date();
+  
+  const formatDate = (dateString) => {
+
+  if (!dateString) {
+    return "-";
+  }
+
+  const [year, month, day] =
+    dateString.split("-");
+
+  return `${day}/${month}/${year}`;
+};
+ 
 
   return createPortal(
     <div className="modal" onClick={onHide}>
@@ -34,8 +96,11 @@ export default function DriverContractView({
         </button>
 
         {/* HEADER */}
+        
         <div className="contract-view-header">
-           <DriverIcon />
+           <div className="contract-view-icon-driver">
+              {<DriverIcon />}
+           </div>
 
           <div>
             <p className="contract-view-label">
@@ -45,21 +110,19 @@ export default function DriverContractView({
             <h2>{contractData.auditDriver}</h2>
 
             <div className="contract-view-tags">
-              <span>  Lic-{contractData.auditLicense || "-"}
-
-                      {contractData.auditLicenseExpiration && (
-                        <>
-                          {" "}
-                          (Vence{" "}
-                          {new Date(
-                            contractData.auditLicenseExpiration
-                          ).getFullYear()}
-                          )
-                        </>
-                      )}
-              </span>
-              <span>{contractData.auditInductionStatus}</span>
+              <div className={`license-status ${licenseStatusClass}`}>
+              <strong>
+                Lic-{contractData.auditLicense || "-"}{" - "} {licenseTextStatus} {fullExpirationDate}
+              </strong>
+              </div>
+            
+            
+             <div className="contract-view-inductions">
+              <strong>INDUCCIONES: </strong>
+              <p>{contractData.auditInductions}</p>
+             </div>
             </div>
+
           </div>
 
         </div>
@@ -72,7 +135,16 @@ export default function DriverContractView({
               UNIDAD ASIGNADA
             </p>
 
-            <h3>{contractData.auditUnidad}</h3>
+            <div className="contract-unit">
+              <div className="contract-unit__icon">
+                <UnitIcon />
+              </div>
+
+              <div className="contract-unit__info">
+                <h3>{placa}</h3>
+                <p>{marca}</p>
+              </div>
+            </div>
 
           </div>
 
@@ -80,13 +152,23 @@ export default function DriverContractView({
             <p className="contract-view-label">
               PERIODO ASIGNACIÓN
             </p>
+        
+            <div className="contract-dates">
+              <div className="contract-dates__icon">
+                <DateIcon />
+              </div>
 
-            <h3>
-              {contractData.auditContract?.start}
-              {" - "}
-              {contractData.auditContract?.end}
-            </h3>
+              <div className="contract-dates__content">
+                <p>
+                  {formatDate(contractData.auditContract?.start)}
+                </p>
 
+                <p>
+                  {formatDate(contractData.auditContract?.end)}
+                </p>
+              </div>
+            </div>
+  
             <small>
               Activo por {contractData.auditContract?.days} días
             </small>
@@ -105,13 +187,13 @@ export default function DriverContractView({
 
                 {contractData.wifi && (
                   <span>
-                    WIFI ✅
+                    WIFI <WifiIcon/>
                   </span>
                 )}
 
                 {contractData.gps && (
                   <span>
-                    GPS ✅
+                    GPS <GpsIcon/>
                   </span>
                 )}
 

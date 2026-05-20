@@ -70,21 +70,24 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
             <div className="insurance-contracts__info">
               <h1 className="insurance-contracts__title mb-0">{title}</h1>
               <p className="insurance-contracts__description mb-0">{datefilter}</p>
+               <div className="contracts-date-filter">
+                <DateRange
+                  desde={desde}
+                  hasta={hasta}
+                  setDesde={setDesde}
+                  setHasta={setHasta}
+                />
+              </div>
             </div>
           </div>
       <div className="insurance-contracts-list-table-wrapper">
-         <DateRange
-            desde={desde}
-            hasta={hasta}
-            setDesde={setDesde}
-            setHasta={setHasta}
-          />
         <table className="insurance-contracts__body">
           <colgroup>
             <col className="col-contracts-supplier" />
             <col className="col-contracts-type" />
             <col className="col-contracts-date" />
             <col className="col-contracts-status" />
+            <col className="col-contracts-actions" />
           </colgroup>
 
           <thead>
@@ -248,7 +251,7 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
               ))
             ) : (
               <tr>
-                <td colSpan="4">
+                <td colSpan="5">
                   <div className="contracts-list-empty">
                     No se encontraron contratos de seguro.
                   </div>

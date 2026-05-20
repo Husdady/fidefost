@@ -27,68 +27,62 @@ export default async function exportAuditZip(
 
   const excelData = [{
 
-    Operador:
-      audit.operador,
-      
     Conductor:
-      audit.auditDriver,
-    
-    Unidad:
-      audit.auditUnidad,
+          audit.auditDriver,
 
-    Licencia:
-      audit.auditLicense,
-    
-    Fecha_Vencimiento:
-      audit.auditLicenseExpiration,
+        Unidad:
+          audit.auditUnidad,
 
-    Induccion:
-      audit.auditInductionStatus,
+        Licencia:
+          audit.auditLicense,
+        
+        Fecha_Vencimiento:
+          audit.auditLicenseExpiration,
 
-    Fecha_Aprobacion_Induccion:
-      audit.auditInductionDate,
+        Inducciones:
+          audit.auditInductions,
 
-    Inicio_Contrato:
-      audit.auditContract?.start,
+        Inicio_Contrato:
+          audit.auditContract?.start,
 
-    Fin_Contrato:
-      audit.auditContract?.end,
+        Fin_Contrato:
+          audit.auditContract?.end,
 
-    Dias_Activos:
-      audit.auditContract?.days,
-    
-    Estado:
-      audit.auditOperationalStatus,
-    
-    GPS:
-      audit.gps ? "SI" : "NO",
-    
-    ID_GPS:
-      audit.gpsId,
+        Dias_Activos:
+          audit.auditContract?.days,
+        
+        Estado:
+          audit.auditOperationalStatus,
+        
+        GPS:
+          audit.gps ? "SI" : "NO",
+        
+        ID_GPS:
+          audit.gpsId,
+        
+        Proveedor_GPS:
+          gpsData?.provider || "",
 
-    Proveedor_GPS:
-      gpsData?.provider || "",
+        Link_GPS:
+          gpsData?.gpsLink || "",
 
-    Link_GPS:
-      gpsData?.gpsLink || "", 
+        Wifi:
+          audit.wifi ? "SI" : "NO",
+        
+        Doc_Brevete:
+          audit.documentos?.brevete ? "SI" : "NO",
+        
+        Doc_DNI:
+          audit.documentos?.dni ? "SI" : "NO",
 
-    Wifi:
-      audit.wifi ? "SI" : "NO",
-    
-    Doc_Brevete:
-      audit.documentos?.brevete ? "SI" : "NO",
-    
-    Doc_DNI:
-      audit.documentos?.dni ? "SI" : "NO",
-
-    Doc_SCTR:
-      audit.documentos?.sctr ? "SI" : "NO",
-    
-    Doc_Antecedentes_Penales:
-      audit.documentos?.antecedentesPenales ? "SI" : "NO",
-      
-    Doc_Antecedentes_Policiales:
-      audit.documentos?.antecedentesPoliciales ? "SI" : "NO",
+        Doc_SCTR:
+          audit.documentos?.sctr ? "SI" : "NO",
+        
+        Doc_Antecedentes_Penales:
+          audit.documentos?.antecedentesPenales ? "SI" : "NO",
+          
+        Doc_Antecedentes_Policiales:
+          audit.documentos?.antecedentesPoliciales ? "SI" : "NO",
 
   }];
 

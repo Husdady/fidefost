@@ -7,6 +7,7 @@ import DeleteIcon from "./Icons/delete-icon";
 export default function ContractsGPSItems({
   items = [], onEdit, onDelete,
 }) {
+
   const [search, setSearch] = useState("");
   const filteredItems = items.filter(
   (item) =>
@@ -47,8 +48,9 @@ export default function ContractsGPSItems({
   };
 };
   return (
-    <div className="contracts-gps__list">
-      <div className="contracts-gps__search">
+    
+    <>
+    <div className="contracts-gps__search">
       <input
         type="text"
         placeholder="Buscar por ID GPS..."
@@ -58,6 +60,8 @@ export default function ContractsGPSItems({
         }
       />
     </div>
+    
+    <div className="contracts-gps__list">
 
       {filteredItems.map((item, index) => {
 
@@ -129,10 +133,15 @@ export default function ContractsGPSItems({
             </div>
 
           </div>
+
         </div>
       );
     })}
 
     </div>
+        <p className="contracts-gps-results">
+          Mostrando {filteredItems.length} resultados
+        </p>
+    </>
   );
 }

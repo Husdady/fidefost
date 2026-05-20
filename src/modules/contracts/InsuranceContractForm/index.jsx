@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { useState, useEffect } from "react";
 
 import { useUpdateInsurance } from "context/contracts/useInsurance";
+import { useGetInsurance } from "context/contracts/useInsurance";
 
 export default function InsuranceContractForm({
   show,
@@ -25,9 +26,15 @@ export default function InsuranceContractForm({
 
   const [deletedFiles, setDeletedFiles] = useState([]);
 
+  const [showDuplicateMessage, setShowDuplicateMessage] =
+  useState(false);
+
   const updateInsurance = useUpdateInsurance();
 
+  const insuranceContracts = useGetInsurance();
+  
   const [form, setForm] = useState(
+    
 
   initialData || {
 
@@ -85,6 +92,41 @@ if (!show) return null;
   };
 
   const handleSubmit = async () => {
+
+    const fullPolicy =
+  `${policyPrefix}${form.poliza}`;
+
+const alreadyExists =
+  insuranceContracts.some((insurance) => {
+
+    // permitir editar el mismo
+    if (
+      isEdit &&
+      insurance._id === initialData?._id
+    ) {
+      return false;
+    }
+
+    return (
+      insurance.poliza
+        ?.toLowerCase()
+        .trim() ===
+      fullPolicy
+        .toLowerCase()
+        .trim()
+    );
+  });
+
+if (alreadyExists) {
+
+  setShowDuplicateMessage(true);
+
+  setTimeout(() => {
+    setShowDuplicateMessage(false);
+  }, 3000);
+
+  return;
+}
 
   // eliminar definitivamente
   // solo al actualizar
@@ -394,22 +436,22 @@ const isFormValid =
                       className="insurance-file-delete"
                       onClick={() => {
 
-  const fileToDelete = files[index];
+                      const fileToDelete = files[index];
 
-  // guardar ids eliminados temporalmente
-  if (fileToDelete.id) {
+                      // guardar ids eliminados temporalmente
+                      if (fileToDelete.id) {
 
-    setDeletedFiles((prev) => [
-      ...prev,
-      fileToDelete.id
-    ]);
-  }
+                        setDeletedFiles((prev) => [
+                          ...prev,
+                          fileToDelete.id
+                        ]);
+                      }
 
-  // solo quitar del form visualmente
-  setFiles((prev) =>
-    prev.filter((_, i) => i !== index)
-  );
-}}
+                      // solo quitar del form visualmente
+                      setFiles((prev) =>
+                        prev.filter((_, i) => i !== index)
+                      );
+                    }}
                     >
                       <svg
                         width="18"
@@ -432,6 +474,14 @@ const isFormValid =
 
               </div>
             )}
+
+        {showDuplicateMessage && (
+          <div className="duplicate-message">
+              {form.tipo === "SOAT"
+                ? "INGRESAR OTRO, Este SOAT ya se encuentra registrado"
+                : "INGRESAR OTRO, Esta póliza ya se encuentra registrada"}
+          </div>
+        )}
 
         <div className="actions">
 

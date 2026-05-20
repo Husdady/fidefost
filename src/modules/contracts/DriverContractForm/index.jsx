@@ -1,5 +1,6 @@
 import { useGetClients } from "context/clients/useClients";
 import useGpsContractsStore from "context/contracts/gpsContractsStore";
+import { useGetContracts } from "context/contracts/useContracts";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import saveDocument from "database/saveDocument";
@@ -45,11 +46,10 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
     };
   };
    const [form, setForm] = useState({
-    operador: "",
     conductor: "",
     gpsId: "",
     licencia: "",
-    fechaInduccion: "",
+    inducciones: "",
     fechaVencimiento: "",
     unidad: "",
     fechaInicio: "",
@@ -71,6 +71,51 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
     (state) => state.gpsContracts
   );
 
+  const contracts = useGetContracts();
+
+  //SELECT GPS UNICO
+  const usedGpsIds = contracts
+  .filter((contract) => contract.gpsId)
+  .map((contract) => contract.gpsId);
+
+  const availableGps = gpsContracts.filter((gps) => {
+
+    // SI ESTÁ EDITANDO
+    // DEJAR SU GPS ACTUAL
+    if (
+      contractData &&
+      gps.id === contractData.gpsId
+    ) {
+      return true;
+    }
+
+    // OCULTAR GPS YA UTILIZADOS
+    return !usedGpsIds.includes(gps.id);
+  });
+
+  //SELECT UNIDADES UNICAS
+  const usedUnits = contracts
+  .filter((contract) => contract.auditUnidad)
+  .map((contract) => contract.auditUnidad);
+
+  const availableUnits = units.filter((unit) => {
+
+  const unitValue =
+    `${unit.placa} - ${unit.marca}`;
+
+  // SI ESTÁ EDITANDO
+  // DEJAR SU UNIDAD ACTUAL
+  if (
+    contractData &&
+    unitValue === contractData.auditUnidad
+  ) {
+    return true;
+  }
+
+  // OCULTAR UNIDADES YA USADAS
+  return !usedUnits.includes(unitValue);
+});
+
   const gpsSelectedData = gpsContracts.find(
     (gps) => gps.id === form.gpsId
   );
@@ -86,6 +131,8 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
   const [deletedFiles, setDeletedFiles] = useState([]);
 
   const [originalFiles, setOriginalFiles] = useState([]);
+  
+  const [errorMessage, setErrorMessage] = useState("");
 
   const operators = useGetClients();
   const calculateDays = (start, end) => {
@@ -103,14 +150,13 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
 
     setForm((prev) => ({
       ...prev,
-      operador: contractData.operador || "",
       conductor: contractData.auditDriver,
       unidad: contractData.auditUnidad || "",
       gpsId: contractData.gpsId || "",
       licencia: contractData.auditLicense || "",
       fechaInicio: contractData.auditContract?.start,
       fechaFin: contractData.auditContract?.end,
-      fechaInduccion: contractData.auditInductionDate || "",
+      inducciones: contractData.auditInductions || "",
       fechaVencimiento: contractData.auditLicenseExpiration || "",
       documentos: contractData.documentos || prev.documentos,
       wifi: contractData.wifi ?? prev.wifi,
@@ -137,8 +183,18 @@ setOriginalFiles(files);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+
+     let newValue = value;
+
+  // SOLO LETRAS Y MAYUSCULAS PARA CONDUCTOR
+  if (name === "conductor") {
+    newValue = value
+      .replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, "")
+      .toUpperCase();
+  }
+    setForm({ ...form, [name]: newValue });
   };
+  
 
   const handleCheckbox = (name) => {
     setForm({
@@ -189,6 +245,38 @@ setOriginalFiles(files);
 };
 
 const handleSubmit = async () => {
+  const driverAlreadyExists = contracts.some(
+    (contract) => {
+
+      // SI ESTÁ EDITANDO
+      // IGNORAR EL MISMO CONTRATO
+      if (
+        contractData &&
+        contract._id === contractData._id
+      ) {
+        return false;
+      }
+
+      return (
+        contract.auditDriver
+          ?.trim()
+          .toLowerCase() ===
+        form.conductor
+          ?.trim()
+          .toLowerCase()
+      );
+    }
+  );
+
+  if (driverAlreadyExists) {
+
+   setErrorMessage(
+      "INGRESAR OTRO NOMBRE, Este conductor ya se encuentra registrado."
+    );
+
+    return;
+  }
+  setErrorMessage("");
 
   // eliminar definitivos
   // solo al actualizar
@@ -228,29 +316,11 @@ const handleSubmit = async () => {
     form.fechaFin
   );
 
-  const inductionDate =
-    new Date(form.fechaInduccion);
-
-  const today = new Date();
-
-  const diffTime =
-    today - inductionDate;
-
-  const diffDays =
-    diffTime / (1000 * 60 * 60 * 24);
-
-  const inductionStatus =
-    diffDays <= 365
-      ? "Inducción OK"
-      : "Inducción Pendiente";
-
   const newAudit = {
 
     ...contractData,
 
     _id: contractId,
-
-    operador: form.operador,
 
     auditDriver: form.conductor,
 
@@ -274,11 +344,8 @@ const handleSubmit = async () => {
 
     auditLicense: form.licencia,
 
-    auditInductionDate:
-      form.fechaInduccion,
-
-    auditInductionStatus:
-      inductionStatus,
+    auditInductions:
+      form.inducciones,
 
     auditLicenseExpiration:
       form.fechaVencimiento,
@@ -293,13 +360,12 @@ const handleSubmit = async () => {
 const isFormValid =
 
   // CAMPOS
-  form.operador &&
   form.unidad &&
   form.conductor &&
   form.licencia &&
   form.fechaInicio &&
   form.fechaFin &&
-  form.fechaInduccion &&
+  form.inducciones &&
   form.fechaVencimiento &&
 
   // CHECKS
@@ -348,21 +414,10 @@ const isFormValid =
           {/* IZQUIERDA */}
           <div className="col">
 
-            <label className="label">EMPRESA OPERADORA</label>
-            <select name="operador" value={form.operador} onChange={handleChange}>
-              <option value="">Seleccionar operador...</option>
-
-              {operators.map((op) => (
-                <option key={op._id} value={op.operatorName}>
-                  {op.operatorName}
-                </option>
-              ))}
-            </select>
-
             <label className="label">UNIDAD (TRACTOR / PLACA)</label>
             <select name="unidad" value={form.unidad || ""} onChange={handleChange}>
               <option value="">Seleccionar unidad...</option>
-              {units.map((unit) => (
+              {availableUnits.map((unit) => (
                 <option
                   key={unit._id}
                   value={`${unit.placa} - ${unit.marca}`}
@@ -390,14 +445,15 @@ const isFormValid =
               <label><input type="checkbox" checked={form.documentos.sctr} onChange={() => handleCheckbox("sctr")} /> SCTR Vincula</label>
               <label><input type="checkbox" checked={form.documentos.antecedentesPenales} onChange={() => handleCheckbox("antecedentesPenales")} /> Antecedentes Penales</label>
               <label><input type="checkbox" checked={form.documentos.antecedentesPoliciales} onChange={() => handleCheckbox("antecedentesPoliciales")} /> Antecedentes Policiales</label>
-              <label><input type="checkbox" checked={form.documentos.induccion} onChange={() => handleCheckbox("induccion")} /> Inducción</label>
-              <div className="approval-date">
-                <p className="approval-label">Fecha de aprobación</p>
+              <label><input type="checkbox" checked={form.documentos.induccion} onChange={() => handleCheckbox("induccion")} /> Inducciones</label>
+              <div className="label">
+                <p className="label">Agregar Inducciones</p>
                 <input
-                  className="small-date"
-                  type="date"
-                  name="fechaInduccion"
-                  value={form.fechaInduccion || ""}
+        
+                  type="text"
+                  name="inducciones"
+                  value={form.inducciones || ""}
+                  placeholder="Ej: Inducción1, Inducción2..."
                   onChange={handleChange}
                 />
               </div>
@@ -413,7 +469,7 @@ const isFormValid =
               type="text"
               name="conductor"
               value={form.conductor}
-              placeholder="Seleccionar conductor..."
+              placeholder="Agregar conductor..."
               onChange={handleChange}
             />
 
@@ -501,7 +557,7 @@ const isFormValid =
                   Seleccionar GPS
                 </option>
 
-                {gpsContracts.map((gps) => (
+                {availableGps.map((gps) => (
                   <option
                     key={gps.id}
                     value={gps.id}
@@ -601,6 +657,12 @@ const isFormValid =
             )}
 
           </div>
+
+          {errorMessage && (
+            <div className="form-error-message">
+              {errorMessage}
+            </div>
+          )}
 
         {/* ACTIONS */}
         <div className="actions">

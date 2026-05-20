@@ -20,9 +20,6 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
       );
 
     return {
-      
-        Operador:
-          audit.operador,
 
         Conductor:
           audit.auditDriver,
@@ -36,11 +33,8 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
         Fecha_Vencimiento:
           audit.auditLicenseExpiration,
 
-        Induccion:
-          audit.auditInductionStatus,
-
-        Fecha_Aprobacion_Induccion:
-          audit.auditInductionDate,
+        Inducciones:
+          audit.auditInductions,
 
         Inicio_Contrato:
           audit.auditContract?.start,

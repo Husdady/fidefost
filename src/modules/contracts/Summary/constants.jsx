@@ -5,6 +5,7 @@ import RiseIcon from "./icons/rise-icon";
 import ValidIcon from "./icons/valid-icon";
 
 export default function useSummaryItems(){
+
    const gpsContracts = useGpsContractsStore(
    (state) => state.gpsContracts);
    const expiredGps = gpsContracts.filter(
@@ -64,12 +65,45 @@ export default function useSummaryItems(){
 
   }).length;
 
+  //contracts activos
+  const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const activeContracts = auditContracts.filter((audit) => {
+
+  if (
+    !audit?.auditContract?.start ||
+    !audit?.auditContract?.end
+  ) {
+    return false;
+  }
+
+  // FECHA INICIO
+  const startDate = new Date(
+    audit.auditContract.start + "T00:00:00"
+  );
+
+  // FECHA FIN
+  const endDate = new Date(
+    audit.auditContract.end + "T00:00:00"
+  );
+
+  startDate.setHours(0, 0, 0, 0);
+  endDate.setHours(0, 0, 0, 0);
+
+  // ACTIVO:
+  // YA EMPEZÓ Y AÚN NO TERMINA
+  return startDate <= today && endDate >= today;
+});
+
+const totaldriversactivos = activeContracts.length;
+
   return [
 
       {
         id: "contratos_activos",
         title: "CONTRATOS ACTIVOS",
-        value: totaldrivers,
+        value: totaldriversactivos,
         description: <div style={{color: "#110542",}}> <RiseIcon />  Activos</div>,
         accent: "default",
       },

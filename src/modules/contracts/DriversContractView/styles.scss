@@ -28,7 +28,7 @@
 }
 
 .contract-view-grid h3 {
-  font-size: 14px;
+  font-size: 15px;
 }
 .contract-view-grid small {
   font-size: 11px;
@@ -43,29 +43,23 @@
 }
 
 .contract-view-label {
-  font-size: 11px;
-  color: #6b7280;
+  font-size: 15px;
+  color: #212529;
   font-weight: 700;
   margin-bottom: 5px;
 }
 
 .contract-view-tags {
   display: flex;
-  gap: 8px;
-  margin-top: 10px;
-  flex-wrap: wrap;
+  flex-direction: column;
+
+  gap: 14px;
+
+  margin-top: 14px;
 }
 
 .contract-view-tags span {
-  background: #f3f4f6;
-  padding: 6px 10px;
-  border-radius: 8px;
   font-size: 11px;
-}
-
-.contract-view-tags .cert {
-  color: #0891b2;
-  font-weight: 700;
 }
 
 .contract-view-grid {
@@ -101,10 +95,117 @@
   width: 100%;
   margin-top: 30px;
   border: none;
-  background: #0891b2;
+  background: #d84646;
   color: white;
   padding: 14px;
   border-radius: 14px;
   cursor: pointer;
   font-weight: 600;
+}
+.contract-dates {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contract-dates__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contract-dates__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contract-dates__content p {
+  font-size: 15px; 
+  margin: 0;
+}
+.contract-unit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contract-unit__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.contract-unit__info h3{
+  margin: 0;
+  font-size: 15px;
+}
+.contract-unit__info p {
+  margin: 0;
+  font-size: 13px;
+}
+.license-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+
+  padding: 10px 14px;
+
+  border-radius: 14px;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+/* TEXTO PRINCIPAL */
+.license-status strong {
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+/* TEXTO ESTADO */
+.license-status small {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+/* INDUCCIONES */
+.contract-view-inductions {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  padding: 10px 14px;
+
+  border-radius: 14px;
+
+  background: #f3f4f6;
+}
+
+.contract-view-inductions strong {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.contract-view-inductions p {
+  margin: 0;
+  font-size: 12px;
+  color: #111827;
+
+  word-break: break-word;
+}
+/* VIGENTE */
+.license-status.active {
+  background: #dcfce7;
+  color: #15803d;
+}
+/* PROX */
+.license-status.warning {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+/* VENCIDA */
+.license-status.expired {
+  background: #fee2e2;
+  color: #dc2626;
 }
