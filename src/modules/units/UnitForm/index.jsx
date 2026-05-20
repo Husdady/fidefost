@@ -25,6 +25,9 @@ export default function UnitForm({ show, onHide, initialData = null,
  const emptyForm = {
   marca: "",
   placa: "",
+  polizaVehicular: "",
+  polizaCarga: "",
+  polizaEndoso: "",
   placaTractor: "",
   placaCarreta: "",
   revisionFecha: "",
@@ -201,7 +204,14 @@ const handleSubmit = async () => {
         form.revisionFecha,
 
       soat: form.soat,
-      poliza: form.poliza,
+      polizaVehicular:
+        form.polizaVehicular,
+
+      polizaCarga:
+        form.polizaCarga,
+
+      polizaEndoso:
+        form.polizaEndoso,
 
       archivos: storedFiles,
 
@@ -245,66 +255,89 @@ const handleInsuranceSelect = async (
   const selectedInsurance =
     insuranceContracts.find((item) => {
 
-      if (type === "poliza") {
-        return (
-          item.tipo !== "SOAT" &&
-          item.poliza === value
-        );
-      }
-
-      if (type === "soat") {
-        return (
-          item.tipo === "SOAT" &&
-          item.poliza === value
-        );
-      }
-
-      return false;
-    });
-
-  if (!selectedInsurance) {
-    return;
+        if (
+    type === "polizaVehicular"
+  ) {
+    return (
+      item.tipo
+        ?.toLowerCase()
+        .includes("vehicular") &&
+      item.poliza === value
+    );
   }
 
-  // =========================
-  // GUARDAR ARCHIVOS EN INDEXEDDB
-  // =========================
+  if (
+    type === "polizaCarga"
+  ) {
+    return (
+      item.tipo
+        ?.toLowerCase()
+        .includes("carga") &&
+      item.poliza === value
+    );
+  }
 
-const savedFiles =
-(selectedInsurance.archivos || []).map(
-  (file) => ({
+  if (
+    type === "polizaEndoso"
+  ) {
+    return (
+      item.tipo
+        ?.toLowerCase()
+        .includes("endoso") &&
+      item.poliza === value
+    );
+  }
 
-    id: file.id,
+        if (type === "soat") {
+          return (
+            item.tipo === "SOAT" &&
+            item.poliza === value
+          );
+        }
 
-    tempId: crypto.randomUUID(),
+        return false;
+      });
 
-    savedInDb: true,
+    if (!selectedInsurance) {
+      return;
+    }
 
-    name: file.name,
+    // =========================
+    // GUARDAR ARCHIVOS EN INDEXEDDB
+    // =========================
 
-    size: file.size,
+  const savedFiles =
+  (selectedInsurance.archivos || []).map(
+    (file) => ({
 
-    type: file.type,
+      id: file.id,
 
-    blob: file.blob,
+      tempId: crypto.randomUUID(),
 
-    insuranceFileId: file.id,
+      savedInDb: true,
 
-    insuranceType:
-      type === "soat"
-        ? "SOAT"
-        : "POLIZA"
-  })
-);  
-  // =========================
-  // ACTUALIZAR FORM
-  // =========================
+      name: file.name,
 
-  setForm((prev) => {
+      size: file.size,
 
-    // ELIMINAR ARCHIVOS ANTERIORES
-    const filteredFiles =
-      prev.archivos.filter((file) => {
+      type: file.type,
+
+      blob: file.blob,
+
+      insuranceFileId: file.id,
+
+      insuranceType: type
+    })
+  );  
+    // =========================
+    // ACTUALIZAR FORM
+    // =========================
+
+    setForm((prev) => {
+
+      // ELIMINAR ARCHIVOS ANTERIORES
+      const filteredFiles =
+        prev.archivos.filter((file) => {
 
         if (
           type === "soat" &&
@@ -314,8 +347,7 @@ const savedFiles =
         }
 
         if (
-          type === "poliza" &&
-          file.insuranceType === "POLIZA"
+          file.insuranceType === type
         ) {
           return false;
         }
@@ -342,7 +374,7 @@ const savedFiles =
             : prev.documentos.soatCheck,
 
         polizaCheck:
-          type === "poliza"
+          type !== "soat"
             ? true
             : prev.documentos.polizaCheck
       }
@@ -383,7 +415,9 @@ const isFormValid =
   form.mtc &&
   form.revisionFecha &&
   form.soat &&
-  form.poliza &&
+  form.polizaVehicular &&
+  form.polizaCarga &&
+  form.polizaEndoso &&
   form.placaTractor &&
   form.placaCarreta &&
 
@@ -551,79 +585,62 @@ const handleClose = () => {
             <label className="label">
               POLIZAS:
             </label>
-            <div>
-            <label className="label">
-              POLIZA VEHICULAR
-            </label>
-            <select name="poliza" 
-                    value={form.poliza || ""} 
-                    onChange={(e)=>
-                      handleInsuranceSelect(
-                        "poliza",
-                        e.target.value
-                      )
-                    }
-            >
-              <option value="">Seleccionar poliza...</option>
-              
-              {insuranceContracts
-                  .filter((insurance) =>
-                      insurance.poliza?.startsWith("POLIZA-")
-                  )
-                  .map((insurance) => (
-                    <option
-                      key={insurance._id}
-                      value={insurance.poliza}
-                    >
-                      {insurance.poliza}
-                    </option>
-              ))}
-            </select>
-            <label className="label">
-              POLIZA CARGA Y CONTENEDOR
-            </label>
-            <select name="poliza" 
-                    value={form.poliza || ""} 
-                    onChange={(e)=>
-                      handleInsuranceSelect(
-                        "poliza",
-                        e.target.value
-                      )
-                    }
-            >
-              <option value="">Seleccionar poliza...</option>
-              
-              {insuranceContracts
-                  .filter((insurance) =>
-                      insurance.poliza?.startsWith("POLIZA-")
-                  )
-                  .map((insurance) => (
-                    <option
-                      key={insurance._id}
-                      value={insurance.poliza}
-                    >
-                      {insurance.poliza}
-                    </option>
-              ))}
-            </select>
+              <div>
+                <label className="label">
+                  POLIZA VEHICULAR
+                </label>
 
-            <label className="label">
-              POLIZA ENDOSO
-            </label>
-            <select name="poliza" 
-                    value={form.poliza || ""} 
-                    onChange={(e)=>
-                      handleInsuranceSelect(
-                        "poliza",
-                        e.target.value
-                      )
-                    }
-            >
-              <option value="">Seleccionar poliza...</option>
-              
-              {insuranceContracts
-                  .filter((insurance) =>
-                      insurance.poliza?.startsWith("POLIZA-")
+                <select
+                  name="polizaVehicular"
+                  value={form.polizaVehicular || ""}
+                  onChange={(e) =>
+                    handleInsuranceSelect(
+                      "polizaVehicular",
+                      e.target.value
+                    )
+                  }
+                >
+                  <option value="">
+                    Seleccionar poliza...
+                  </option>
+
+                  {insuranceContracts
+                    .filter(
+                      (insurance) =>
+                        insurance.tipo?.toLowerCase().includes("vehicular")
+                    )
+                    .map((insurance) => (
+                      <option
+                        key={insurance._id}
+                        value={insurance.poliza}
+                      >
+                        {insurance.poliza}
+                      </option>
+                    ))}
+                </select>
+
+                <label className="label">
+                  POLIZAS CARGA Y CONTENEDOR
+                </label>
+
+                <select
+                name="polizaCarga"
+                value={form.polizaCarga || ""}
+                onChange={(e) =>
+                  handleInsuranceSelect(
+                    "polizaCarga",
+                    e.target.value
+                  )
+                }
+              >
+                <option value="">
+                  Seleccionar poliza...
+                </option>
+
+                {insuranceContracts
+                  .filter(
+                    (insurance) =>
+                      insurance.tipo?.toLowerCase().includes("carga")
                   )
                   .map((insurance) => (
                     <option
@@ -632,11 +649,42 @@ const handleClose = () => {
                     >
                       {insurance.poliza}
                     </option>
-              ))}
-            </select>
-            </div>
+                  ))}
+              </select>
 
-          
+              <label className="label">
+                 POLIZA ENDOSO
+              </label>
+              
+              <select
+                name="polizaEndoso"
+                value={form.polizaEndoso || ""}
+                onChange={(e) =>
+                  handleInsuranceSelect(
+                    "polizaEndoso",
+                    e.target.value
+                  )
+                }
+              >
+                <option value="">
+                  Seleccionar poliza...
+                </option>
+
+                {insuranceContracts
+                  .filter(
+                    (insurance) =>
+                      insurance.tipo?.toLowerCase().includes("endoso")
+                  )
+                  .map((insurance) => (
+                    <option
+                      key={insurance._id}
+                      value={insurance.poliza}
+                    >
+                      {insurance.poliza}
+                    </option>
+                  ))}
+              </select>
+              </div>
 
             <label className="label">
               SOAT
