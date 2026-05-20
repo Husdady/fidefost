@@ -88,15 +88,6 @@ input::placeholder{
   align-items:center;
   gap:12px;
 }
-.checklist label {
-    display: grid;
-    grid-template-columns: 16px auto;
-    align-items: center;
-    gap: 10px;
-    width: fit-content;
-    padding: 4px 6px;
-    border-radius: 6px;
-    cursor: pointer;}
 
 input[type="checkbox"]{
   width:18px;
@@ -255,4 +246,89 @@ input[type="checkbox"]{
   color:#dc2626;
 
   cursor:pointer;
+}
+.message-box-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+
+  backdrop-filter: blur(4px);
+}
+
+.message-box {
+  width: 380px;
+
+  background: white;
+
+  border-radius: 22px;
+
+  padding: 28px;
+
+  box-shadow:
+    0 20px 45px rgba(0,0,0,.15);
+
+  animation:
+    messageBoxShow .18s ease;
+}
+
+.message-box h3 {
+  margin: 0 0 14px;
+
+  font-size: 20px;
+
+  color: #dc2626;
+}
+
+.message-box p {
+  margin: 0;
+
+  color: #475569;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+}
+
+.message-box-btn {
+  width: 100%;
+
+  margin-top: 24px;
+
+  border: none;
+
+  background: #111827;
+
+  color: white;
+
+  padding: 12px;
+
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: .2s;
+}
+
+.message-box-btn:hover {
+  transform: translateY(-1px);
+}
+
+@keyframes messageBoxShow {
+  from {
+    opacity: 0;
+    transform: scale(.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

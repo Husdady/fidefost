@@ -56,10 +56,26 @@ export default function UnitForm({ show, onHide, initialData = null,
   },
   archivos: []
 };
+const resetForm = () => {
+
+  setForm(emptyForm);
+
+  setDeletedFiles([]);
+
+  setOriginalFiles([]);
+
+  setIsSaving(false);
+};
 
 const [form, setForm] = useState(
   initialData || emptyForm
 );
+
+const [showMessageBox, setShowMessageBox] =
+  useState(false);
+
+const [messageBoxText, setMessageBoxText] =
+  useState("");
 
 const handleCheckbox = (name) => {
     setForm({
@@ -128,6 +144,10 @@ const removeFile = (fileId) => {
 };
 
 const handleSubmit = async () => {
+  
+  if (!validateUniqueFields()) {
+    return;
+  }
 
   // BLOQUEAR DOBLE CLICK
   if (savingRef.current) return;
@@ -239,10 +259,7 @@ const handleSubmit = async () => {
     }
 
     // LIMPIAR
-    setForm(emptyForm);
-
-    setDeletedFiles([]);
-    setOriginalFiles([]);
+    resetForm();
 
     onHide();
 
@@ -256,6 +273,111 @@ const handleSubmit = async () => {
 
     savingRef.current = false;
   }
+};
+
+//validacion datos
+const validateUniqueFields = () => {
+
+  const duplicatedFields = [];
+
+  units.forEach((unit) => {
+
+    // IGNORAR EL MISMO REGISTRO EN EDICIÓN
+    if (
+      isEdit &&
+      unit._id === initialData?._id
+    ) {
+      return;
+    }
+
+    // PLACA
+    if (
+      unit.placa === form.placa &&
+      form.placa
+    ) {
+      duplicatedFields.push(
+        `PLACA: ${form.placa}`
+      );
+    }
+
+    // MARCA
+    if (
+      unit.marca === form.marca &&
+      form.marca
+    ) {
+      duplicatedFields.push(
+        `MARCA: ${form.marca}`
+      );
+    }
+
+    // PLACA TRACTOR
+    if (
+      unit.placaTractor ===
+        form.placaTractor &&
+      form.placaTractor
+    ) {
+      duplicatedFields.push(
+        `PLACA TRACTOR: ${form.placaTractor}`
+      );
+    }
+
+    // PLACA CARRETA
+    if (
+      unit.placaCarreta ===
+        form.placaCarreta &&
+      form.placaCarreta
+    ) {
+      duplicatedFields.push(
+        `PLACA CARRETA: ${form.placaCarreta}`
+      );
+    }
+
+    // MTC
+    if (
+      unit.mtc === form.mtc &&
+      form.mtc
+    ) {
+      duplicatedFields.push(
+        `MTC: ${form.mtc}`
+      );
+    }
+
+    // IDENTIFICACION VEHICULAR
+    if (
+      unit.tarjetaVehicularInfo ===
+        form.documentos
+          .tarjetaVehicularInfo &&
+      form.documentos
+        .tarjetaVehicularInfo
+    ) {
+      duplicatedFields.push(
+        `IDENTIFICACIÓN VEHICULAR: ${
+          form.documentos
+            .tarjetaVehicularInfo
+        }`
+      );
+    }
+  });
+
+  // ELIMINAR DUPLICADOS REPETIDOS
+  const uniqueDuplicatedFields = [
+    ...new Set(duplicatedFields)
+  ];
+
+  if (
+    uniqueDuplicatedFields.length > 0
+  ) {
+
+    setMessageBoxText(
+      uniqueDuplicatedFields.join("\n")
+    );
+
+    setShowMessageBox(true);
+
+    return false;
+  }
+
+  return true;
 };
 
 const handleInsuranceSelect = async (
@@ -415,6 +537,10 @@ useEffect(() => {
     setOriginalFiles(
       initialData.archivos || []
     );
+  
+  } else {
+
+    setForm(emptyForm);
   }
 
 }, [initialData]);
@@ -445,16 +571,7 @@ const isFormValid =
 
 const handleClose = () => {
 
-  // RESTAURAR SI CANCELA
-  if (isEdit) {
-
-    setForm((prev) => ({
-      ...prev,
-      archivos: originalFiles
-    }));
-
-    setDeletedFiles([]);
-  }
+  resetForm();
 
   onHide();
 };
@@ -901,6 +1018,42 @@ const handleClose = () => {
                   </div>
                 )}
           </div>
+          {showMessageBox && (
+          <div
+            className="message-box-overlay"
+            onClick={() =>
+              setShowMessageBox(false)
+            }
+          >
+            <div
+              className="message-box"
+              onClick={(e) =>
+                e.stopPropagation()
+              }
+            >
+              <h3>
+                Datos Duplicados
+              </h3>
+
+              <p
+                style={{
+                  whiteSpace: "pre-line"
+                }}
+              >
+                {messageBoxText}
+              </p>
+
+              <button
+                className="message-box-btn"
+                onClick={() =>
+                  setShowMessageBox(false)
+                }
+              >
+                Entendido
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* ACTIONS */}
         <div className="actions">
