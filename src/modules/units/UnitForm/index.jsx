@@ -25,15 +25,15 @@ export default function UnitForm({ show, onHide, initialData = null,
  const emptyForm = {
   marca: "",
   placa: "",
-  partida: "",
+  placaTractor: "",
+  placaCarreta: "",
   revisionFecha: "",
   mtc: "",
   poliza: "",
   soat: "",
   documentos: {
     mtcCheck: false,
-    recTecnTractorCheck: false,
-    recTecnCarretaCheck: false,
+    revisionTecnicaCheck: false,
     soatCheck: false,
     polizaCheck: false,
     tarjetaVehicularCheck: false,
@@ -188,6 +188,10 @@ const handleSubmit = async () => {
       placa: form.placa,
       marca: form.marca,
 
+      placaTractor: form.placaTractor,
+
+      placaCarreta: form.placaCarreta,
+
       mtc: form.mtc,
 
       tarjetaVehicularInfo:
@@ -198,8 +202,6 @@ const handleSubmit = async () => {
 
       soat: form.soat,
       poliza: form.poliza,
-
-      partida: form.partida,
 
       archivos: storedFiles,
 
@@ -382,13 +384,13 @@ const isFormValid =
   form.revisionFecha &&
   form.soat &&
   form.poliza &&
-  form.partida &&
+  form.placaTractor &&
+  form.placaCarreta &&
 
   form.documentos.tarjetaVehicularInfo &&
 
   // CHECKS
-  form.documentos.recTecnCarretaCheck &&
-  form.documentos.recTecnTractorCheck &&
+  form.documentos.revisionTecnicaCheck &&
   form.documentos.soatCheck &&
   form.documentos.polizaCheck &&
   form.documentos.tarjetaVehicularCheck &&
@@ -462,7 +464,8 @@ const handleClose = () => {
             />
 
             <label className="label">
-              PLACA (TRACTOR/CARRETA)
+              PLACA UNIDAD
+              (TRACTOR/CARRETA)
             </label>
 
             <input
@@ -478,19 +481,35 @@ const handleClose = () => {
             />
 
             <label className="label">
-              PARTIDA REGISTRAL DEL VEHICULO
+              PLACA TRACTOR
             </label>
 
             <input
               type="text"
-              value={form.partida}
+              value={form.placaTractor}
               onChange={(e) =>
                 setForm({
                   ...form,
-                  partida: e.target.value
+                  placaTractor: e.target.value
                 })
               }
-              placeholder="12399999"               
+              placeholder="TRACTOR"               
+            />
+
+            <label className="label">
+              PLACA CARRETA
+            </label>
+
+            <input
+              type="text"
+              value={form.placaCarreta}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  placaCarreta: e.target.value
+                })
+              }
+              placeholder="CARRETA"               
             />
 
             <label className="label">
@@ -530,7 +549,7 @@ const handleClose = () => {
             />
 
             <label className="label">
-              POLIZA
+              POLIZAS
             </label>
             <select name="poliza" 
                     value={form.poliza || ""} 
@@ -607,23 +626,12 @@ const handleClose = () => {
             <label>
               <input
                 type="checkbox"
-                checked={form.documentos.recTecnTractorCheck}
+                checked={form.documentos.revisionTecnicaCheck}
                 onChange={() =>
-                  handleCheckbox("recTecnTractorCheck")
+                  handleCheckbox("revisionTecnicaCheck")
                 }
               />
-              REC TECN. TRACTOR BAL-929
-            </label>
-
-            <label>
-              <input
-                type="checkbox"
-                checked={form.documentos.recTecnCarretaCheck}
-                onChange={() =>
-                  handleCheckbox("recTecnCarretaCheck")
-                }
-              />
-              REC TECN. CARRETERA BAL-C3E-970
+              REVISIÓN TÉCNICA
             </label>
 
             <label>
@@ -645,7 +653,7 @@ const handleClose = () => {
                   handleCheckbox("polizaCheck")
                 }
               />
-              POLIZA
+              POLIZAS
             </label>
             
             <div className="check-item">
@@ -657,7 +665,7 @@ const handleClose = () => {
                   handleCheckbox("tarjetaVehicularCheck")
                 }
               />
-              TARJETA DE IDENTIFICACION VEHICULAR
+              TARJETA DE IDENTIFICACIÓN VEHICULAR
             </label>
                 <input
                   className="property-card-in"
