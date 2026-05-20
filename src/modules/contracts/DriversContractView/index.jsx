@@ -110,17 +110,17 @@ const diffDays = expirationDate
             <h2>{contractData.auditDriver}</h2>
 
             <div className="contract-view-tags">
-              <span className={`license-status ${licenseStatusClass}`}>
-                Lic-{contractData.auditLicense || "-"}{" "}
-                
-                {expirationDate && (
-                  <>
-                    ({licenseTextStatus} {fullExpirationDate})
-                  </>
-                )}
-              </span>
-              <span>INDUCCIONES:{" "} <p>{contractData.auditInductions}</p></span>
-                  
+              <div className={`license-status ${licenseStatusClass}`}>
+              <strong>
+                Lic-{contractData.auditLicense || "-"}{" - "} {licenseTextStatus} {fullExpirationDate}
+              </strong>
+              </div>
+            
+            
+             <div className="contract-view-inductions">
+              <strong>INDUCCIONES: </strong>
+              <p>{contractData.auditInductions}</p>
+             </div>
             </div>
 
           </div>
