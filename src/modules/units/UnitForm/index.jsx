@@ -428,7 +428,6 @@ const isFormValid =
   form.soat &&
   form.polizaVehicular &&
   form.polizaCarga &&
-  form.polizaEndoso &&
   form.placaTractor &&
   form.placaCarreta &&
 
@@ -442,7 +441,7 @@ const isFormValid =
   form.documentos.permisoMunicipalCheck &&
   form.documentos.mtcCheck &&
 // ARCHIVOS
-  form.archivos.length > 2;
+  form.archivos.length > 6;
 
 const handleClose = () => {
 
@@ -497,12 +496,13 @@ const handleClose = () => {
             </label>
 
             <input
+              className="uppercase-input"
               type="text"
               value={form.marca}
               onChange={(e) =>
                 setForm({
                   ...form,
-                  marca: e.target.value
+                  marca: e.target.value.toUpperCase()
                 })
               }
               placeholder="Ej. VOLVO"
@@ -514,15 +514,16 @@ const handleClose = () => {
             </label>
 
             <input
+              className="uppercase-input"
               type="text"
               value={form.placa}
               onChange={(e) =>
                 setForm({
                   ...form,
-                  placa: e.target.value
+                  placa: e.target.value.toUpperCase()
                 })
               }
-              placeholder="ABC-123"
+               placeholder="ABC-123"
             />
 
             <label className="label">
@@ -530,12 +531,13 @@ const handleClose = () => {
             </label>
 
             <input
+              className="uppercase-input"
               type="text"
               value={form.placaTractor}
               onChange={(e) =>
                 setForm({
                   ...form,
-                  placaTractor: e.target.value
+                  placaTractor: e.target.value.toUpperCase()
                 })
               }
               placeholder="TRACTOR"               
@@ -546,15 +548,16 @@ const handleClose = () => {
             </label>
 
             <input
+              className="uppercase-input"
               type="text"
               value={form.placaCarreta}
               onChange={(e) =>
                 setForm({
                   ...form,
-                  placaCarreta: e.target.value
+                  placaCarreta: e.target.value.toUpperCase()
                 })
               }
-              placeholder="CARRETA"               
+              placeholder="CARRETA"
             />
 
             <label className="label">
@@ -738,93 +741,101 @@ const handleClose = () => {
         </div>
 
         {/* CHECKLIST */}
-        <div className="list-checklist"> 
-          CHECKLIST DE DOCUMENTACION
-          <div className="checklist">
-            <label>
-              <input
-                type="checkbox"
-                checked={form.documentos.mtcCheck}
-                onChange={() =>
-                  handleCheckbox("mtcCheck")
-                }
-              />
-              MTC TRACTOR
-            </label>
+        
+            <div className="list-checklist"> 
+              CHECKLIST DE DOCUMENTACION
+              <div className="checklist">
+               <div className="grid">
+                <div className="col">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.mtcCheck}
+                    onChange={() =>
+                      handleCheckbox("mtcCheck")
+                    }
+                  />
+                  MTC TRACTOR
+                </label>
 
-            <label>
-              <input
-                type="checkbox"
-                checked={form.documentos.revisionTecnicaCheck}
-                onChange={() =>
-                  handleCheckbox("revisionTecnicaCheck")
-                }
-              />
-              REVISIÓN TÉCNICA
-            </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.revisionTecnicaCheck}
+                    onChange={() =>
+                      handleCheckbox("revisionTecnicaCheck")
+                    }
+                  />
+                  REVISIÓN TÉCNICA
+                </label>
 
-            <label>
-              <input
-                type="checkbox"
-                checked={form.documentos.soatCheck}
-                onChange={() =>
-                  handleCheckbox("soatCheck")
-                }
-              />
-              SOAT
-            </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.soatCheck}
+                    onChange={() =>
+                      handleCheckbox("soatCheck")
+                    }
+                  />
+                  SOAT
+                </label>
 
-            <label>
-              <input
-                type="checkbox"
-                checked={form.documentos.polizaCheck}
-                onChange={() =>
-                  handleCheckbox("polizaCheck")
-                }
-              />
-              POLIZAS
-            </label>
-            
-            <div className="check-item">
-             <label className="check-row">
-              <input
-                type="checkbox"
-                checked={form.documentos.tarjetaVehicularCheck}
-                onChange={() =>
-                  handleCheckbox("tarjetaVehicularCheck")
-                }
-              />
-              TARJETA DE IDENTIFICACIÓN VEHICULAR
-            </label>
-                <input
-                  className="property-card-in"
-                  type="text"
-                  name="tarjetaVehicularInfo"
-                  value={form.documentos.tarjetaVehicularInfo || ""}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      documentos: {
-                        ...form.documentos,
-                        tarjetaVehicularInfo: e.target.value
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.polizaCheck}
+                    onChange={() =>
+                      handleCheckbox("polizaCheck")
+                    }
+                  />
+                  POLIZAS
+                </label>
+              </div>
+
+              <div className="col">
+                <div className="check-item">
+                <label className="check-row">
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.tarjetaVehicularCheck}
+                    onChange={() =>
+                      handleCheckbox("tarjetaVehicularCheck")
+                    }
+                  />
+                  TARJETA DE IDENTIFICACIÓN VEHICULAR
+                </label>
+                  <div className="label">
+                    <input
+                      type="text"
+                      name="tarjetaVehicularInfo"
+                      value={form.documentos.tarjetaVehicularInfo || ""}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          documentos: {
+                            ...form.documentos,
+                            tarjetaVehicularInfo: e.target.value
+                          }
+                        })
                       }
-                    })
-                  }
-                  placeholder="TARJETA DE IDENTIFICACION VEHICULAR"
-                />
-            </div>
+                      placeholder="TARJETA DE I. VEHICULAR"
+                    />
+                    </div>
+                </div>
 
-            <label>
-              <input
-                type="checkbox"
-                checked={form.documentos.permisoMunicipalCheck}
-                onChange={() =>
-                  handleCheckbox("permisoMunicipalCheck")
-                }
-              />
-              PERMISO DE LA MUNICIPALIDAD
-            </label>
-          </div>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.permisoMunicipalCheck}
+                    onChange={() =>
+                      handleCheckbox("permisoMunicipalCheck")
+                    }
+                  />
+                  PERMISO DE LA MUNICIPALIDAD
+                </label>
+                </div>
+              </div>
+            </div>
         </div>
 
           <div className="upload">
