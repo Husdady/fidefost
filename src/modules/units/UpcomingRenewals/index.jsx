@@ -3,6 +3,7 @@ import { useGetInsurance } from "context/contracts/useInsurance";
 import { useGetUnits } from "context/units/useUnits";
 
 import InsuranceContractForm from "modules/contracts/InsuranceContractForm";
+import InsuranceIcon from "./icons/insurance-icon";
 
 export default function UpcomingRenewals() {
 
@@ -94,7 +95,7 @@ const [selectedInsurance, setSelectedInsurance] =
               <div className="renewal-card-left">
 
                 <div className="renewal-icon">
-                  @
+                  <InsuranceIcon/>
                 </div>
 
                 <div className="renewal-info">

@@ -20,7 +20,7 @@
 .upcoming-renewals__title{
   margin:0;
 
-  font-size:32px;
+  font-size:24px;
   font-weight:700;
 
   color:#111827;
@@ -108,7 +108,7 @@
 }
 
 .renewal-success .renewal-icon{
-  background:#dcfce7;
+  background:#61cf88;
   color:#16a34a;
 }
 
@@ -117,8 +117,8 @@
 }
 
 .renewal-warning .renewal-icon{
-  background:#fef3c7;
-  color:#d97706;
+  background:#eb9431;
+  color:#ec8815;
 }
 
 .renewal-danger{
@@ -126,8 +126,8 @@
 }
 
 .renewal-danger .renewal-icon{
-  background:#fee2e2;
-  color:#dc2626;
+  background:#db6363;
+  color:#c50f0f;
 }
 
 .renewal-status{
