@@ -81,32 +81,59 @@ export default function UpcomingRenewals() {
         .toLowerCase()
         .includes(search.toLowerCase())
     )
+
     .filter((item) => {
 
       const { status } =
-        getInsuranceStatus(item.fechaFin);
+        getInsuranceStatus(
+          item.fechaFin
+        );
 
       return (
         filterStatus === "TODOS" ||
         filterStatus === status
       );
     })
+
     .sort((a, b) => {
 
-      // SOLO ORDENAR CUANDO ES TODOS
-      if (filterStatus !== "TODOS") {
-        return 0;
-      }
-
       const statusA =
-        getInsuranceStatus(a.fechaFin);
+        getInsuranceStatus(
+          a.fechaFin
+        );
 
       const statusB =
-        getInsuranceStatus(b.fechaFin);
+        getInsuranceStatus(
+          b.fechaFin
+        );
+
+      // =====================
+      // SOLO EN "TODOS"
+      // =====================
+
+      if (
+        filterStatus === "TODOS"
+      ) {
+
+        // ORDEN POR ESTADO
+        if (
+          statusA.priority !==
+          statusB.priority
+        ) {
+          return (
+            statusA.priority -
+            statusB.priority
+          );
+        }
+      }
+
+      // =====================
+      // ORDEN POR FECHA
+      // =====================
 
       return (
-        statusA.priority -
-        statusB.priority
+        new Date(a.fechaFin) -
+        new Date(b.fechaFin)
       );
     });
 
