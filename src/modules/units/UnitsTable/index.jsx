@@ -111,7 +111,7 @@ const formatDate = (dateString) => {
         <div className="units-table-search">
           <input
             type="text"
-            placeholder="Buscar Placa de Unidad/Tractor/Carreta,  SOAT,  Pólizas,  MTC,  Tarj. Identificación Vehicular"
+            placeholder="Buscar Placa de Unidad/Tractor/Carreta,  Marca,  SOAT,  Pólizas,  MTC,  T. Identificación Vehicular"
             value={search}
             onChange={(e) =>
               setSearch(e.target.value)
