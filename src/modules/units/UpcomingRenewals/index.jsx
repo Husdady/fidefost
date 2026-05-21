@@ -43,15 +43,15 @@ export default function UpcomingRenewals() {
 
       </div>
       <div className="renewals-search">
-  <input
-    type="text"
-    placeholder="Buscar renovación..."
-    value={search}
-    onChange={(e) =>
-      setSearch(e.target.value)
-    }
-  />
-</div>
+        <input
+          type="text"
+          placeholder="Buscar renovación..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+        />
+      </div>
       <div className="renewal-cards-wrapper">
 
       <div className="renewal-cards">
