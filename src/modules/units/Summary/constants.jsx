@@ -79,7 +79,7 @@ export default function useSummaryUnits(){
     id: "flota_total",
     title: "FLOTA TOTAL",
     value: <div>{units.length}</div>,
-    description: "UNIDADES",
+    description: "Unidades",
     accent: "default",
     icon: <FleetIcon />,
   },
