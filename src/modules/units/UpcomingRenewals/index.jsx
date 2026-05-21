@@ -7,6 +7,8 @@ import InsuranceIcon from "./icons/insurance-icon";
 
 export default function UpcomingRenewals() {
   
+  const [filterStatus, setFilterStatus] =
+  useState("TODOS");
   const [search, setSearch] = useState("");
   const insuranceContracts = useGetInsurance();
   const units = useGetUnits();
@@ -38,14 +40,42 @@ export default function UpcomingRenewals() {
       <div className="upcoming-renewals__header">
 
         <h2 className="upcoming-renewals__title">
-          Próximas Renovaciones
+          Estados y Renovaciones
+          <span>(POLIZAS/SOAT)</span>
         </h2>
 
+        <div className="renewals-filters">
+
+            <select
+              value={filterStatus}
+              onChange={(e) =>
+                setFilterStatus(e.target.value)
+              }
+            >
+              <option value="TODOS">
+                Todos
+              </option>
+
+              <option value="ACTIVO">
+                Activos
+              </option>
+
+              <option value="PROX. EXPIRAR">
+                Prox. Expirar
+              </option>
+
+              <option value="EXPIRADO">
+                Expirados
+              </option>
+
+            </select>
+
+          </div>
       </div>
       <div className="renewals-search">
         <input
           type="text"
-          placeholder="Buscar renovación..."
+          placeholder="Buscar N° Poliza o SOAT"
           value={search}
           onChange={(e) =>
             setSearch(e.target.value)
@@ -110,6 +140,14 @@ export default function UpcomingRenewals() {
           status = "PROX. EXPIRAR";
           statusClass = "renewal-warning";
         }
+        const matchesFilter =
+          filterStatus === "TODOS" ||
+          filterStatus === status;
+
+        if (!matchesFilter) {
+          return null;
+        }
+        
           return (
             <div
               key={insurance._id}
@@ -129,12 +167,17 @@ export default function UpcomingRenewals() {
                     {insurance.tipo}
                   </h4>
 
+                  <p className="renewal-policy">
+                    {insurance.poliza}
+                  </p>
+
                   {/* PLACA + FECHA */}
                   <p>
                     Unidad {linkedUnit?.placa || "Sin unidad"}
                     {" • "}
                     Vence el {insurance.fechaFin}
                   </p>
+
                   <span className="renewal-status">
                     {status}
                   </span>
