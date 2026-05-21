@@ -66,8 +66,17 @@ const filteredUnits = units.filter((unit) => {
           <h3>Listado de Unidades</h3>
         </div>
 
-        <div className="units-table-filters">
-
+        <div>
+          <button 
+               onClick={() => exportUnitsExcel(units)}
+               className="export-btn"
+          >
+            Exportar Data
+          </button>
+        </div>
+        
+      </div>
+        <div className="units-table-search">
           <input
             type="text"
             placeholder="Buscar placa, SOAT, póliza..."
@@ -76,17 +85,7 @@ const filteredUnits = units.filter((unit) => {
               setSearch(e.target.value)
             }
           />
-
-          <button 
-               onClick={() => exportUnitsExcel(units)}
-               className="export-btn"
-          >
-            Exportar Data
-          </button>
-
         </div>
-
-      </div>
 
       {/* TABLE */}
       <div className="units-table-wrapper">
