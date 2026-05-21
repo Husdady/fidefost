@@ -576,6 +576,10 @@ const handleClose = () => {
   onHide();
 };
 
+const usedSoats = units
+  .map((unit) => unit.soat)
+  .filter(Boolean);
+  
   if (!show) return null;
 
   return createPortal(
@@ -841,9 +845,30 @@ const handleClose = () => {
               <option value="">Seleccionar SOAT...</option>
                 
                 {insuranceContracts
-                     .filter((insurance) =>
-                      insurance.poliza?.startsWith("SOAT-")
-                    )
+                  .filter((insurance) => {
+
+                    // SOLO SOAT
+                    if (
+                      !insurance.poliza?.startsWith(
+                        "SOAT-"
+                      )
+                    ) {
+                      return false;
+                    }
+
+                    // EN EDICION SI PERMITIR EL MISMO
+                    if (
+                      isEdit &&
+                      form.soat === insurance.poliza
+                    ) {
+                      return true;
+                    }
+
+                    // BLOQUEAR SI YA ESTÁ USADO
+                    return !usedSoats.includes(
+                      insurance.poliza
+                    );
+                  })
                      .map((insurance) => (
                       <option
                         key={insurance._id}
