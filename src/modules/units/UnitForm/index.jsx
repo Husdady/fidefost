@@ -720,7 +720,7 @@ const usedSoats = units
             <label className="label">
               POLIZAS:
             </label>
-              <div>
+              <div className="select-polizas">
                 <label className="label">
                   POLIZA VEHICULAR
                 </label>
