@@ -6,15 +6,29 @@ import InsuranceContractForm from "modules/contracts/InsuranceContractForm";
 import InsuranceIcon from "./icons/insurance-icon";
 
 export default function UpcomingRenewals() {
-
+  
+  const [search, setSearch] = useState("");
   const insuranceContracts = useGetInsurance();
   const units = useGetUnits();
 
   const [editModal, setEditModal] =
   useState(false);
 
-const [selectedInsurance, setSelectedInsurance] =
+  const [selectedInsurance, setSelectedInsurance] =
   useState(null);
+
+  const renovaciones = insuranceContracts;
+
+  const filteredRenovaciones =
+  renovaciones.filter((item) =>
+    (
+      item.poliza +
+      " " +
+      item.tipo
+    )
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  );
 
   return (
     <>
@@ -28,11 +42,21 @@ const [selectedInsurance, setSelectedInsurance] =
         </h2>
 
       </div>
+      <div className="renewals-search">
+  <input
+    type="text"
+    placeholder="Buscar renovación..."
+    value={search}
+    onChange={(e) =>
+      setSearch(e.target.value)
+    }
+  />
+</div>
       <div className="renewal-cards-wrapper">
 
       <div className="renewal-cards">
 
-        {insuranceContracts.map((insurance) => {
+        {filteredRenovaciones.map((insurance) => {
 
           // BUSCAR UNIDAD RELACIONADA
           const linkedUnit = units.find((unit) => {
