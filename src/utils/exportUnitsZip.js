@@ -116,15 +116,14 @@ const unitDocuments =
     unit._id
   );
 
+let fileIndex = 1;
+
 for (const document of unitDocuments) {
 
   const fileData =
     document.blob || document.file || document;
 
-  // VALIDAR
-  if (
-    !(fileData instanceof Blob)
-  ) {
+  if (!(fileData instanceof Blob)) {
     console.warn(
       "Archivo inválido:",
       document
@@ -133,10 +132,15 @@ for (const document of unitDocuments) {
     continue;
   }
 
+  const fileName =
+    `${fileIndex}-${document.name || "archivo"}`;
+
   documentsFolder.file(
-    document.name || "archivo",
+    fileName,
     fileData
   );
+
+  fileIndex++;
 }
 
 // =========================
@@ -179,11 +183,15 @@ for (const file of unit.archivos || []) {
     continue;
   }
 
-  documentsFolder.file(
-    insuranceDocument.name ||
-      "seguro",
-    fileData
-  );
+  const insuranceFileName =
+  `${fileIndex}-${insuranceDocument.name || "seguro"}`;
+
+documentsFolder.file(
+  insuranceFileName,
+  fileData
+);
+
+fileIndex++;
 }
 
   // =========================

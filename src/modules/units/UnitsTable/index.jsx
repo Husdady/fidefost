@@ -76,6 +76,18 @@ const filteredUnits = units.filter((unit) => {
   );
 });
 
+const formatDate = (dateString) => {
+
+      if (!dateString) {
+        return "-";
+      }
+
+      const [year, month, day] =
+        dateString.split("-");
+
+      return `${day}/${month}/${year}`;
+    };
+
   return (
     <div className="units-table-container">
 
@@ -155,7 +167,7 @@ const filteredUnits = units.filter((unit) => {
 
               <td>
                 <span className="badge-success">
-                  {unit.revisionFecha}
+                  {formatDate(unit.revisionFecha)}
                 </span>
               </td>
 

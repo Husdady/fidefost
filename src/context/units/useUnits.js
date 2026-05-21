@@ -9,7 +9,7 @@ const useUnitsStore = create(
 
       addUnit: (unit) =>
         set((state) => ({
-          units: [...state.units, unit],
+          units: [unit, ...state.units],
         })),
 
       deleteUnit: (id) =>

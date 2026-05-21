@@ -300,16 +300,6 @@ const validateUniqueFields = () => {
       );
     }
 
-    // MARCA
-    if (
-      unit.marca === form.marca &&
-      form.marca
-    ) {
-      duplicatedFields.push(
-        `MARCA: ${form.marca}`
-      );
-    }
-
     // PLACA TRACTOR
     if (
       unit.placaTractor ===
