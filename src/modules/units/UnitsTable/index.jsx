@@ -12,7 +12,7 @@ import exportUnitsZip from "utils/exportUnitsZip";
 import EditIcon from "./icons/edit-icon";
 import DeleteIcon from "./icons/delete-icon";
 import ExportIcon from "./icons/export-icon";
-
+import UnitIcon from "./icons/unit-icon";
 export default function UnitsTable() {
 
 const deleteUnit = useDeleteUnit();
@@ -37,6 +37,14 @@ const filteredUnits = units.filter((unit) => {
     unit.placa
       ?.toLowerCase()
       .includes(query) ||
+    
+    unit.placaTractor
+      ?.toLowerCase()
+      .includes(query) ||
+    
+    unit.placaCarreta
+      ?.toLowerCase()
+      .includes(query) ||
 
     unit.marca
       ?.toLowerCase()
@@ -46,11 +54,23 @@ const filteredUnits = units.filter((unit) => {
       ?.toLowerCase()
       .includes(query) ||
 
-    unit.poliza
+    unit.polizaVehicular
+      ?.toLowerCase()
+      .includes(query) ||
+    
+    unit.polizaCarga
+      ?.toLowerCase()
+      .includes(query) ||
+    
+    unit.polizaEndoso
+      ?.toLowerCase()
+      .includes(query) ||
+    
+    unit.mtc
       ?.toLowerCase()
       .includes(query) ||
 
-    unit.mtc
+    unit.tarjetaVehicularInfo
       ?.toLowerCase()
       .includes(query)
   );
@@ -79,7 +99,7 @@ const filteredUnits = units.filter((unit) => {
         <div className="units-table-search">
           <input
             type="text"
-            placeholder="Buscar placa, SOAT, póliza..."
+            placeholder="Buscar Placa de Unidad/Tractor/Carreta,  SOAT,  Pólizas,  MTC,  Tarj. Identificación Vehicular"
             value={search}
             onChange={(e) =>
               setSearch(e.target.value)
@@ -112,7 +132,7 @@ const filteredUnits = units.filter((unit) => {
                 <div className="unit-info">
 
                   <div className="unit-icon">
-                    🚚
+                    <UnitIcon/>
                   </div>
                   
 
