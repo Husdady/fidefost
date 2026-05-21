@@ -20,17 +20,95 @@ export default function UpcomingRenewals() {
   useState(null);
 
   const renovaciones = insuranceContracts;
+  
+  const getInsuranceStatus = (fechaFin) => {
+
+  const millisecondsPerDay =
+    1000 * 60 * 60 * 24;
+
+  const today = new Date();
+
+  const todayString =
+    `${today.getFullYear()}-${
+      String(today.getMonth() + 1).padStart(2, "0")
+    }-${
+      String(today.getDate()).padStart(2, "0")
+    }`;
+
+  const currentDate =
+    new Date(todayString).getTime();
+
+  const endDate =
+    new Date(fechaFin).getTime();
+
+  const diffDays =
+    Math.trunc(
+      (endDate - currentDate) /
+      millisecondsPerDay
+    );
+
+  if (diffDays < 0) {
+    return {
+      status: "EXPIRADO",
+      statusClass: "renewal-danger",
+      priority: 1
+    };
+  }
+
+  if (diffDays <= 59) {
+    return {
+      status: "PROX. EXPIRAR",
+      statusClass: "renewal-warning",
+      priority: 2
+    };
+  }
+
+  return {
+    status: "ACTIVO",
+    statusClass: "renewal-success",
+    priority: 3
+  };
+};
 
   const filteredRenovaciones =
-  renovaciones.filter((item) =>
-    (
-      item.poliza +
-      " " +
-      item.tipo
+  renovaciones
+    .filter((item) =>
+      (
+        item.poliza +
+        " " +
+        item.tipo
+      )
+        .toLowerCase()
+        .includes(search.toLowerCase())
     )
-      .toLowerCase()
-      .includes(search.toLowerCase())
-  );
+    .filter((item) => {
+
+      const { status } =
+        getInsuranceStatus(item.fechaFin);
+
+      return (
+        filterStatus === "TODOS" ||
+        filterStatus === status
+      );
+    })
+    .sort((a, b) => {
+
+      // SOLO ORDENAR CUANDO ES TODOS
+      if (filterStatus !== "TODOS") {
+        return 0;
+      }
+
+      const statusA =
+        getInsuranceStatus(a.fechaFin);
+
+      const statusB =
+        getInsuranceStatus(b.fechaFin);
+
+      return (
+        statusA.priority -
+        statusB.priority
+      );
+    });
 
   return (
     <>
@@ -99,54 +177,13 @@ export default function UpcomingRenewals() {
             // SI ES POLIZA
             return unit.poliza === insurance.poliza;
           });
-
-        const millisecondsPerDay =
-          1000 * 60 * 60 * 24;
-
-        // FECHA ACTUAL
-        const today = new Date();
-
-        const todayString =
-          `${today.getFullYear()}-${
-            String(today.getMonth() + 1).padStart(2, "0")
-          }-${
-            String(today.getDate()).padStart(2, "0")
-          }`;
-
-        // TIMESTAMPS LIMPIOS
-        const currentDate =
-          new Date(todayString).getTime();
-
-        const endDate =
-          new Date(insurance.fechaFin).getTime();
-
-        // DIFERENCIA REAL
-        const diffDays =
-          Math.trunc(
-            (endDate - currentDate) /
-            millisecondsPerDay
-          );
-
-        let status = "ACTIVO";
-        let statusClass = "renewal-success";
-
-        if (diffDays < 0) {
-
-          status = "EXPIRADO";
-          statusClass = "renewal-danger";
-
-        } else if (diffDays <= 59) {
-
-          status = "PROX. EXPIRAR";
-          statusClass = "renewal-warning";
-        }
-        const matchesFilter =
-          filterStatus === "TODOS" ||
-          filterStatus === status;
-
-        if (!matchesFilter) {
-          return null;
-        }
+ 
+        const {
+                status,
+                statusClass
+              } = getInsuranceStatus(
+                insurance.fechaFin
+              );
         
           return (
             <div
