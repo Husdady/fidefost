@@ -103,7 +103,7 @@ export default function useSummaryUnits(){
     title: "ALERTAS CRITICAS",
     value: expiredCount,
     description: "Documentos vencidos",
-    accent: "warning",
+    accent: "danger",
     icon: <AlertsIcon />,
   },
   {
@@ -111,7 +111,7 @@ export default function useSummaryUnits(){
     title: "PROXIMOS VENCIMIENTOS",
     value: upcomingCount,
     description: "Documentos por vencer",
-    accent: "alert",
+    accent: "warning",
     icon: <UpcomingExpirationsIcon />,
   },
   {
@@ -119,7 +119,7 @@ export default function useSummaryUnits(){
     title: "Revisiones Técnicas",
     value: revisionWarningCount,
     description: "Revisiones Técnicas por vencer",
-    accent: "alert",
+    accent: "warning",
     icon: <RevisionIcon />,
   },
 ];

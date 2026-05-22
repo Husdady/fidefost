@@ -5,6 +5,7 @@ import {useAddUnit} from "context/units/useUnits";
 import { useGetUnits } from "context/units/useUnits";
 import { useGetInsurance } from "context/contracts/useInsurance";
 import { useUpdateUnit } from "context/units/useUnits";
+import getInsuranceStatus from "utils/getInsuranceStatus";
 
 import saveDocument from "database/saveDocument";
 import deleteDocument from "database/deleteDocument";
@@ -746,8 +747,21 @@ const usedSoats = units
                       <option
                         key={insurance._id}
                         value={insurance.poliza}
+                        
                       >
-                        {insurance.poliza}
+                        {
+                          `${
+                            getInsuranceStatus(
+                              insurance.fechaFin
+                            ).status === "ACTIVO"
+                              ? "🟢"
+                              : getInsuranceStatus(
+                                  insurance.fechaFin
+                                ).status === "PROX. EXPIRAR"
+                              ? "🟡"
+                              : "🔴"
+                          } ${insurance.poliza}`
+                        }
                       </option>
                     ))}
                 </select>
@@ -780,7 +794,19 @@ const usedSoats = units
                       key={insurance._id}
                       value={insurance.poliza}
                     >
-                      {insurance.poliza}
+                      {
+                          `${
+                            getInsuranceStatus(
+                              insurance.fechaFin
+                            ).status === "ACTIVO"
+                              ? "🟢"
+                              : getInsuranceStatus(
+                                  insurance.fechaFin
+                                ).status === "PROX. EXPIRAR"
+                              ? "🟡"
+                              : "🔴"
+                          } ${insurance.poliza}`
+                        }
                     </option>
                   ))}
               </select>
@@ -813,7 +839,19 @@ const usedSoats = units
                       key={insurance._id}
                       value={insurance.poliza}
                     >
-                      {insurance.poliza}
+                      {
+                          `${
+                            getInsuranceStatus(
+                              insurance.fechaFin
+                            ).status === "ACTIVO"
+                              ? "🟢"
+                              : getInsuranceStatus(
+                                  insurance.fechaFin
+                                ).status === "PROX. EXPIRAR"
+                              ? "🟡"
+                              : "🔴"
+                          } ${insurance.poliza}`
+                        }
                     </option>
                   ))}
               </select>
@@ -863,8 +901,21 @@ const usedSoats = units
                       <option
                         key={insurance._id}
                         value={insurance.poliza}
+                        
                       >
-                        {insurance.poliza}
+                        {
+                          `${
+                            getInsuranceStatus(
+                              insurance.fechaFin
+                            ).status === "ACTIVO"
+                              ? "🟢"
+                              : getInsuranceStatus(
+                                  insurance.fechaFin
+                                ).status === "PROX. EXPIRAR"
+                              ? "🟡"
+                              : "🔴"
+                          } ${insurance.poliza}`
+                        }
                       </option>
               ))}
             </select>
