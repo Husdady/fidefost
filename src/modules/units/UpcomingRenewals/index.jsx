@@ -55,7 +55,7 @@ export default function UpcomingRenewals() {
     };
   }
 
-  if (diffDays <= 59) {
+  if (diffDays <= 60) {
     return {
       status: "PROX. EXPIRAR",
       statusClass: "renewal-warning",
@@ -136,6 +136,19 @@ export default function UpcomingRenewals() {
         new Date(b.fechaFin)
       );
     });
+    
+    //format date
+    const formatDate = (dateString) => {
+
+      if (!dateString) {
+        return "-";
+      }
+
+      const [year, month, day] =
+        dateString.split("-");
+
+      return `${day}/${month}/${year}`;
+    };
 
   return (
     <>
@@ -239,7 +252,7 @@ export default function UpcomingRenewals() {
                   <p>
                     Unidad {linkedUnit?.placa || "Sin unidad"}
                     {" • "}
-                    Vence el {insurance.fechaFin}
+                    Vence el {formatDate(insurance.fechaFin)}
                   </p>
 
                   <span className="renewal-status">

@@ -1,9 +1,11 @@
 import { useGetUnits } from "context/units/useUnits";
 import { useGetInsurance } from "context/contracts/useInsurance";
+import getRevisionStatus from "utils/getRevisionStatus";
 
 import FleetIcon from "./icons/fleet-icon";
 import AlertsIcon from "./icons/alerts-icon";
 import  UpcomingExpirationsIcon from "./icons/upcoming-expirations-icon";
+import RevisionIcon from "./icons/revision-icon";
 
 export default function useSummaryUnits(){
   const units = useGetUnits();
@@ -12,56 +14,56 @@ export default function useSummaryUnits(){
   const expiredCount =
     insuranceContracts.filter((insurance) => {
 
-      const millisecondsPerDay =
-        1000 * 60 * 60 * 24;
+  const millisecondsPerDay =
+     1000 * 60 * 60 * 24;
 
-      const today = new Date();
+  const today = new Date();
 
-      const todayString =
-        `${today.getFullYear()}-${
-          String(today.getMonth() + 1).padStart(2, "0")
-        }-${
-          String(today.getDate()).padStart(2, "0")
-        }`;
+  const todayString =
+    `${today.getFullYear()}-${
+        String(today.getMonth() + 1).padStart(2, "0")
+     }-${
+        String(today.getDate()).padStart(2, "0")
+     }`;
 
-      const currentDate =
-        new Date(todayString).getTime();
+  const currentDate =
+     new Date(todayString).getTime();
 
-      const endDate =
-        new Date(insurance.fechaFin).getTime();
+  const endDate =
+     new Date(insurance.fechaFin).getTime();
 
-      const diffDays =
-        Math.trunc(
-          (endDate - currentDate) /
-          millisecondsPerDay
-        );
+  const diffDays =
+     Math.trunc(
+      (endDate - currentDate) /
+       millisecondsPerDay
+      );
 
       return diffDays < 0;
 
-    }).length;
+  }).length;
   
   const upcomingCount =
   insuranceContracts.filter((insurance) => {
 
-    const millisecondsPerDay =
-      1000 * 60 * 60 * 24;
+  const millisecondsPerDay =
+    1000 * 60 * 60 * 24;
 
-    const today = new Date();
+  const today = new Date();
 
-    const todayString =
-      `${today.getFullYear()}-${
-        String(today.getMonth() + 1).padStart(2, "0")
-      }-${
-        String(today.getDate()).padStart(2, "0")
-      }`;
+  const todayString =
+   `${today.getFullYear()}-${
+      String(today.getMonth() + 1).padStart(2, "0")
+    }-${
+      String(today.getDate()).padStart(2, "0")
+    }`;
 
-    const currentDate =
-      new Date(todayString).getTime();
+  const currentDate =
+    new Date(todayString).getTime();
 
-    const endDate =
-      new Date(insurance.fechaFin).getTime();
+  const endDate =
+    new Date(insurance.fechaFin).getTime();
 
-    const diffDays =
+  const diffDays =
       Math.trunc(
         (endDate - currentDate) /
         millisecondsPerDay
@@ -71,6 +73,19 @@ export default function useSummaryUnits(){
       diffDays <= 59 &&
       diffDays >= 0
     );
+
+  }).length;
+
+//REVISIONES TECNICAS
+  const revisionWarningCount =
+  units.filter((unit) => {
+
+    const status =
+      getRevisionStatus(
+        unit.revisionFecha
+      );
+
+    return status === "badge-warning";
 
   }).length;
 
@@ -96,13 +111,16 @@ export default function useSummaryUnits(){
     title: "PROXIMOS VENCIMIENTOS",
     value: upcomingCount,
     description: "Documentos por vencer",
-    accent: "default",
+    accent: "alert",
     icon: <UpcomingExpirationsIcon />,
   },
   {
-    id: "",
-    title: "",
-    value:"",
+    id: "revisiones_tecnicas",
+    title: "Revisiones Técnicas",
+    value: revisionWarningCount,
+    description: "Revisiones Técnicas por vencer",
+    accent: "alert",
+    icon: <RevisionIcon />,
   },
 ];
 }

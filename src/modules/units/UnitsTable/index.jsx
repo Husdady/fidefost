@@ -3,6 +3,7 @@ import { useState } from "react";
 import UnitForm from "../UnitForm";
 import { useDeleteUnit } from "context/units/useUnits";
 import deleteDocument from "database/deleteDocument";
+import getRevisionStatus from "utils/getRevisionStatus";
 
 //export 
 import exportUnitsExcel from "utils/exportUnitsExcel";
@@ -166,7 +167,13 @@ const formatDate = (dateString) => {
               </td>
 
               <td>
-                <span className="badge-success">
+                <span
+                  className={
+                    getRevisionStatus(
+                      unit.revisionFecha
+                    )
+                  }
+                >
                   {formatDate(unit.revisionFecha)}
                 </span>
               </td>
@@ -193,8 +200,8 @@ const formatDate = (dateString) => {
               </td>
 
               <td>
-                <div>
-                    <button
+                <div className="unit-actions">
+                    <button className="btn-actions"
                       onClick={() => {
                         setSelectedUnit(unit);
                         setEditModal(true);
@@ -203,7 +210,7 @@ const formatDate = (dateString) => {
                       <EditIcon />
                     </button>
                   
-                    <button
+                    <button className="btn-actions"
                       onClick={async () => {
 
                         // ELIMINAR ARCHIVOS INDEXEDDB
@@ -226,7 +233,7 @@ const formatDate = (dateString) => {
                   
 
                   
-                    <button
+                    <button className="btn-actions"
                     onClick={() =>
                       exportUnitsZip(unit)
                     }
