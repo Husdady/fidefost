@@ -38,13 +38,13 @@ export default function ContractsGPSItems({
   if (diffDays < 30) {
     return {
       text: "SIST. GPS POR VENCER",
-      color: "#ff9800",
+      color: "#d97706",
     };
   }
 
   return {
     text: "SIST. GPS ACTIVO",
-    color: "#1db954",
+    color: "#15803d",
   };
 };
   return (
