@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 // Utils
 import classnames from "utils/classnames";
-import exportAuditExcel from "utils/exportAuditExcel";
 import exportAuditZip from "utils/exportAuditZip";
 
 const formatMonthYear = (date) => {
