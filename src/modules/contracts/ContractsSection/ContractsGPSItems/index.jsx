@@ -11,7 +11,7 @@ export default function ContractsGPSItems({
   const [search, setSearch] = useState("");
   const filteredItems = items.filter(
   (item) =>
-    item.id
+    (item.id || "")
       .toLowerCase()
       .includes(search.toLowerCase())
 );
@@ -63,7 +63,7 @@ export default function ContractsGPSItems({
     
     <div className="contracts-gps__list">
 
-      {filteredItems.map((item, index) => {
+      {filteredItems.map((item) => {
 
         const status = getGpsStatus(
           item.endDate
@@ -71,7 +71,7 @@ export default function ContractsGPSItems({
 
         return (
         <div
-          key={index}
+          key={item._id}
           className="contracts-gps-item"
         >
           <div className="contracts-gps-item__header">
@@ -124,7 +124,7 @@ export default function ContractsGPSItems({
               <span className="contracts-gps-item__label">
                 <button
                   onClick={() =>
-                    onDelete(item.id)
+                    onDelete(item._id)
                   }
                 >
                   <DeleteIcon/>
