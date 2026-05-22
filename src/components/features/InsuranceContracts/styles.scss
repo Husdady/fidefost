@@ -122,7 +122,9 @@
     }
 }
 
-.contracts-list-supplier{
+.contracts-list-supplier,
+.contracts-list-type,
+.contracts-list-date {
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -130,19 +132,18 @@
 .contracts-list-supplier strong {
   font-size: 14px;
   font-weight: 600;
-  color: #111827;
+  color: #2b3137;
 }
 
 .contracts-list-supplier small {
   font-size: 11px;
-  color: #111827;
+  color: #2b3137;
 }
 .contracts-list-type,
 .contracts-list-date {
     color: #2b3137;
     font-size: 14px;
     font-weight: 500;
-    line-height: 1.3;
 }
   .contracts-list-status {
     display: inline-flex;
