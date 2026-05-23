@@ -158,7 +158,7 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
                           if (diffDays < 0) {
                             statusClass = "expired";
                             statusText = "VENCIDA";
-                          } else if (diffDays < 60) {
+                          } else if (diffDays <= 60) {
                             statusClass = "warning";
                             statusText = "PROX. VENCER";
                           }
