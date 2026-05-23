@@ -48,7 +48,7 @@ export default function ContractsGPSItems({
   };
 };
 
-//formate date
+//format date
 const formatDate = (dateString) => {
 
       if (!dateString) {
