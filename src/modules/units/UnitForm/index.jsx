@@ -97,25 +97,28 @@ const handleFiles = (e) => {
   const uploadedFiles = Array.from(e.target.files);
 
   const filesWithId = uploadedFiles.map((file) => ({
-  blob: file,
+    blob: file,
 
-  tempId: crypto.randomUUID(),
+    tempId: crypto.randomUUID(),
 
-  savedInDb: false,
+    savedInDb: false,
 
-  name: file.name,
-  size: file.size,
-  type: file.type
-}));
+    name: file.name,
+    size: file.size,
+    type: file.type
+  }));
 
-setForm((prev) => ({
-  ...prev,
+  setForm((prev) => ({
+    ...prev,
 
-  archivos: [
-    ...prev.archivos,
-    ...filesWithId
-  ]
-}));
+    archivos: [
+      ...prev.archivos,
+      ...filesWithId
+    ]
+  }));
+
+  // PERMITIR SUBIR EL MISMO ARCHIVO OTRA VEZ
+  e.target.value = "";
 };
 
 const removeFile = (fileId) => {
