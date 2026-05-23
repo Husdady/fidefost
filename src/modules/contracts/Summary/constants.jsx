@@ -124,7 +124,7 @@ const totaldriversactivos = activeContracts.length;
       {
         id: "alertas_gps",
         title: "ALERTAS GPS",
-        value: <div> {expiredGps.length} vencidos </div>,
+        value: <div> {expiredGps.length} <span className="title-gps"> vencidos </span> </div>,
         description: <div style={{color: "#b66a00",}}> <ExpiredLicensesIcon /> {gpsExpiringSoon.length} por vencer </div>,
         accent: "danger",
       },

@@ -35,7 +35,7 @@ export default function ContractsGPSItems({
     };
   }
 
-  if (diffDays < 30) {
+  if (diffDays <= 30) {
     return {
       text: "SIST. GPS POR VENCER",
       color: "#d97706",
@@ -47,6 +47,20 @@ export default function ContractsGPSItems({
     color: "#15803d",
   };
 };
+
+//formate date
+const formatDate = (dateString) => {
+
+      if (!dateString) {
+        return "-";
+      }
+
+      const [year, month, day] =
+        dateString.split("-");
+
+      return `${day}/${month}/${year}`;
+    };
+
   return (
     
     <>
@@ -103,7 +117,7 @@ export default function ContractsGPSItems({
               </span>
 
               <span className="contracts-gps-item__date">
-                {item.installationDate}
+                {formatDate(item.installationDate)}
               </span>
             </div>
 
@@ -113,7 +127,7 @@ export default function ContractsGPSItems({
               </span>
 
               <span className="contracts-gps-item__date">
-                {item.endDate}
+                {formatDate(item.endDate)}
               </span>
             </div>
 
