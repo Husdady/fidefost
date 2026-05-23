@@ -75,10 +75,13 @@ export default function ContractsGPSItems({
           className="contracts-gps-item"
         >
           <div className="contracts-gps-item__header">
+           <div className="contracts-gps-item__column">
             <span className="contracts-gps-item__id">
               ID: {item.id}
             </span>
+           </div>
 
+           <div className="contracts-gps-item__column">
             <span className="contracts-gps-item__status">
               <span
                 className="contracts-gps-item__status"
@@ -89,6 +92,7 @@ export default function ContractsGPSItems({
                 ● {status.text}
               </span>
             </span>
+           </div>
           </div>
 
           <div className="contracts-gps-item__body">
@@ -113,16 +117,16 @@ export default function ContractsGPSItems({
               </span>
             </div>
 
-            <div className="contracts-gps-item__column">
-              <span className="contracts-gps-item__label">
-                <button
+            <div className="contracts-gps-item__columnBtn">
+              <span >
+                <button className="contracts-gps-item__btn"
                   onClick={() => onEdit(item)}
                 >
                   <EditIcon />
                 </button>
               </span>
-              <span className="contracts-gps-item__label">
-                <button
+              <span >
+                <button className="contracts-gps-item__btn"
                   onClick={() =>
                     onDelete(item._id)
                   }
