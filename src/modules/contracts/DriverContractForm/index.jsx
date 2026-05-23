@@ -377,7 +377,7 @@ const isFormValid =
   form.documentos.induccion &&
 
   // ARCHIVOS
-  form.archivos.length > 0;
+  form.archivos.length > 5;
 
   const handleClose = () => {
 
