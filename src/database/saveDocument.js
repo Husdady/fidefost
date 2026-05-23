@@ -9,7 +9,6 @@ import { STORE_NAME } from "./index";
  * @param {object} params Params
  */
 export default async function saveDocument({
-  
   file,
   module,
   relatedId,
@@ -21,11 +20,10 @@ export default async function saveDocument({
     const transaction = db.transaction(STORE_NAME, "readwrite");
     const store = transaction.objectStore(STORE_NAME);
 
-    // ID único REAL
     const id = crypto.randomUUID();
 
     const documentRecord = {
-      id, 
+      id,
       module,
       blob: file,
       name: file.name,

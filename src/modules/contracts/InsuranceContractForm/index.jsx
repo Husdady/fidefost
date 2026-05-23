@@ -2,7 +2,7 @@ import saveDocument from "database/saveDocument";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
 import deleteDocument from "database/deleteDocument";
 import { createPortal } from "react-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef } from "react";
 
 import { useUpdateInsurance } from "context/contracts/useInsurance";
 import { useGetInsurance } from "context/contracts/useInsurance";
@@ -15,11 +15,6 @@ export default function InsuranceContractForm({
   isEdit = false
 }) {
 
-  
-  const [insuranceId] = useState(
-  () => initialData?._id || crypto.randomUUID()
-);
-
   const [files, setFiles] = useState([]);
 
   const [originalFiles, setOriginalFiles] = useState([]);
@@ -28,6 +23,16 @@ export default function InsuranceContractForm({
 
   const [showDuplicateMessage, setShowDuplicateMessage] =
   useState(false);
+
+  const insuranceIdRef = useRef(null);
+
+if (!insuranceIdRef.current) {
+
+  insuranceIdRef.current =
+    initialData?._id || crypto.randomUUID();
+}
+
+const insuranceId = insuranceIdRef.current;
 
   const updateInsurance = useUpdateInsurance();
 
@@ -49,35 +54,62 @@ export default function InsuranceContractForm({
 
   useEffect(() => {
 
-  if (initialData) {
+  if (!show) return;
 
-    setForm({
-      ...initialData,
+  const loadData = async () => {
 
-      // quitar prefijo visualmente
-      poliza:
-        initialData.poliza
-          ?.replace("SOAT-", "")
-          ?.replace("POLIZA-", "")
-    });
-  }
+    if (initialData) {
 
-  const loadFiles = async () => {
+      setForm({
+        ...initialData,
 
-    const savedFiles =
-      await getDocumentsByRelation(
-        "insurance",
-        initialData?._id || insuranceId
-      );
+        poliza:
+          initialData.poliza
+            ?.replace("SOAT-", "")
+            ?.replace("POLIZA-", "")
+      });
 
-    setFiles(savedFiles);
+      const savedFiles =
+        await getDocumentsByRelation(
+          "insurance",
+          initialData._id
+        );
 
-    setOriginalFiles(savedFiles);
+      setFiles(savedFiles || []);
+
+      setOriginalFiles(savedFiles || []);
+
+    } else {
+
+      setFiles([]);
+
+      setOriginalFiles([]);
+
+      setForm({
+        proveedor: "",
+        poliza: "",
+        tipo: "",
+        fechaInicio: "",
+        fechaFin: "",
+        archivos: []
+      });
+    }
   };
 
-  loadFiles();
+  loadData();
 
-}, [initialData, insuranceId]);
+}, [show]);
+
+useEffect(() => {
+
+  if (initialData?._id) {
+
+    insuranceIdRef.current =
+      initialData._id;
+
+  }
+
+}, [initialData]);
 
 
 if (!show) return null;
@@ -90,6 +122,7 @@ if (!show) return null;
       [name]: value,
     }));
   };
+
 
   const handleSubmit = async () => {
 
@@ -138,31 +171,29 @@ if (alreadyExists) {
     }
   }
 
-  const storedFiles = [];
+  const storedFiles = await Promise.all(
 
-  for (const file of files) {
+  files.map(async (file) => {
 
-    // si ya existe en indexeddb
+    // YA EXISTE
     if (file.id) {
-
-      storedFiles.push(file);
-
-      continue;
+      return file;
     }
 
-    // guardar nuevos archivos
+    // NUEVO
     const saved = await saveDocument({
-      file,
+      file: file.blob || file,
       module: "insurance",
       relatedId: insuranceId,
     });
 
-    storedFiles.push(saved);
-  }
+    return saved;
+  })
+);
 
   const newInsurance = {
 
-    _id: insuranceId,
+   _id: insuranceId,
 
     ...form,
 
@@ -176,7 +207,7 @@ if (alreadyExists) {
   if (isEdit) {
 
     updateInsurance(
-      initialData._id,
+      insuranceId,
       newInsurance
     );
 
@@ -359,9 +390,18 @@ const isFormValid =
               const uploadedFiles =
                 Array.from(e.target.files);
 
+              const normalizedFiles =
+                uploadedFiles.map((file) => ({
+                  tempId: crypto.randomUUID(),
+                  blob: file,
+                  name: file.name,
+                  size: file.size,
+                  type: file.type,
+                }));
+
               setFiles((prev) => [
                 ...prev,
-                ...uploadedFiles
+                ...normalizedFiles
               ]);
 
             }}
@@ -390,9 +430,9 @@ const isFormValid =
              {files.length > 0 && (
               <div className="insurance-file-list">
 
-                {files.map((file) => (
+                {files.map((file, index) => (
                   <div
-                    key={file.id || file.name}
+                    key={file.id || file.tempId || index}
                     className="insurance-file-row">
 
                     <div className="insurance-file-info">
@@ -436,7 +476,7 @@ const isFormValid =
                       className="insurance-file-delete"
                       onClick={() => {
 
-                      const fileToDelete = files[index];
+                      const fileToDelete = file;
 
                       // guardar ids eliminados temporalmente
                       if (fileToDelete.id) {
@@ -449,7 +489,10 @@ const isFormValid =
 
                       // solo quitar del form visualmente
                       setFiles((prev) =>
-                        prev.filter((_, i) => i !== index)
+                        prev.filter((item) =>
+                          (item.id || item.tempId) !==
+                          (file.id || file.tempId)
+                        )
                       );
                     }}
                     >
