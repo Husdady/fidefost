@@ -10,7 +10,7 @@ const useGpsContractsStore = create(
         set((state) => ({
           gpsContracts: [
             contract,
-            ...state.gpsContracts,
+            ...state.gpsContracts
           ],
         })),
     
