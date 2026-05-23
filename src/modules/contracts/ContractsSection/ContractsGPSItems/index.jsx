@@ -31,7 +31,7 @@ export default function ContractsGPSItems({
   if (diffDays < 0) {
     return {
       text: "SIST. GPS VENCIDO",
-      color: "#e53935",
+      color: "#df2f26",
     };
   }
 

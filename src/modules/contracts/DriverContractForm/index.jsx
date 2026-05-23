@@ -25,23 +25,23 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
       diffTime / (1000 * 60 * 60 * 24)
     );
 
-    if (diffDays <= 0) {
+    if (diffDays < 0) {
       return {
         text: "SIST. GPS VENCIDO",
-        color: "#e53935",
+        color: "#df2f26",
       };
     }
 
     if (diffDays <= 30) {
       return {
         text: "SIST. GPS POR VENCER",
-        color: "#ff9800",
+        color: "#d97706",
       };
     }
 
     return {
       text: "SIST. GPS ACTIVO",
-      color: "#1db954",
+      color: "#15803d",
     };
   };
    const [form, setForm] = useState({
@@ -212,16 +212,25 @@ setOriginalFiles(files);
   const handleFiles = (e) => {
 
   const uploadedFiles =
-    Array.from(e.target.files);
+      Array.from(e.target.files);
 
-  setForm((prev) => ({
-    ...prev,
-    archivos: [
-      ...prev.archivos,
-      ...uploadedFiles
-    ]
-  }));
-};
+          const normalizedFiles =
+            uploadedFiles.map((file) => ({
+              tempId: crypto.randomUUID(),
+              blob: file,
+              name: file.name,
+              size: file.size,
+              type: file.type,
+            }));
+
+          setForm((prev) => ({
+            ...prev,
+            archivos: [
+              ...prev.archivos,
+              ...normalizedFiles
+            ]
+          }));
+    };
 
   const removeFile = (file) => {
 
@@ -234,13 +243,13 @@ setOriginalFiles(files);
     ]);
   }
 
-  // solo quitar visualmente
+  // eliminar SOLO el archivo exacto
   setForm((prev) => ({
     ...prev,
     archivos: prev.archivos.filter(
       (f) =>
-        (f.id || f.name) !==
-        (file.id || file.name)
+        (f.id || f.tempId) !==
+        (file.id || file.tempId)
     )
   }));
 };
@@ -303,7 +312,7 @@ const handleSubmit = async () => {
 
     // guardar nuevos archivos
     const saved = await saveDocument({
-      file,
+      file: file.blob,
       module: "contracts",
       relatedId: contractId,
       category: "legal"
@@ -589,7 +598,17 @@ const isFormValid =
         {/* UPLOAD */}
         <div className="upload">
           <label className="upload-box">
-            <input type="file" multiple onChange={handleFiles} />
+            <input
+              type="file"
+              multiple
+              onChange={(e) => {
+                handleFiles(e);
+
+                // permitir volver a subir
+                // el mismo archivo
+                e.target.value = "";
+              }}
+            />
 
             <div className="upload-content">
               <div className="icon">☁️</div>
@@ -613,7 +632,7 @@ const isFormValid =
 
                   return(
                   <div
-                    key={file.id || `${file.name}-${index}`}
+                    key={file.id || file.tempId}
                     className="file-row"
                   >
                     
