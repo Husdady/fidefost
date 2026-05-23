@@ -65,6 +65,12 @@ export default async function exportAuditZip(
 
         Link_GPS:
           gpsData?.gpsLink || "",
+        
+        FI_CONTRATO:
+          gpsData?.installationDate || "",
+        
+        FV_CONTRATO:
+          gpsData?.endDate || "",
 
         Wifi:
           audit.wifi ? "SI" : "NO",
@@ -123,18 +129,21 @@ const documents =
   );
 
   
-    documents.forEach((doc,i) => {
+    const documentsFolder =
+  zip.folder("documentos");
 
-    if (doc?.blob) {
+documents.forEach((doc, i) => {
 
-        zip.file(
-        `${i + 1}-${doc.name}`,
+  if (doc?.blob) {
+
+    documentsFolder.file(
+      `${i + 1}-${doc.name}`,
       doc.blob
-        );
+    );
 
-    }
+  }
 
-    });
+});
 
   // ==========
   // GENERAR ZIP

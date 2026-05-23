@@ -182,7 +182,7 @@ if (alreadyExists) {
 
     // NUEVO
     const saved = await saveDocument({
-      file: file.blob || file,
+      file: file.blob,
       module: "insurance",
       relatedId: insuranceId,
     });
@@ -387,24 +387,25 @@ const isFormValid =
               multiple
               onChange={(e) => {
 
-              const uploadedFiles =
-                Array.from(e.target.files);
+                const uploadedFiles =
+                  Array.from(e.target.files);
 
-              const normalizedFiles =
-                uploadedFiles.map((file) => ({
-                  tempId: crypto.randomUUID(),
-                  blob: file,
-                  name: file.name,
-                  size: file.size,
-                  type: file.type,
-                }));
+                const normalizedFiles =
+                  uploadedFiles.map((file) => ({
+                    tempId: crypto.randomUUID(),
+                    blob: file,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                  }));
 
-              setFiles((prev) => [
-                ...prev,
-                ...normalizedFiles
-              ]);
+                setFiles((prev) => [
+                  ...prev,
+                  ...normalizedFiles
+                ]);
 
-            }}
+                e.target.value = "";
+              }}
             />
 
             <div className="upload-content">
@@ -432,7 +433,7 @@ const isFormValid =
 
                 {files.map((file, index) => (
                   <div
-                    key={file.id || file.tempId || index}
+                    key={file.id || file.tempId}
                     className="insurance-file-row">
 
                     <div className="insurance-file-info">

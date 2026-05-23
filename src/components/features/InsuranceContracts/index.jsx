@@ -9,6 +9,7 @@ import DateRange from "../DateRange";
 import {useState} from "react";
 import { useDeleteInsurance } from "context/contracts/useInsurance";
 import deleteDocument from "database/deleteDocument";
+import downloadInsuranceZip from "utils/downloadInsuranceZip";
 
 function InsuranceContracts({ title, datefilter, className = "",  accent = "default" 
 }) {
@@ -155,31 +156,11 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
 
                       <button
                         className="contracts-download-btn"
-                        onClick={() => {
-
-                          insurance.archivos.forEach((doc) => {
-
-                            const url =
-                              URL.createObjectURL(doc.blob);
-
-                            const a =
-                              document.createElement("a");
-
-                            a.href = url;
-
-                            a.download = doc.name;
-
-                            document.body.appendChild(a);
-
-                            a.click();
-
-                            a.remove();
-
-                            URL.revokeObjectURL(url);
-
-                          });
-
-                        }}
+                        onClick={() => 
+                            downloadInsuranceZip(
+                              insurance
+                        )
+                       }
                       >
                         Descargar
                       </button>

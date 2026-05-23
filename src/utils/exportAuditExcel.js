@@ -59,6 +59,12 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
 
         Link_GPS:
           gpsData?.gpsLink || "",
+          
+        FI_CONTRATO:
+          gpsData?.installationDate || "",
+        
+        FV_CONTRATO:
+          gpsData?.endDate || "",
 
         Wifi:
           audit.wifi ? "SI" : "NO",
