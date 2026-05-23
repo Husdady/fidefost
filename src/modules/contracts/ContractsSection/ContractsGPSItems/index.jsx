@@ -77,7 +77,7 @@ export default function ContractsGPSItems({
           <div className="contracts-gps-item__header">
            <div className="contracts-gps-item__column">
             <span className="contracts-gps-item__id">
-              ID: {item.id}
+              ID:{" "} {item.id}
             </span>
            </div>
 

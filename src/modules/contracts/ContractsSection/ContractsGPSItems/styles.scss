@@ -14,10 +14,12 @@
 }
 
 .contracts-gps-item__id {
-  color: #8d8d8d;
+  display: flex;
+  color: #4f4f4f;
   font-size: 14px;
+  font-weight: 700;
   line-break:anywhere;
-  width: 80%;
+  width: 90px;
 }
 
 .contracts-gps-item__status {
@@ -81,6 +83,7 @@
   margin: 0px;
 }
 .contracts-gps__list {
+  display: flex;
   max-height: 420px;
   overflow-y: auto;
   padding-right: 6px;
