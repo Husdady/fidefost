@@ -13,7 +13,6 @@ import { useGetUnits } from "context/units/useUnits";
 export default function DriverContractForm({ onHide, onSave, contractData }) {
 
     const units = useGetUnits();
-    const [selectedGps, setSelectedGps] = useState("");
     const getGpsStatus = (endDate) => {
     const today = new Date();
 
@@ -239,7 +238,9 @@ setOriginalFiles(files);
   setForm((prev) => ({
     ...prev,
     archivos: prev.archivos.filter(
-      (f) => f !== file
+      (f) =>
+        (f.id || f.name) !==
+        (file.id || file.name)
     )
   }));
 };
@@ -559,7 +560,7 @@ const isFormValid =
 
                 {availableGps.map((gps) => (
                   <option
-                    key={gps.id}
+                    key={gps._id}
                     value={gps.id}
                   >
                     {gps.id}
@@ -609,7 +610,6 @@ const isFormValid =
               {form.archivos.length > 0 && (
               <div className="file-list">
                 {form.archivos.map((file, index) =>  {
-                  console.log("FILE ID:", file.id);
 
                   return(
                   <div
