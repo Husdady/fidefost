@@ -9,6 +9,7 @@ import generateId from "utils/generateId";
 import isValidFile from "../utils/isValidFile";
 import saveDocument from "database/saveDocument";
 import createRoadMapFile from "../utils/createRoadMapFile";
+import { getRoadMapStats } from "../utils/getRoadMapStats";
 
 /**
  * Hook for upload Road Maps files
@@ -25,8 +26,6 @@ export default function useUploadFiles(params) {
   const handleFiles = async (files) => {
     const validFiles = Array.from(files || []).filter(isValidFile);
 
-    console.log({ validFiles })
-
     if (!validFiles.length) return;
 
     const services = [];
@@ -39,7 +38,10 @@ export default function useUploadFiles(params) {
         _id: serviceId,
       };
 
-      services.push(item);
+      const stats = await getRoadMapStats(file);
+
+      // Add service
+      services.push({ ...item, ...stats });
 
       await saveDocument({
         file: file,
