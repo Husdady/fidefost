@@ -18,3 +18,25 @@ body,
   color: #4f4f4f;
   font-family: "Montserrat", sans-serif;
 }
+
+.Toastify__toast {
+  font-size: 14px;
+  color: #333333;
+  line-height: 20px;
+  font-weight: 500 !important;
+  padding: 1.35rem 1rem 1rem !important;
+  font-family: "Montserrat", sans-serif !important;
+
+  & > .Toastify__toast-icon {
+    width: 100%;
+    max-width: 18px;
+    margin-right: 0.5rem;
+
+    & svg {
+      min-width: 18px;
+      max-width: 18px;
+      min-height: 18px;
+      max-height: 18px;
+    }
+  }
+}

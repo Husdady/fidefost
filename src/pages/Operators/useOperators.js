@@ -8,6 +8,7 @@ import saveDocument from "database/saveDocument";
 
 // Utils
 import generateId from "utils/generateId";
+import { showSuccessToast } from "utils/toast";
 
 /**
  * Hook for operators actions
@@ -61,6 +62,7 @@ export default function useOperators() {
 
       addClient(newClient);
       createOperatorModal.hide();
+      showSuccessToast("Un nuevo operador ha sido añadido!");
 
       return newClient;
     },

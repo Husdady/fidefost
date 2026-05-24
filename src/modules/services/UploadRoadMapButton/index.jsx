@@ -9,7 +9,9 @@ import useUploadFiles from "../hooks/useUploadFiles";
 import { acceptedFiles } from "../constants";
 
 export default function UploadRoadMapButton() {
-  const { fileInputRef, handleFilesChange } = useUploadFiles();
+  const { fileInputRef, handleFilesChange } = useUploadFiles({
+    message: "Una nueva hoja de ruta ha sido cargada",
+  });
 
   return (
     <>

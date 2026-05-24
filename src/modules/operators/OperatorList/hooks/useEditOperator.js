@@ -11,6 +11,7 @@ import getDocumentsByRelation from "database/getDocumentsByRelation";
 
 // Utils
 import generateId from "utils/generateId";
+import { showInfoToast } from "utils/toast";
 
 /**
  * Hook for edit operator information
@@ -112,6 +113,7 @@ export default function useEditOperator() {
 
         updateClient(_id, updatedClient);
         editOperatorForm.hide();
+        showInfoToast("La información del operador ha sido actualizada");
       } catch (error) {
         console.error("Error editing operator", error);
       } finally {

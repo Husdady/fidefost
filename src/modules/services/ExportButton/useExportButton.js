@@ -10,6 +10,7 @@ import getDocumentsByRelation from "database/getDocumentsByRelation";
 
 // Utils
 import createValidArray from "utils/createValidArray";
+import { showWarnToast } from "utils/toast";
 /**
  * Hook for implements logic of ExportButton component
  */
@@ -29,21 +30,17 @@ export default function useExportButton() {
       const promisesResolved = await Promise.allSettled(promises);
 
       const documents = promisesResolved.map((item) => item?.value).flat();
-      if (!documents.length) return;
+
+      if (!documents.length) {
+        throw new Error("Invalid documents");
+      }
 
       const zip = new JSZip();
 
       documents.forEach((document, index) => {
-
         if (document?.blob) {
-
-          zip.file(
-            `${index + 1}-${document.name}`,
-            document.blob
-          );
-
+          zip.file(`${index + 1}-${document.name}`, document.blob);
         }
-
       });
 
       const zipBlob = await zip.generateAsync({ type: "blob" });
@@ -62,6 +59,7 @@ export default function useExportButton() {
       URL.revokeObjectURL(downloadUrl);
     } catch (error) {
       console.error("Error downloading Road Map files:", error);
+      showWarnToast("No hay hojas de rutas válidas para exportar");
     } finally {
       setIsExportingServices(false);
     }

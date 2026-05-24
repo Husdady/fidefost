@@ -10,6 +10,7 @@ import getDocumentsByRelation from "database/getDocumentsByRelation";
 // Utils
 import createSafeFileName from "utils/files/createSafeFileName";
 import resolveDocumentFile from "utils/files/resolveDocumentFile";
+import { showWarnToast } from "utils/toast";
 
 /**
  * Hook for download operator documents
@@ -33,7 +34,10 @@ export default function useDownloadDocuments({ setSelectedOperator }) {
       );
 
       const validDocuments = Array.isArray(documents) ? documents : [];
-      if (!validDocuments.length) return;
+
+      if (!validDocuments.length) {
+        throw new Error("Invalid documents");
+      }
 
       const zip = new JSZip();
 
@@ -65,6 +69,10 @@ export default function useDownloadDocuments({ setSelectedOperator }) {
       URL.revokeObjectURL(downloadUrl);
     } catch (error) {
       console.error("Error downloading operator documents:", error);
+
+      showWarnToast(
+        "No es posible descargar los documentos de este operador, revisa los archivos subidos"
+      );
     } finally {
       setIsDownloadingDocuments(false);
     }

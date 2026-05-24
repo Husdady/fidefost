@@ -3,15 +3,18 @@ import { useRef } from "react";
 import { useAddServices } from "context/services/useServices";
 
 // Utils
+import { showInfoToast } from "utils/toast";
+
+import generateId from "utils/generateId";
 import isValidFile from "../utils/isValidFile";
 import saveDocument from "database/saveDocument";
 import createRoadMapFile from "../utils/createRoadMapFile";
 
 /**
  * Hook for upload Road Maps files
+ * @param {object} params Params
  */
-
-export default function useUploadFiles() {
+export default function useUploadFiles(params) {
   const fileInputRef = useRef(null);
   const addServices = useAddServices();
 
@@ -20,38 +23,44 @@ export default function useUploadFiles() {
    * @param {FileList|File[]} files Uploaded files
    */
   const handleFiles = async (files) => {
+    const validFiles = Array.from(files || []).filter(isValidFile);
 
-  const validFiles =
-    Array.from(files || []).filter(isValidFile);
+    console.log({ validFiles })
 
-  if (!validFiles.length) return;
+    if (!validFiles.length) return;
 
-  const services = [];
+    const services = [];
 
-  for (const file of files) {
+    for (const file of validFiles) {
+      const serviceId = generateId();
 
-    const serviceId =
-      crypto.randomUUID();
+      const item = {
+        ...createRoadMapFile(file),
+        _id: serviceId,
+      };
 
-    const item = {
-      ...createRoadMapFile(file),
-      _id: serviceId,
-    };
+      services.push(item);
 
-    console.log("ITEM:", item);
+      await saveDocument({
+        file: file,
+        relatedId: serviceId,
+        category: "road-maps",
+        module: "services",
+      });
+    }
 
-    services.push(item);
+    addServices(services);
 
-    await saveDocument({
-      file: file,
-      relatedId: serviceId,
-      category: "road-maps",
-      module: "services",
-    });
-  }
+    const totalServices = services?.length;
+    const hasMultipleServices = totalServices > 1;
+    const s = hasMultipleServices ? "s" : "";
 
-  addServices(services);
-};
+    const defaultMessage = `Se ${
+      hasMultipleServices ? "añadieron" : "añadió"
+    } ${totalServices} hoja${s} de ruta${s}`;
+
+    showInfoToast(params?.message ?? defaultMessage);
+  };
 
   /**
    * Handles input file change

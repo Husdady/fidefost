@@ -7,6 +7,7 @@ import deleteDocument from "database/deleteDocument";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
 
 // Utils
+import { showWarnToast } from "utils/toast";
 import isValidString from "utils/isValidString";
 
 /**
@@ -26,6 +27,7 @@ export default function useRoadMaps() {
     if (!serviceId) return;
 
     deleteService(serviceId);
+    showWarnToast("Hoja de ruta eliminada");
 
     const documents = await getDocumentsByRelation("services", serviceId);
 
@@ -39,7 +41,6 @@ export default function useRoadMaps() {
   // Callback for download file
   const handleDownloadFile = useCallback(async (serviceId) => {
     try {
-
       if (!isValidString(serviceId)) {
         throw new Error("Invalid service id");
       }
@@ -54,16 +55,13 @@ export default function useRoadMaps() {
       // Get blob file from document
       const blob = document.blob;
 
-      const downloadUrl =
-        URL.createObjectURL(blob);
+      const downloadUrl = URL.createObjectURL(blob);
 
-      const link =
-        window.document.createElement("a");
+      const link = window.document.createElement("a");
 
       link.href = downloadUrl;
 
-      link.download =
-        document.name || "service-file";
+      link.download = document.name || "service-file";
 
       window.document.body.appendChild(link);
 
@@ -72,6 +70,7 @@ export default function useRoadMaps() {
 
       URL.revokeObjectURL(downloadUrl);
     } catch (error) {
+      showWarnToast("El archivo no pudo ser descargado");
       console.error("Error to download service file", { error });
     }
   }, []);
