@@ -18,6 +18,19 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
         (gps) =>
           gps.id === audit.gpsId
       );
+  
+  //format date
+  const formatDate = (dateString) => {
+
+        if (!dateString) {
+          return "-";
+        }
+
+        const [year, month, day] =
+          dateString.split("-");
+
+        return `${day}/${month}/${year}`;
+      };
 
     return {
 
@@ -31,16 +44,16 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
           audit.auditLicense,
         
         Fecha_Vencimiento:
-          audit.auditLicenseExpiration,
+          formatDate(audit.auditLicenseExpiration),
 
         Inducciones:
           audit.auditInductions,
 
         Inicio_Contrato:
-          audit.auditContract?.start,
+          formatDate(audit.auditContract?.start),
 
         Fin_Contrato:
-          audit.auditContract?.end,
+          formatDate(audit.auditContract?.end),
 
         Dias_Activos:
           audit.auditContract?.days,
@@ -52,13 +65,19 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
           audit.gps ? "SI" : "NO",
         
         ID_GPS:
-          audit.gpsId,
+          audit.gpsId || "-",
         
         Proveedor_GPS:
-          gpsData?.provider || "",
+          gpsData?.provider || "-",
 
         Link_GPS:
-          gpsData?.gpsLink || "",
+          gpsData?.gpsLink || "-",
+
+        FI_CONTRATO:
+          formatDate(gpsData?.installationDate || ""),
+        
+        FV_CONTRATO:
+          formatDate(gpsData?.endDate || ""),
 
         Wifi:
           audit.wifi ? "SI" : "NO",

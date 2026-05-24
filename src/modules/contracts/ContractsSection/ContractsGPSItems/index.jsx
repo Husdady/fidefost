@@ -11,7 +11,7 @@ export default function ContractsGPSItems({
   const [search, setSearch] = useState("");
   const filteredItems = items.filter(
   (item) =>
-    item.id
+    (item.id || "")
       .toLowerCase()
       .includes(search.toLowerCase())
 );
@@ -31,22 +31,36 @@ export default function ContractsGPSItems({
   if (diffDays < 0) {
     return {
       text: "SIST. GPS VENCIDO",
-      color: "#e53935",
+      color: "#df2f26",
     };
   }
 
-  if (diffDays < 30) {
+  if (diffDays <= 30) {
     return {
       text: "SIST. GPS POR VENCER",
-      color: "#ff9800",
+      color: "#d97706",
     };
   }
 
   return {
     text: "SIST. GPS ACTIVO",
-    color: "#1db954",
+    color: "#15803d",
   };
 };
+
+//format date
+const formatDate = (dateString) => {
+
+      if (!dateString) {
+        return "-";
+      }
+
+      const [year, month, day] =
+        dateString.split("-");
+
+      return `${day}/${month}/${year}`;
+    };
+
   return (
     
     <>
@@ -63,7 +77,7 @@ export default function ContractsGPSItems({
     
     <div className="contracts-gps__list">
 
-      {filteredItems.map((item, index) => {
+      {filteredItems.map((item) => {
 
         const status = getGpsStatus(
           item.endDate
@@ -71,14 +85,17 @@ export default function ContractsGPSItems({
 
         return (
         <div
-          key={index}
+          key={item._id}
           className="contracts-gps-item"
         >
           <div className="contracts-gps-item__header">
+           <div className="contracts-gps-item__column">
             <span className="contracts-gps-item__id">
-              ID: {item.id}
+              ID:{" "} {item.id}
             </span>
+           </div>
 
+           <div className="contracts-gps-item__column">
             <span className="contracts-gps-item__status">
               <span
                 className="contracts-gps-item__status"
@@ -89,6 +106,7 @@ export default function ContractsGPSItems({
                 ● {status.text}
               </span>
             </span>
+           </div>
           </div>
 
           <div className="contracts-gps-item__body">
@@ -99,7 +117,7 @@ export default function ContractsGPSItems({
               </span>
 
               <span className="contracts-gps-item__date">
-                {item.installationDate}
+                {formatDate(item.installationDate)}
               </span>
             </div>
 
@@ -109,22 +127,22 @@ export default function ContractsGPSItems({
               </span>
 
               <span className="contracts-gps-item__date">
-                {item.endDate}
+                {formatDate(item.endDate)}
               </span>
             </div>
 
-            <div className="contracts-gps-item__column">
-              <span className="contracts-gps-item__label">
-                <button
+            <div className="contracts-gps-item__columnBtn">
+              <span >
+                <button className="contracts-gps-item__btn"
                   onClick={() => onEdit(item)}
                 >
                   <EditIcon />
                 </button>
               </span>
-              <span className="contracts-gps-item__label">
-                <button
+              <span >
+                <button className="contracts-gps-item__btn"
                   onClick={() =>
-                    onDelete(item.id)
+                    onDelete(item._id)
                   }
                 >
                   <DeleteIcon/>

@@ -8,7 +8,7 @@ const useContracts = create(
 
       add: (newContract) =>
         set((state) => ({
-          contracts: [...state.contracts, newContract],
+          contracts: [newContract, ...state.contracts],
         })),
 
       update: (id, data) =>

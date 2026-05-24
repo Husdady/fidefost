@@ -14,12 +14,16 @@
 }
 
 .contracts-gps-item__id {
-  color: #8d8d8d;
+  display: flex;
+  color: #4f4f4f;
   font-size: 14px;
+  font-weight: 700;
+  line-break:anywhere;
+  width: 90px;
 }
 
 .contracts-gps-item__status {
-  color: #1ea84b;
+  color: #15803d;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -47,7 +51,39 @@
   font-size: 14px;
   font-weight: 700;
 }
+.contracts-gps-item__btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0 6px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: transform 0.2s ease,
+              opacity 0.2s ease;
+}
+.contracts-gps-item__btn:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+
+.contracts-gps-item__btn-actions:active {
+  transform: scale(0.95);
+}
+
+.contracts-gps-item__columnBtn {
+  
+  display: grid;
+  align-items: center;
+  justify-content: left;
+  gap: 12px;
+  margin: 0px;
+}
 .contracts-gps__list {
+  display: flex;
   max-height: 420px;
   overflow-y: auto;
   padding-right: 6px;

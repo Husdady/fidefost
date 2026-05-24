@@ -162,57 +162,21 @@
   .audit-list-license,
   .audit-list-operationalStatus{
     margin: 0;
-    font-size: 13px;
-    font-weight: 600;
-    color: #4f4f4f;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2b3137;
   }
   .audit-list-inductions {
     margin: 0;
-    font-size: 13px;
-    font-weight: 600;
-    color: #4f4f4f;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2b3137;
     max-width: 180px;
     word-break: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
 }
-  .audit-list-actions-edit {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: 0.2s;
-  cursor: pointer;
-  }
-  .audit-list-actions-edit:hover {
-  opacity: 0.7;
-  }
-
-  .audit-list-actions-visual {
-  cursor: pointer;
-  transition: 0.2s;
- }
-
- .audit-list-actions-visual:hover {
-  opacity: 0.7;
- }
- .audit-list-actions-export {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-
-  cursor: pointer;
-
-  color: #6E797E;
-
-  font-size: 14px;
-  font-weight: 500;
-}
-
- .audit-list-actions-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
+  
   .audit-list-empty {
     padding: 28px 0;
     text-align: center;
@@ -260,8 +224,37 @@
   cursor: pointer;
 }
 
-.audit-list-actions:hover {
-  opacity: 0.7;
+.btn-audit-list-actions {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0 6px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: transform 0.2s ease,
+              opacity 0.2s ease;
+}
+
+.btn-audit-list-actions:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+
+.btn-audit-list-actions:active {
+  transform: scale(0.95);
+}
+
+.audit-list-actions {
+  
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  gap: 3px;
+  margin: 0px;
 }
 
 .license-status {

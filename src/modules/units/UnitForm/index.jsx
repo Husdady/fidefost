@@ -2,8 +2,10 @@ import { createPortal } from "react-dom";
 import { useState, useEffect, useRef } from "react";
 
 import {useAddUnit} from "context/units/useUnits";
+import { useGetUnits } from "context/units/useUnits";
 import { useGetInsurance } from "context/contracts/useInsurance";
 import { useUpdateUnit } from "context/units/useUnits";
+import getInsuranceStatus from "utils/getInsuranceStatus";
 
 import saveDocument from "database/saveDocument";
 import deleteDocument from "database/deleteDocument";
@@ -17,6 +19,16 @@ export default function UnitForm({ show, onHide, initialData = null,
   const addUnit = useAddUnit();
   const updateUnit = useUpdateUnit();
   const insuranceContracts = useGetInsurance();
+  const units = useGetUnits();
+  const usedVehicularPolicies = units
+  .filter(
+    (unit) =>
+      unit._id !== initialData?._id
+  )
+  .map(
+    (unit) => unit.polizaVehicular
+  )
+  .filter(Boolean);
 
  const [deletedFiles, setDeletedFiles] = useState([]);
 
@@ -25,15 +37,18 @@ export default function UnitForm({ show, onHide, initialData = null,
  const emptyForm = {
   marca: "",
   placa: "",
-  partida: "",
+  polizaVehicular: "",
+  polizaCarga: "",
+  polizaEndoso: "",
+  placaTractor: "",
+  placaCarreta: "",
   revisionFecha: "",
   mtc: "",
   poliza: "",
   soat: "",
   documentos: {
     mtcCheck: false,
-    recTecnTractorCheck: false,
-    recTecnCarretaCheck: false,
+    revisionTecnicaCheck: false,
     soatCheck: false,
     polizaCheck: false,
     tarjetaVehicularCheck: false,
@@ -42,10 +57,26 @@ export default function UnitForm({ show, onHide, initialData = null,
   },
   archivos: []
 };
+const resetForm = () => {
+
+  setForm(emptyForm);
+
+  setDeletedFiles([]);
+
+  setOriginalFiles([]);
+
+  setIsSaving(false);
+};
 
 const [form, setForm] = useState(
   initialData || emptyForm
 );
+
+const [showMessageBox, setShowMessageBox] =
+  useState(false);
+
+const [messageBoxText, setMessageBoxText] =
+  useState("");
 
 const handleCheckbox = (name) => {
     setForm({
@@ -66,25 +97,28 @@ const handleFiles = (e) => {
   const uploadedFiles = Array.from(e.target.files);
 
   const filesWithId = uploadedFiles.map((file) => ({
-  blob: file,
+    blob: file,
 
-  tempId: crypto.randomUUID(),
+    tempId: crypto.randomUUID(),
 
-  savedInDb: false,
+    savedInDb: false,
 
-  name: file.name,
-  size: file.size,
-  type: file.type
-}));
+    name: file.name,
+    size: file.size,
+    type: file.type
+  }));
 
-setForm((prev) => ({
-  ...prev,
+  setForm((prev) => ({
+    ...prev,
 
-  archivos: [
-    ...prev.archivos,
-    ...filesWithId
-  ]
-}));
+    archivos: [
+      ...prev.archivos,
+      ...filesWithId
+    ]
+  }));
+
+  // PERMITIR SUBIR EL MISMO ARCHIVO OTRA VEZ
+  e.target.value = "";
 };
 
 const removeFile = (fileId) => {
@@ -114,6 +148,10 @@ const removeFile = (fileId) => {
 };
 
 const handleSubmit = async () => {
+  
+  if (!validateUniqueFields()) {
+    return;
+  }
 
   // BLOQUEAR DOBLE CLICK
   if (savingRef.current) return;
@@ -141,8 +179,7 @@ const handleSubmit = async () => {
 
     for (const file of form.archivos) {
 
-      // ARCHIVO YA GUARDADO
-      if (file.savedInDb) {
+     if (file.savedInDb) {
 
   storedFiles.push({
     id: file.id,
@@ -153,7 +190,7 @@ const handleSubmit = async () => {
 
     type: file.type,
 
-    blob: file.blob,
+    blob: file.blob || null,
 
     insuranceFileId:
       file.insuranceFileId,
@@ -188,6 +225,10 @@ const handleSubmit = async () => {
       placa: form.placa,
       marca: form.marca,
 
+      placaTractor: form.placaTractor,
+
+      placaCarreta: form.placaCarreta,
+
       mtc: form.mtc,
 
       tarjetaVehicularInfo:
@@ -197,9 +238,14 @@ const handleSubmit = async () => {
         form.revisionFecha,
 
       soat: form.soat,
-      poliza: form.poliza,
+      polizaVehicular:
+        form.polizaVehicular,
 
-      partida: form.partida,
+      polizaCarga:
+        form.polizaCarga,
+
+      polizaEndoso:
+        form.polizaEndoso,
 
       archivos: storedFiles,
 
@@ -216,10 +262,7 @@ const handleSubmit = async () => {
     }
 
     // LIMPIAR
-    setForm(emptyForm);
-
-    setDeletedFiles([]);
-    setOriginalFiles([]);
+    resetForm();
 
     onHide();
 
@@ -235,6 +278,101 @@ const handleSubmit = async () => {
   }
 };
 
+//validacion datos
+const validateUniqueFields = () => {
+
+  const duplicatedFields = [];
+
+  units.forEach((unit) => {
+
+    // IGNORAR EL MISMO REGISTRO EN EDICIÓN
+    if (
+      isEdit &&
+      unit._id === initialData?._id
+    ) {
+      return;
+    }
+
+    // PLACA
+    if (
+      unit.placa === form.placa &&
+      form.placa
+    ) {
+      duplicatedFields.push(
+        `PLACA: ${form.placa}`
+      );
+    }
+
+    // PLACA TRACTOR
+    if (
+      unit.placaTractor ===
+        form.placaTractor &&
+      form.placaTractor
+    ) {
+      duplicatedFields.push(
+        `PLACA TRACTOR: ${form.placaTractor}`
+      );
+    }
+
+    // PLACA CARRETA
+    if (
+      unit.placaCarreta ===
+        form.placaCarreta &&
+      form.placaCarreta
+    ) {
+      duplicatedFields.push(
+        `PLACA CARRETA: ${form.placaCarreta}`
+      );
+    }
+
+    // MTC
+    if (
+      unit.mtc === form.mtc &&
+      form.mtc
+    ) {
+      duplicatedFields.push(
+        `MTC: ${form.mtc}`
+      );
+    }
+
+    // IDENTIFICACION VEHICULAR
+    if (
+      unit.tarjetaVehicularInfo ===
+        form.documentos
+          .tarjetaVehicularInfo &&
+      form.documentos
+        .tarjetaVehicularInfo
+    ) {
+      duplicatedFields.push(
+        `IDENTIFICACIÓN VEHICULAR: ${
+          form.documentos
+            .tarjetaVehicularInfo
+        }`
+      );
+    }
+  });
+
+  // ELIMINAR DUPLICADOS REPETIDOS
+  const uniqueDuplicatedFields = [
+    ...new Set(duplicatedFields)
+  ];
+
+  if (
+    uniqueDuplicatedFields.length > 0
+  ) {
+
+    setMessageBoxText(
+      uniqueDuplicatedFields.join("\n")
+    );
+
+    setShowMessageBox(true);
+
+    return false;
+  }
+
+  return true;
+};
+
 const handleInsuranceSelect = async (
   type,
   value
@@ -243,66 +381,89 @@ const handleInsuranceSelect = async (
   const selectedInsurance =
     insuranceContracts.find((item) => {
 
-      if (type === "poliza") {
-        return (
-          item.tipo !== "SOAT" &&
-          item.poliza === value
-        );
-      }
-
-      if (type === "soat") {
-        return (
-          item.tipo === "SOAT" &&
-          item.poliza === value
-        );
-      }
-
-      return false;
-    });
-
-  if (!selectedInsurance) {
-    return;
+        if (
+    type === "polizaVehicular"
+  ) {
+    return (
+      item.tipo
+        ?.toLowerCase()
+        .includes("vehicular") &&
+      item.poliza === value
+    );
   }
 
-  // =========================
-  // GUARDAR ARCHIVOS EN INDEXEDDB
-  // =========================
+  if (
+    type === "polizaCarga"
+  ) {
+    return (
+      item.tipo
+        ?.toLowerCase()
+        .includes("carga") &&
+      item.poliza === value
+    );
+  }
 
-const savedFiles =
-(selectedInsurance.archivos || []).map(
-  (file) => ({
+  if (
+    type === "polizaEndoso"
+  ) {
+    return (
+      item.tipo
+        ?.toLowerCase()
+        .includes("endoso") &&
+      item.poliza === value
+    );
+  }
 
-    id: file.id,
+        if (type === "soat") {
+          return (
+            item.tipo === "SOAT" &&
+            item.poliza === value
+          );
+        }
 
-    tempId: crypto.randomUUID(),
+        return false;
+      });
 
-    savedInDb: true,
+    if (!selectedInsurance) {
+      return;
+    }
 
-    name: file.name,
+    // =========================
+    // GUARDAR ARCHIVOS EN INDEXEDDB
+    // =========================
 
-    size: file.size,
+  const savedFiles =
+  (selectedInsurance.archivos || []).map(
+    (file) => ({
 
-    type: file.type,
+      id: file.id,
 
-    blob: file.blob,
+      tempId: crypto.randomUUID(),
 
-    insuranceFileId: file.id,
+      savedInDb: true,
 
-    insuranceType:
-      type === "soat"
-        ? "SOAT"
-        : "POLIZA"
-  })
-);  
-  // =========================
-  // ACTUALIZAR FORM
-  // =========================
+      name: file.name,
 
-  setForm((prev) => {
+      size: file.size,
 
-    // ELIMINAR ARCHIVOS ANTERIORES
-    const filteredFiles =
-      prev.archivos.filter((file) => {
+      type: file.type,
+
+      blob: file.blob,
+
+      insuranceFileId: file.id,
+
+      insuranceType: type
+    })
+  );  
+    // =========================
+    // ACTUALIZAR FORM
+    // =========================
+
+    setForm((prev) => {
+
+      // ELIMINAR ARCHIVOS ANTERIORES
+      const filteredFiles =
+        prev.archivos.filter((file) => {
 
         if (
           type === "soat" &&
@@ -312,8 +473,7 @@ const savedFiles =
         }
 
         if (
-          type === "poliza" &&
-          file.insuranceType === "POLIZA"
+          file.insuranceType === type
         ) {
           return false;
         }
@@ -340,7 +500,7 @@ const savedFiles =
             : prev.documentos.soatCheck,
 
         polizaCheck:
-          type === "poliza"
+          type !== "soat"
             ? true
             : prev.documentos.polizaCheck
       }
@@ -352,27 +512,210 @@ useEffect(() => {
 
   if (initialData) {
 
+    // VALIDAR SI LAS POLIZAS AUN EXISTEN
+    const vehicularExists =
+      insuranceContracts.some(
+        (insurance) =>
+          insurance.poliza ===
+          initialData.polizaVehicular
+      );
+
+    const cargaExists =
+      insuranceContracts.some(
+        (insurance) =>
+          insurance.poliza ===
+          initialData.polizaCarga
+      );
+
+    const endosoExists =
+      insuranceContracts.some(
+        (insurance) =>
+          insurance.poliza ===
+          initialData.polizaEndoso
+      );
+
+    const soatExists =
+      insuranceContracts.some(
+        (insurance) =>
+          insurance.poliza ===
+          initialData.soat
+      );
+
+    // FILTRAR ARCHIVOS HUERFANOS
+    const validFiles =
+      (initialData.archivos || []).filter(
+        (file) => {
+
+          if (
+            file.insuranceType === "polizaVehicular" &&
+            !vehicularExists
+          ) {
+            return false;
+          }
+
+          if (
+            file.insuranceType === "polizaCarga" &&
+            !cargaExists
+          ) {
+            return false;
+          }
+
+          if (
+            file.insuranceType === "polizaEndoso" &&
+            !endosoExists
+          ) {
+            return false;
+          }
+
+          if (
+            file.insuranceType === "soat" &&
+            !soatExists
+          ) {
+            return false;
+          }
+
+          return true;
+        }
+      );
+
     setForm({
-  ...initialData,
+      ...initialData,
 
-  archivos:
-    (initialData.archivos || []).map(
-      (file) => ({
-        ...file,
-        tempId:
-          crypto.randomUUID(),
+      polizaVehicular:
+        vehicularExists
+          ? initialData.polizaVehicular
+          : "",
 
-        savedInDb: true
-      })
-    )
-});
+      polizaCarga:
+        cargaExists
+          ? initialData.polizaCarga
+          : "",
 
-    setOriginalFiles(
-      initialData.archivos || []
-    );
+      polizaEndoso:
+        endosoExists
+          ? initialData.polizaEndoso
+          : "",
+
+      soat:
+        soatExists
+          ? initialData.soat
+          : "",
+
+      archivos: validFiles.map(
+        (file) => ({
+          ...file,
+          tempId:
+            crypto.randomUUID(),
+
+          savedInDb: true
+        })
+      )
+    });
+
+    setOriginalFiles(validFiles);
+
+  } else {
+
+    setForm(emptyForm);
   }
 
-}, [initialData]);
+}, [initialData, insuranceContracts]);
+
+useEffect(() => {
+
+  if (!show) return;
+
+  setForm((prev) => {
+
+    const insuranceFields = [
+      {
+        key: "polizaVehicular",
+        value: prev.polizaVehicular
+      },
+      {
+        key: "polizaCarga",
+        value: prev.polizaCarga
+      },
+      {
+        key: "polizaEndoso",
+        value: prev.polizaEndoso
+      },
+      {
+        key: "soat",
+        value: prev.soat
+      }
+    ];
+
+    const manualFiles =
+      prev.archivos.filter(
+        (file) => !file.insuranceType
+      );
+
+    let syncedInsuranceFiles = [];
+
+    insuranceFields.forEach(
+      ({ key, value }) => {
+
+        if (!value) return;
+
+        const insurance =
+          insuranceContracts.find(
+            (item) =>
+              item.poliza === value
+          );
+
+        if (!insurance) return;
+
+        const files =
+          (insurance.archivos || []).map(
+            (file) => ({
+
+              id: file.id,
+
+              tempId:
+                crypto.randomUUID(),
+
+              savedInDb: true,
+
+              name: file.name,
+
+              size: file.size,
+
+              type: file.type,
+
+              blob: file.blob || null,
+
+              insuranceFileId:
+                file.id,
+
+              insuranceType: key
+            })
+          );
+
+        syncedInsuranceFiles.push(
+          ...files
+        );
+      }
+    );
+
+    return {
+
+      ...prev,
+
+      archivos: [
+        ...manualFiles,
+        ...syncedInsuranceFiles
+      ]
+    };
+  });
+
+}, [
+  insuranceContracts,
+  form.polizaVehicular,
+  form.polizaCarga,
+  form.polizaEndoso,
+  form.soat
+]);
 
 const isFormValid =
  // CAMPOS
@@ -381,38 +724,34 @@ const isFormValid =
   form.mtc &&
   form.revisionFecha &&
   form.soat &&
-  form.poliza &&
-  form.partida &&
+  form.polizaVehicular &&
+  form.polizaCarga &&
+  form.placaTractor &&
+  form.placaCarreta &&
 
   form.documentos.tarjetaVehicularInfo &&
 
   // CHECKS
-  form.documentos.recTecnCarretaCheck &&
-  form.documentos.recTecnTractorCheck &&
+  form.documentos.revisionTecnicaCheck &&
   form.documentos.soatCheck &&
   form.documentos.polizaCheck &&
   form.documentos.tarjetaVehicularCheck &&
   form.documentos.permisoMunicipalCheck &&
   form.documentos.mtcCheck &&
 // ARCHIVOS
-  form.archivos.length > 2;
+  form.archivos.length > 6;
 
 const handleClose = () => {
 
-  // RESTAURAR SI CANCELA
-  if (isEdit) {
-
-    setForm((prev) => ({
-      ...prev,
-      archivos: originalFiles
-    }));
-
-    setDeletedFiles([]);
-  }
+  resetForm();
 
   onHide();
 };
 
+const usedSoats = units
+  .map((unit) => unit.soat)
+  .filter(Boolean);
+  
   if (!show) return null;
 
   return createPortal(
@@ -450,47 +789,68 @@ const handleClose = () => {
             </label>
 
             <input
+              className="uppercase-input"
               type="text"
               value={form.marca}
               onChange={(e) =>
                 setForm({
                   ...form,
-                  marca: e.target.value
+                  marca: e.target.value.toUpperCase()
                 })
               }
               placeholder="Ej. VOLVO"
             />
 
             <label className="label">
-              PLACA (TRACTOR/CARRETA)
+              PLACA UNIDAD
+              (TRACTOR/CARRETA)
             </label>
 
             <input
+              className="uppercase-input"
               type="text"
               value={form.placa}
               onChange={(e) =>
                 setForm({
                   ...form,
-                  placa: e.target.value
+                  placa: e.target.value.toUpperCase()
                 })
               }
-              placeholder="ABC-123"
+               placeholder="ABC-123"
             />
 
             <label className="label">
-              PARTIDA REGISTRAL DEL VEHICULO
+              PLACA TRACTOR
             </label>
 
             <input
+              className="uppercase-input"
               type="text"
-              value={form.partida}
+              value={form.placaTractor}
               onChange={(e) =>
                 setForm({
                   ...form,
-                  partida: e.target.value
+                  placaTractor: e.target.value.toUpperCase()
                 })
               }
-              placeholder="12399999"               
+              placeholder="TRACTOR"               
+            />
+
+            <label className="label">
+              PLACA CARRETA
+            </label>
+
+            <input
+              className="uppercase-input"
+              type="text"
+              value={form.placaCarreta}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  placaCarreta: e.target.value.toUpperCase()
+                })
+              }
+              placeholder="CARRETA"
             />
 
             <label className="label">
@@ -530,32 +890,153 @@ const handleClose = () => {
             />
 
             <label className="label">
-              POLIZA
+              POLIZAS:
             </label>
-            <select name="poliza" 
-                    value={form.poliza || ""} 
-                    onChange={(e)=>
-                      handleInsuranceSelect(
-                        "poliza",
-                        e.target.value
-                      )
-                    }
-            >
-              <option value="">Seleccionar poliza...</option>
-              
-              {insuranceContracts
-                  .filter((insurance) =>
-                      insurance.poliza?.startsWith("POLIZA-")
+              <div className="select-polizas">
+                <label className="label">
+                  POLIZA VEHICULAR
+                </label>
+
+                <select
+                  name="polizaVehicular"
+                  value={form.polizaVehicular || ""}
+                  onChange={(e) =>
+                    handleInsuranceSelect(
+                      "polizaVehicular",
+                      e.target.value
+                    )
+                  }
+                >
+                  <option value="">
+                    Seleccionar poliza...
+                  </option>
+
+                  {insuranceContracts
+                    .filter(
+                      (insurance) =>
+                        insurance.tipo
+                          ?.toLowerCase()
+                          .includes("vehicular")
+                    )
+                    .filter(
+                      (insurance) =>
+                        !usedVehicularPolicies.includes(
+                          insurance.poliza
+                        )
+                    )
+                    .map((insurance) => (
+                      <option
+                        key={insurance._id}
+                        value={insurance.poliza}
+                        
+                      >
+                        {
+                          `${
+                            getInsuranceStatus(
+                              insurance.fechaFin
+                            ).status === "ACTIVO"
+                              ? "🟢"
+                              : getInsuranceStatus(
+                                  insurance.fechaFin
+                                ).status === "PROX. EXPIRAR"
+                              ? "🟡"
+                              : "🔴"
+                          } ${insurance.poliza}`
+                        }
+                      </option>
+                    ))}
+                </select>
+
+                <label className="label">
+                  POLIZAS CARGA Y CONTENEDOR
+                </label>
+
+                <select
+                name="polizaCarga"
+                value={form.polizaCarga || ""}
+                onChange={(e) =>
+                  handleInsuranceSelect(
+                    "polizaCarga",
+                    e.target.value
+                  )
+                }
+              >
+                <option value="">
+                  Seleccionar poliza...
+                </option>
+
+                {insuranceContracts
+                  .filter(
+                    (insurance) =>
+                      insurance.tipo?.toLowerCase().includes("carga")
                   )
                   .map((insurance) => (
                     <option
                       key={insurance._id}
                       value={insurance.poliza}
                     >
-                      {insurance.poliza}
+                      {
+                          `${
+                            getInsuranceStatus(
+                              insurance.fechaFin
+                            ).status === "ACTIVO"
+                              ? "🟢"
+                              : getInsuranceStatus(
+                                  insurance.fechaFin
+                                ).status === "PROX. EXPIRAR"
+                              ? "🟡"
+                              : "🔴"
+                          } ${insurance.poliza}`
+                        }
                     </option>
-              ))}
-            </select>
+                  ))}
+              </select>
+
+              <label className="label">
+                 POLIZA ENDOSO
+              </label>
+              
+              <select
+                name="polizaEndoso"
+                value={form.polizaEndoso || ""}
+                onChange={(e) =>
+                  handleInsuranceSelect(
+                    "polizaEndoso",
+                    e.target.value
+                  )
+                }
+              >
+                <option value="">
+                  Seleccionar poliza...
+                </option>
+
+                {insuranceContracts
+                  .filter(
+                    (insurance) =>
+                      insurance.tipo?.toLowerCase().includes("endoso")
+                  )
+                  .map((insurance) => (
+                    <option
+                      key={insurance._id}
+                      value={insurance.poliza}
+                    >
+                      {
+                          `${
+                            getInsuranceStatus(
+                              insurance.fechaFin
+                            ).status === "ACTIVO"
+                              ? "🟢"
+                              : getInsuranceStatus(
+                                  insurance.fechaFin
+                                ).status === "PROX. EXPIRAR"
+                              ? "🟡"
+                              : "🔴"
+                          } ${insurance.poliza}`
+                        }
+                    </option>
+                  ))}
+              </select>
+              </div>
 
             <label className="label">
               SOAT
@@ -573,15 +1054,49 @@ const handleClose = () => {
               <option value="">Seleccionar SOAT...</option>
                 
                 {insuranceContracts
-                     .filter((insurance) =>
-                      insurance.poliza?.startsWith("SOAT-")
-                    )
+                  .filter((insurance) => {
+
+                    // SOLO SOAT
+                    if (
+                      !insurance.poliza?.startsWith(
+                        "SOAT-"
+                      )
+                    ) {
+                      return false;
+                    }
+
+                    // EN EDICION SI PERMITIR EL MISMO
+                    if (
+                      isEdit &&
+                      form.soat === insurance.poliza
+                    ) {
+                      return true;
+                    }
+
+                    // BLOQUEAR SI YA ESTÁ USADO
+                    return !usedSoats.includes(
+                      insurance.poliza
+                    );
+                  })
                      .map((insurance) => (
                       <option
                         key={insurance._id}
                         value={insurance.poliza}
+                        
                       >
-                        {insurance.poliza}
+                        {
+                          `${
+                            getInsuranceStatus(
+                              insurance.fechaFin
+                            ).status === "ACTIVO"
+                              ? "🟢"
+                              : getInsuranceStatus(
+                                  insurance.fechaFin
+                                ).status === "PROX. EXPIRAR"
+                              ? "🟡"
+                              : "🔴"
+                          } ${insurance.poliza}`
+                        }
                       </option>
               ))}
             </select>
@@ -590,104 +1105,101 @@ const handleClose = () => {
         </div>
 
         {/* CHECKLIST */}
-        <div className="list-checklist"> 
-          CHECKLIST DE DOCUMENTACION
-          <div className="checklist">
-            <label>
-              <input
-                type="checkbox"
-                checked={form.documentos.mtcCheck}
-                onChange={() =>
-                  handleCheckbox("mtcCheck")
-                }
-              />
-              MTC TRACTOR
-            </label>
+        
+            <div className="list-checklist"> 
+              CHECKLIST DE DOCUMENTACION
+              <div className="checklist">
+               <div className="grid">
+                <div className="col">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.mtcCheck}
+                    onChange={() =>
+                      handleCheckbox("mtcCheck")
+                    }
+                  />
+                  MTC TRACTOR
+                </label>
 
-            <label>
-              <input
-                type="checkbox"
-                checked={form.documentos.recTecnTractorCheck}
-                onChange={() =>
-                  handleCheckbox("recTecnTractorCheck")
-                }
-              />
-              REC TECN. TRACTOR BAL-929
-            </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.revisionTecnicaCheck}
+                    onChange={() =>
+                      handleCheckbox("revisionTecnicaCheck")
+                    }
+                  />
+                  REVISIÓN TÉCNICA
+                </label>
 
-            <label>
-              <input
-                type="checkbox"
-                checked={form.documentos.recTecnCarretaCheck}
-                onChange={() =>
-                  handleCheckbox("recTecnCarretaCheck")
-                }
-              />
-              REC TECN. CARRETERA BAL-C3E-970
-            </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.soatCheck}
+                    onChange={() =>
+                      handleCheckbox("soatCheck")
+                    }
+                  />
+                  SOAT
+                </label>
 
-            <label>
-              <input
-                type="checkbox"
-                checked={form.documentos.soatCheck}
-                onChange={() =>
-                  handleCheckbox("soatCheck")
-                }
-              />
-              SOAT
-            </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.polizaCheck}
+                    onChange={() =>
+                      handleCheckbox("polizaCheck")
+                    }
+                  />
+                  POLIZAS
+                </label>
+              </div>
 
-            <label>
-              <input
-                type="checkbox"
-                checked={form.documentos.polizaCheck}
-                onChange={() =>
-                  handleCheckbox("polizaCheck")
-                }
-              />
-              POLIZA
-            </label>
-            
-            <div className="check-item">
-             <label className="check-row">
-              <input
-                type="checkbox"
-                checked={form.documentos.tarjetaVehicularCheck}
-                onChange={() =>
-                  handleCheckbox("tarjetaVehicularCheck")
-                }
-              />
-              TARJETA DE IDENTIFICACION VEHICULAR
-            </label>
-                <input
-                  className="property-card-in"
-                  type="text"
-                  name="tarjetaVehicularInfo"
-                  value={form.documentos.tarjetaVehicularInfo || ""}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      documentos: {
-                        ...form.documentos,
-                        tarjetaVehicularInfo: e.target.value
+              <div className="col">
+                <div className="check-item">
+                <label className="check-row">
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.tarjetaVehicularCheck}
+                    onChange={() =>
+                      handleCheckbox("tarjetaVehicularCheck")
+                    }
+                  />
+                  TARJETA DE IDENTIFICACIÓN VEHICULAR
+                </label>
+                  <div className="label">
+                    <input
+                      type="text"
+                      name="tarjetaVehicularInfo"
+                      value={form.documentos.tarjetaVehicularInfo || ""}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          documentos: {
+                            ...form.documentos,
+                            tarjetaVehicularInfo: e.target.value
+                          }
+                        })
                       }
-                    })
-                  }
-                  placeholder="TARJETA DE IDENTIFICACION VEHICULAR"
-                />
-            </div>
+                      placeholder="TARJETA DE I. VEHICULAR"
+                    />
+                    </div>
+                </div>
 
-            <label>
-              <input
-                type="checkbox"
-                checked={form.documentos.permisoMunicipalCheck}
-                onChange={() =>
-                  handleCheckbox("permisoMunicipalCheck")
-                }
-              />
-              PERMISO DE LA MUNICIPALIDAD
-            </label>
-          </div>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.permisoMunicipalCheck}
+                    onChange={() =>
+                      handleCheckbox("permisoMunicipalCheck")
+                    }
+                  />
+                  PERMISO DE LA MUNICIPALIDAD
+                </label>
+                </div>
+              </div>
+            </div>
         </div>
 
           <div className="upload">
@@ -753,6 +1265,42 @@ const handleClose = () => {
                   </div>
                 )}
           </div>
+          {showMessageBox && (
+          <div
+            className="message-box-overlay"
+            onClick={() =>
+              setShowMessageBox(false)
+            }
+          >
+            <div
+              className="message-box"
+              onClick={(e) =>
+                e.stopPropagation()
+              }
+            >
+              <h3>
+                Datos Duplicados
+              </h3>
+
+              <p
+                style={{
+                  whiteSpace: "pre-line"
+                }}
+              >
+                {messageBoxText}
+              </p>
+
+              <button
+                className="message-box-btn"
+                onClick={() =>
+                  setShowMessageBox(false)
+                }
+              >
+                Entendido
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* ACTIONS */}
         <div className="actions">

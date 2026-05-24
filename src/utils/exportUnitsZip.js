@@ -5,8 +5,9 @@ import { saveAs } from "file-saver";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
 import getDocumentById from "database/getDocumentById";
 
-export default async function exportUnitZip(unit) {
-
+export default async function exportUnitZip(unit, insuranceContracts) {
+  insuranceContracts =
+    insuranceContracts || [];
   const zip = new JSZip();
 
   // =========================
@@ -15,54 +16,59 @@ export default async function exportUnitZip(unit) {
 
   const data = [
     {
-      PLACA: unit.placa,
-      MARCA: unit.marca,
+          // UNIDAD
+    MARCA: unit.marca,
+    PLACA_UNIDAD: unit.placa,
+    PLACA_TRACTOR: unit.placaTractor,
+    PLACA_CARRETA: unit.placaCarreta,
 
-      MTC: unit.mtc,
+    // MTC / PROPIEDAD
+    MTC: unit.mtc,
 
-      TARJETA_VEHICULAR:
-        unit.tarjetaVehicularInfo,
+    TARJETA_VEHICULAR:
+      unit.tarjetaVehicularInfo,
 
-      F_VENCIMIENTO_REVISION_TECNICA:
-        unit.revisionFecha,
+    // REVISION
+    F_VENCIMIENTO_REVISION_TECNICA:
+      unit.revisionFecha,
 
-      SOAT: unit.soat,
+    // SEGUROS
+    SOAT: unit.soat,
 
-      POLIZA: unit.poliza,
+    POLIZA_VEHICULAR: unit.polizaVehicular,
 
-      PARTIDA: unit.partida,
+    POLIZAS_CARGA_CONTENEDOR: unit.polizaCarga,
 
-      DOCUMENTACION_MTC:
+    POLIZA_ENDOSO: unit.polizaEndoso,
+
+    // CHECKS
+    DOCUMENTACION_MTC:
       unit.documentos?.mtcCheck
         ? "SI"
         : "NO",
 
-        DOCUMENTACION_SOAT:
-        unit.documentos?.soatCheck
-            ? "SI"
-            : "NO",
+    DOCUMENTACION_SOAT:
+      unit.documentos?.soatCheck
+        ? "SI"
+        : "NO",
 
-        DOCUMENTACION_POLIZA:
-        unit.documentos?.polizaCheck
-            ? "SI"
-            : "NO",
+    DOCUMENTACION_POLIZAS:
+      unit.documentos?.polizaCheck
+        ? "SI"
+        : "NO",
 
-        DOCUMENTACION_TARJETA_VEHICULAR:
-        unit.documentos?.tarjetaVehicularCheck
-            ? "SI"
-            : "NO",
-        DOCUMENTACION_REC_TECN_TRACTOR_BAL_929:
-            unit.documentos?.recTecnTractorCheck 
-            ? "SI"
-            : "NO",
-        DOCUMENTACION_REC_TECN_TRACTOR_BAL_C3E_970:
-            unit.documentos?.recTecnCarretaCheck 
-            ? "SI"
-            : "NO",
-        DOCUMENTACION_PERMISO_MUNICIPAL:
-            unit.documentos?.permisoMunicipalCheck
-            ? "SI"
-            : "NO",
+    DOCUMENTACION_TARJETA_VEHICULAR:
+      unit.documentos?.tarjetaVehicularCheck
+        ? "SI"
+        : "NO",
+    DOCUMENTACION_REVISION_TEC:
+        unit.documentos?.revisionTecnicaCheck 
+        ? "SI"
+        : "NO",
+    DOCUMENTACION_PERMISO_MUNICIPAL:
+        unit.documentos?.permisoMunicipalCheck
+        ? "SI"
+        : "NO",
     }
   ];
 
@@ -111,15 +117,14 @@ const unitDocuments =
     unit._id
   );
 
+let fileIndex = 1;
+
 for (const document of unitDocuments) {
 
   const fileData =
     document.blob || document.file || document;
 
-  // VALIDAR
-  if (
-    !(fileData instanceof Blob)
-  ) {
+  if (!(fileData instanceof Blob)) {
     console.warn(
       "Archivo inválido:",
       document
@@ -128,59 +133,117 @@ for (const document of unitDocuments) {
     continue;
   }
 
+  const fileName =
+    `${fileIndex}-${document.name || "archivo"}`;
+
   documentsFolder.file(
-    document.name || "archivo",
+    fileName,
     fileData
   );
+
+  fileIndex++;
 }
 
 // =========================
-// ARCHIVOS SOAT / POLIZA
+// ARCHIVOS ACTUALES SEGUROS
 // =========================
 
-for (const file of unit.archivos || []) {
+const insuranceFiles = [];
 
-  if (!file.insuranceFileId) {
-    continue;
-  }
+// POLIZA VEHICULAR
+const vehicularInsurance =
+  insuranceContracts.find(
+    (item) =>
+      item.poliza === unit.polizaVehicular
+  );
+
+if (vehicularInsurance?.archivos) {
+  insuranceFiles.push(
+    ...vehicularInsurance.archivos
+  );
+}
+
+// POLIZA CARGA
+const cargaInsurance =
+  insuranceContracts.find(
+    (item) =>
+      item.poliza === unit.polizaCarga
+  );
+
+if (cargaInsurance?.archivos) {
+  insuranceFiles.push(
+    ...cargaInsurance.archivos
+  );
+}
+
+// POLIZA ENDOSO
+const endosoInsurance =
+  insuranceContracts.find(
+    (item) =>
+      item.poliza === unit.polizaEndoso
+  );
+
+if (endosoInsurance?.archivos) {
+  insuranceFiles.push(
+    ...endosoInsurance.archivos
+  );
+}
+
+// SOAT
+const soatInsurance =
+  insuranceContracts.find(
+    (item) =>
+      item.poliza === unit.soat
+  );
+
+if (soatInsurance?.archivos) {
+  insuranceFiles.push(
+    ...soatInsurance.archivos
+  );
+}
+
+const addedFiles = new Set();
+
+for (const file of insuranceFiles) {
 
   const insuranceDocument =
     await getDocumentById(
-      file.insuranceFileId
-    );
+  file.id || file.insuranceFileId
+);
+
+  if (!insuranceDocument) {
+    continue;
+  }
 
   const fileData =
-    insuranceDocument?.blob ||
-    insuranceDocument?.file;
+    insuranceDocument.blob ||
+    insuranceDocument.file;
 
-  // VALIDAR
-  if (
-    !(fileData instanceof Blob)
-  ) {
-    console.warn(
-      "Seguro inválido:",
-      insuranceDocument
-    );
-
+  if (!(fileData instanceof Blob)) {
     continue;
   }
 
   // EVITAR DUPLICADOS
-  if (
-    documentsFolder.files[
-      insuranceDocument.name
-    ]
-  ) {
+  const uniqueKey =
+    insuranceDocument.id ||
+    insuranceDocument.name;
+
+  if (addedFiles.has(uniqueKey)) {
     continue;
   }
 
+  addedFiles.add(uniqueKey);
+
+  const insuranceFileName =
+    `${fileIndex}-${insuranceDocument.name || "seguro"}`;
+
   documentsFolder.file(
-    insuranceDocument.name ||
-      "seguro",
+    insuranceFileName,
     fileData
   );
-}
 
+  fileIndex++;
+}
   // =========================
   // GENERAR ZIP
   // =========================

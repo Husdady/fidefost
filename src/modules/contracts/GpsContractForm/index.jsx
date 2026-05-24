@@ -159,10 +159,10 @@ const isFormValid =
               const alreadyExists =
               gpsContracts.some((gps) => {
 
-                // permitir editar el mismo
+                // IGNORAR EL MISMO REGISTRO
                 if (
                   editingGps &&
-                  gps.id === editingGps.id
+                  gps._id === editingGps._id
                 ) {
                   return false;
                 }
@@ -195,6 +195,7 @@ const isFormValid =
 
                 onSave({
                   ...form,
+                  _id: crypto.randomUUID(),
                   status: "ONLINE",
                 });
 

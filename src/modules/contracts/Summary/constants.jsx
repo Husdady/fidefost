@@ -8,36 +8,37 @@ export default function useSummaryItems(){
 
    const gpsContracts = useGpsContractsStore(
    (state) => state.gpsContracts);
-   const expiredGps = gpsContracts.filter(
+   const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const expiredGps = gpsContracts.filter(
       (gps) => {
-        const today = new Date();
 
         const endDate = new Date(
-          gps.endDate
+          gps.endDate + "T00:00:00"
         );
 
-        return endDate <= today;
+        return endDate < today;
       }
     );
     const gpsExpiringSoon = gpsContracts.filter(
-      (gps) => {
-        const today = new Date();
+  (gps) => {
 
-        const endDate = new Date(
-          gps.endDate
-        );
-
-        const diffTime =
-          endDate - today;
-
-        const diffDays = Math.ceil(
-          diffTime / (1000 * 60 * 60 * 24)
-        );
-
-        return diffDays > 0 &&
-              diffDays <= 30;
-      }
+    const endDate = new Date(
+      gps.endDate + "T00:00:00"
     );
+
+    const diffTime =
+      endDate - today;
+
+    const diffDays = Math.ceil(
+      diffTime / (1000 * 60 * 60 * 24)
+    );
+
+    return diffDays >= 0 &&
+           diffDays <= 30;
+  }
+);
    const auditContracts = useGetContracts();
    const totaldrivers = auditContracts.length;
    const totalWifi = auditContracts.filter(
@@ -53,21 +54,22 @@ export default function useSummaryItems(){
     const today = new Date();
 
     const expirationDate =
-      new Date(audit.auditLicenseExpiration);
+      new Date(
+        audit.auditLicenseExpiration + "T00:00:00"
+      );
 
     const diffTime =
       expirationDate - today;
 
-    const diffDays =
-      diffTime / (1000 * 60 * 60 * 24);
+    const diffDays = Math.ceil(
+      diffTime / (1000 * 60 * 60 * 24)
+    );
 
-    return diffDays >= 0 && diffDays <= 59;
+    return diffDays >= 0 && diffDays <= 60;
 
   }).length;
 
   //contracts activos
-  const today = new Date();
-today.setHours(0, 0, 0, 0);
 
 const activeContracts = auditContracts.filter((audit) => {
 
@@ -87,9 +89,6 @@ const activeContracts = auditContracts.filter((audit) => {
   const endDate = new Date(
     audit.auditContract.end + "T00:00:00"
   );
-
-  startDate.setHours(0, 0, 0, 0);
-  endDate.setHours(0, 0, 0, 0);
 
   // ACTIVO:
   // YA EMPEZÓ Y AÚN NO TERMINA
@@ -124,7 +123,7 @@ const totaldriversactivos = activeContracts.length;
       {
         id: "alertas_gps",
         title: "ALERTAS GPS",
-        value: <div> {expiredGps.length} vencidos </div>,
+        value: <div> {expiredGps.length} <span className="title-gps"> vencidos </span> </div>,
         description: <div style={{color: "#b66a00",}}> <ExpiredLicensesIcon /> {gpsExpiringSoon.length} por vencer </div>,
         accent: "danger",
       },

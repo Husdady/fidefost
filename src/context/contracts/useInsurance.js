@@ -9,8 +9,8 @@ const useInsurance = create(
       addInsurance: (data) =>
         set((state) => ({
           insurance: [
-            ...state.insurance,
-            data
+            data,
+            ...state.insurance
           ],
         })),
 

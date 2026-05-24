@@ -3,11 +3,13 @@ import PropTypes from "prop-types";
 
 // Utils
 import classnames from "utils/classnames";
+import getInsuranceStatus from "utils/getInsuranceStatus";
 import {useGetInsurance} from "context/contracts/useInsurance"
 import DateRange from "../DateRange";
 import {useState} from "react";
 import { useDeleteInsurance } from "context/contracts/useInsurance";
 import deleteDocument from "database/deleteDocument";
+import downloadInsuranceZip from "utils/downloadInsuranceZip";
 
 function InsuranceContracts({ title, datefilter, className = "",  accent = "default" 
 }) {
@@ -102,7 +104,16 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
 
           <tbody>
             {filteredContracts.length > 0 ? (
-              filteredContracts.map((insurance) => (
+              filteredContracts.map((insurance) => {
+
+                const {
+                  status,
+                  statusClass
+                } = getInsuranceStatus(
+                  insurance.fechaFin
+                );
+
+                return (
                 <tr key={insurance._id}>
                   <td>
                     <div className="contracts-list-supplier">
@@ -133,60 +144,11 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
                   </td>
 
                   <td>
-                    {(() => {
-
-                      const millisecondsPerDay =
-                        1000 * 60 * 60 * 24;
-
-                      // FECHA ACTUAL
-                      const today = new Date();
-
-                      const todayString =
-                        `${today.getFullYear()}-${
-                          String(today.getMonth() + 1).padStart(2, "0")
-                        }-${
-                          String(today.getDate()).padStart(2, "0")
-                        }`;
-
-                      // TIMESTAMPS
-                      const currentDate =
-                        new Date(todayString).getTime();
-
-                      const endDate =
-                        new Date(insurance.fechaFin).getTime();
-
-                      // DIFERENCIA
-                      const diffDays =
-                        Math.trunc(
-                          (endDate - currentDate) /
-                          millisecondsPerDay
-                        );
-
-                      let status = "ACTIVO";
-                      let statusClass = "active";
-
-                      // EXPIRADO
-                      if (diffDays < 0) {
-
-                        status = "EXPIRADO";
-                        statusClass = "expired";
-
-                      // PROXIMO A VENCER
-                      } else if (diffDays <= 59) {
-
-                        status = "PROX. EXPIRAR";
-                        statusClass = "warning";
-                      }
-                      return (
-                        <span
-                          className={`contracts-list-status ${statusClass}`}
-                        >
-                          {status}
-                        </span>
-                      );
-
-                    })()}
-
+                    <span
+                      className={`contracts-list-status ${statusClass}`}
+                    >
+                      {status}
+                    </span>
 
                   </td>
                   <td>
@@ -194,31 +156,11 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
 
                       <button
                         className="contracts-download-btn"
-                        onClick={() => {
-
-                          insurance.archivos.forEach((doc) => {
-
-                            const url =
-                              URL.createObjectURL(doc.blob);
-
-                            const a =
-                              document.createElement("a");
-
-                            a.href = url;
-
-                            a.download = doc.name;
-
-                            document.body.appendChild(a);
-
-                            a.click();
-
-                            a.remove();
-
-                            URL.revokeObjectURL(url);
-
-                          });
-
-                        }}
+                        onClick={() => 
+                            downloadInsuranceZip(
+                              insurance
+                        )
+                       }
                       >
                         Descargar
                       </button>
@@ -248,7 +190,8 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
                     </div>
                   </td>
                 </tr>
-              ))
+              );
+            })
             ) : (
               <tr>
                 <td colSpan="5">

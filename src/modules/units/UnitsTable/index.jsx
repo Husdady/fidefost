@@ -2,7 +2,9 @@ import { useGetUnits } from "context/units/useUnits";
 import { useState } from "react";
 import UnitForm from "../UnitForm";
 import { useDeleteUnit } from "context/units/useUnits";
+import { useGetInsurance } from "context/contracts/useInsurance";
 import deleteDocument from "database/deleteDocument";
+import getRevisionStatus from "utils/getRevisionStatus";
 
 //export 
 import exportUnitsExcel from "utils/exportUnitsExcel";
@@ -12,7 +14,8 @@ import exportUnitsZip from "utils/exportUnitsZip";
 import EditIcon from "./icons/edit-icon";
 import DeleteIcon from "./icons/delete-icon";
 import ExportIcon from "./icons/export-icon";
-
+import UnitIcon from "./icons/unit-icon";
+import InsuranceContracts from "components/features/InsuranceContracts";
 export default function UnitsTable() {
 
 const deleteUnit = useDeleteUnit();
@@ -28,6 +31,9 @@ const [search, setSearch] =
 
 const units = useGetUnits();
 
+const insuranceContracts =
+  useGetInsurance();
+  
 const query =
     search.toLowerCase();
 
@@ -35,6 +41,14 @@ const filteredUnits = units.filter((unit) => {
 
   return (
     unit.placa
+      ?.toLowerCase()
+      .includes(query) ||
+    
+    unit.placaTractor
+      ?.toLowerCase()
+      .includes(query) ||
+    
+    unit.placaCarreta
       ?.toLowerCase()
       .includes(query) ||
 
@@ -46,15 +60,39 @@ const filteredUnits = units.filter((unit) => {
       ?.toLowerCase()
       .includes(query) ||
 
-    unit.poliza
+    unit.polizaVehicular
+      ?.toLowerCase()
+      .includes(query) ||
+    
+    unit.polizaCarga
+      ?.toLowerCase()
+      .includes(query) ||
+    
+    unit.polizaEndoso
+      ?.toLowerCase()
+      .includes(query) ||
+    
+    unit.mtc
       ?.toLowerCase()
       .includes(query) ||
 
-    unit.mtc
+    unit.tarjetaVehicularInfo
       ?.toLowerCase()
       .includes(query)
   );
 });
+
+const formatDate = (dateString) => {
+
+      if (!dateString) {
+        return "-";
+      }
+
+      const [year, month, day] =
+        dateString.split("-");
+
+      return `${day}/${month}/${year}`;
+    };
 
   return (
     <div className="units-table-container">
@@ -66,27 +104,26 @@ const filteredUnits = units.filter((unit) => {
           <h3>Listado de Unidades</h3>
         </div>
 
-        <div className="units-table-filters">
-
-          <input
-            type="text"
-            placeholder="Buscar placa, SOAT, póliza..."
-            value={search}
-            onChange={(e) =>
-              setSearch(e.target.value)
-            }
-          />
-
+        <div>
           <button 
                onClick={() => exportUnitsExcel(units)}
                className="export-btn"
           >
             Exportar Data
           </button>
-
         </div>
-
+        
       </div>
+        <div className="units-table-search">
+          <input
+            type="text"
+            placeholder="Buscar Placa de Unidad/Tractor/Carreta,  Marca,  SOAT,  Pólizas,  MTC,  T. Identificación Vehicular"
+            value={search}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+          />
+        </div>
 
       {/* TABLE */}
       <div className="units-table-wrapper">
@@ -113,7 +150,7 @@ const filteredUnits = units.filter((unit) => {
                 <div className="unit-info">
 
                   <div className="unit-icon">
-                    🚚
+                    <UnitIcon/>
                   </div>
                   
 
@@ -135,22 +172,41 @@ const filteredUnits = units.filter((unit) => {
               </td>
 
               <td>
-                <span className="badge-success">
-                  {unit.revisionFecha}
+                <span
+                  className={
+                    getRevisionStatus(
+                      unit.revisionFecha
+                    )
+                  }
+                >
+                  {formatDate(unit.revisionFecha)}
                 </span>
               </td>
 
-              <td>
-                <strong className="soat-ok">
+              <td className="col-seguros">
+                <strong className="soat">
                   {unit.soat}
                 </strong>
 
-                <p>{unit.poliza}</p>
+                <p>
+                  P.V:{" "}
+                  {unit.polizaVehicular?.split("-")[1] || "-"}
+                </p>
+
+                <p>
+                  P.C.C:{" "}
+                  {unit.polizaCarga?.split("-")[1] || "-"}
+                </p>
+
+                <p>
+                  P.E:{" "}
+                  {unit.polizaEndoso?.split("-")[1] || "-"}
+                </p>
               </td>
 
               <td>
-                <div>
-                    <button
+                <div className="unit-actions">
+                    <button className="btn-actions"
                       onClick={() => {
                         setSelectedUnit(unit);
                         setEditModal(true);
@@ -159,7 +215,7 @@ const filteredUnits = units.filter((unit) => {
                       <EditIcon />
                     </button>
                   
-                    <button
+                    <button className="btn-actions"
                       onClick={async () => {
 
                         // ELIMINAR ARCHIVOS INDEXEDDB
@@ -182,9 +238,12 @@ const filteredUnits = units.filter((unit) => {
                   
 
                   
-                    <button
+                    <button className="btn-actions"
                     onClick={() =>
-                      exportUnitsZip(unit)
+                      exportUnitsZip(
+                        unit,
+                        insuranceContracts
+                      )
                     }
                     >
                       <ExportIcon />
