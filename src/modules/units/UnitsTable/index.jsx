@@ -2,6 +2,7 @@ import { useGetUnits } from "context/units/useUnits";
 import { useState } from "react";
 import UnitForm from "../UnitForm";
 import { useDeleteUnit } from "context/units/useUnits";
+import { useGetInsurance } from "context/contracts/useInsurance";
 import deleteDocument from "database/deleteDocument";
 import getRevisionStatus from "utils/getRevisionStatus";
 
@@ -14,6 +15,7 @@ import EditIcon from "./icons/edit-icon";
 import DeleteIcon from "./icons/delete-icon";
 import ExportIcon from "./icons/export-icon";
 import UnitIcon from "./icons/unit-icon";
+import InsuranceContracts from "components/features/InsuranceContracts";
 export default function UnitsTable() {
 
 const deleteUnit = useDeleteUnit();
@@ -29,6 +31,9 @@ const [search, setSearch] =
 
 const units = useGetUnits();
 
+const insuranceContracts =
+  useGetInsurance();
+  
 const query =
     search.toLowerCase();
 
@@ -235,7 +240,10 @@ const formatDate = (dateString) => {
                   
                     <button className="btn-actions"
                     onClick={() =>
-                      exportUnitsZip(unit)
+                      exportUnitsZip(
+                        unit,
+                        insuranceContracts
+                      )
                     }
                     >
                       <ExportIcon />

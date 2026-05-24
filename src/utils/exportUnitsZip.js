@@ -5,8 +5,9 @@ import { saveAs } from "file-saver";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
 import getDocumentById from "database/getDocumentById";
 
-export default async function exportUnitZip(unit) {
-
+export default async function exportUnitZip(unit, insuranceContracts) {
+  insuranceContracts =
+    insuranceContracts || [];
   const zip = new JSZip();
 
   // =========================
@@ -144,56 +145,105 @@ for (const document of unitDocuments) {
 }
 
 // =========================
-// ARCHIVOS SOAT / POLIZA
+// ARCHIVOS ACTUALES SEGUROS
 // =========================
 
-for (const file of unit.archivos || []) {
+const insuranceFiles = [];
 
-  if (!file.insuranceFileId) {
-    continue;
-  }
+// POLIZA VEHICULAR
+const vehicularInsurance =
+  insuranceContracts.find(
+    (item) =>
+      item.poliza === unit.polizaVehicular
+  );
+
+if (vehicularInsurance?.archivos) {
+  insuranceFiles.push(
+    ...vehicularInsurance.archivos
+  );
+}
+
+// POLIZA CARGA
+const cargaInsurance =
+  insuranceContracts.find(
+    (item) =>
+      item.poliza === unit.polizaCarga
+  );
+
+if (cargaInsurance?.archivos) {
+  insuranceFiles.push(
+    ...cargaInsurance.archivos
+  );
+}
+
+// POLIZA ENDOSO
+const endosoInsurance =
+  insuranceContracts.find(
+    (item) =>
+      item.poliza === unit.polizaEndoso
+  );
+
+if (endosoInsurance?.archivos) {
+  insuranceFiles.push(
+    ...endosoInsurance.archivos
+  );
+}
+
+// SOAT
+const soatInsurance =
+  insuranceContracts.find(
+    (item) =>
+      item.poliza === unit.soat
+  );
+
+if (soatInsurance?.archivos) {
+  insuranceFiles.push(
+    ...soatInsurance.archivos
+  );
+}
+
+const addedFiles = new Set();
+
+for (const file of insuranceFiles) {
 
   const insuranceDocument =
     await getDocumentById(
-      file.insuranceFileId
-    );
+  file.id || file.insuranceFileId
+);
+
+  if (!insuranceDocument) {
+    continue;
+  }
 
   const fileData =
-    insuranceDocument?.blob ||
-    insuranceDocument?.file;
+    insuranceDocument.blob ||
+    insuranceDocument.file;
 
-  // VALIDAR
-  if (
-    !(fileData instanceof Blob)
-  ) {
-    console.warn(
-      "Seguro inválido:",
-      insuranceDocument
-    );
-
+  if (!(fileData instanceof Blob)) {
     continue;
   }
 
   // EVITAR DUPLICADOS
-  if (
-    documentsFolder.files[
-      insuranceDocument.name
-    ]
-  ) {
+  const uniqueKey =
+    insuranceDocument.id ||
+    insuranceDocument.name;
+
+  if (addedFiles.has(uniqueKey)) {
     continue;
   }
 
+  addedFiles.add(uniqueKey);
+
   const insuranceFileName =
-  `${fileIndex}-${insuranceDocument.name || "seguro"}`;
+    `${fileIndex}-${insuranceDocument.name || "seguro"}`;
 
-documentsFolder.file(
-  insuranceFileName,
-  fileData
-);
+  documentsFolder.file(
+    insuranceFileName,
+    fileData
+  );
 
-fileIndex++;
+  fileIndex++;
 }
-
   // =========================
   // GENERAR ZIP
   // =========================

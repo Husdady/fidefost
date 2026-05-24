@@ -179,8 +179,7 @@ const handleSubmit = async () => {
 
     for (const file of form.archivos) {
 
-      // ARCHIVO YA GUARDADO
-      if (file.savedInDb) {
+     if (file.savedInDb) {
 
   storedFiles.push({
     id: file.id,
@@ -191,7 +190,7 @@ const handleSubmit = async () => {
 
     type: file.type,
 
-    blob: file.blob,
+    blob: file.blob || null,
 
     insuranceFileId:
       file.insuranceFileId,
@@ -513,31 +512,210 @@ useEffect(() => {
 
   if (initialData) {
 
+    // VALIDAR SI LAS POLIZAS AUN EXISTEN
+    const vehicularExists =
+      insuranceContracts.some(
+        (insurance) =>
+          insurance.poliza ===
+          initialData.polizaVehicular
+      );
+
+    const cargaExists =
+      insuranceContracts.some(
+        (insurance) =>
+          insurance.poliza ===
+          initialData.polizaCarga
+      );
+
+    const endosoExists =
+      insuranceContracts.some(
+        (insurance) =>
+          insurance.poliza ===
+          initialData.polizaEndoso
+      );
+
+    const soatExists =
+      insuranceContracts.some(
+        (insurance) =>
+          insurance.poliza ===
+          initialData.soat
+      );
+
+    // FILTRAR ARCHIVOS HUERFANOS
+    const validFiles =
+      (initialData.archivos || []).filter(
+        (file) => {
+
+          if (
+            file.insuranceType === "polizaVehicular" &&
+            !vehicularExists
+          ) {
+            return false;
+          }
+
+          if (
+            file.insuranceType === "polizaCarga" &&
+            !cargaExists
+          ) {
+            return false;
+          }
+
+          if (
+            file.insuranceType === "polizaEndoso" &&
+            !endosoExists
+          ) {
+            return false;
+          }
+
+          if (
+            file.insuranceType === "soat" &&
+            !soatExists
+          ) {
+            return false;
+          }
+
+          return true;
+        }
+      );
+
     setForm({
-  ...initialData,
+      ...initialData,
 
-  archivos:
-    (initialData.archivos || []).map(
-      (file) => ({
-        ...file,
-        tempId:
-          crypto.randomUUID(),
+      polizaVehicular:
+        vehicularExists
+          ? initialData.polizaVehicular
+          : "",
 
-        savedInDb: true
-      })
-    )
-});
+      polizaCarga:
+        cargaExists
+          ? initialData.polizaCarga
+          : "",
 
-    setOriginalFiles(
-      initialData.archivos || []
-    );
-  
+      polizaEndoso:
+        endosoExists
+          ? initialData.polizaEndoso
+          : "",
+
+      soat:
+        soatExists
+          ? initialData.soat
+          : "",
+
+      archivos: validFiles.map(
+        (file) => ({
+          ...file,
+          tempId:
+            crypto.randomUUID(),
+
+          savedInDb: true
+        })
+      )
+    });
+
+    setOriginalFiles(validFiles);
+
   } else {
 
     setForm(emptyForm);
   }
 
-}, [initialData]);
+}, [initialData, insuranceContracts]);
+
+useEffect(() => {
+
+  if (!show) return;
+
+  setForm((prev) => {
+
+    const insuranceFields = [
+      {
+        key: "polizaVehicular",
+        value: prev.polizaVehicular
+      },
+      {
+        key: "polizaCarga",
+        value: prev.polizaCarga
+      },
+      {
+        key: "polizaEndoso",
+        value: prev.polizaEndoso
+      },
+      {
+        key: "soat",
+        value: prev.soat
+      }
+    ];
+
+    const manualFiles =
+      prev.archivos.filter(
+        (file) => !file.insuranceType
+      );
+
+    let syncedInsuranceFiles = [];
+
+    insuranceFields.forEach(
+      ({ key, value }) => {
+
+        if (!value) return;
+
+        const insurance =
+          insuranceContracts.find(
+            (item) =>
+              item.poliza === value
+          );
+
+        if (!insurance) return;
+
+        const files =
+          (insurance.archivos || []).map(
+            (file) => ({
+
+              id: file.id,
+
+              tempId:
+                crypto.randomUUID(),
+
+              savedInDb: true,
+
+              name: file.name,
+
+              size: file.size,
+
+              type: file.type,
+
+              blob: file.blob || null,
+
+              insuranceFileId:
+                file.id,
+
+              insuranceType: key
+            })
+          );
+
+        syncedInsuranceFiles.push(
+          ...files
+        );
+      }
+    );
+
+    return {
+
+      ...prev,
+
+      archivos: [
+        ...manualFiles,
+        ...syncedInsuranceFiles
+      ]
+    };
+  });
+
+}, [
+  insuranceContracts,
+  form.polizaVehicular,
+  form.polizaCarga,
+  form.polizaEndoso,
+  form.soat
+]);
 
 const isFormValid =
  // CAMPOS
