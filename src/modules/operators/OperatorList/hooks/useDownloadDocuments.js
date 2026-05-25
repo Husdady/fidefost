@@ -8,9 +8,9 @@ import { useState, useCallback } from "react";
 import getDocumentsByRelation from "database/getDocumentsByRelation";
 
 // Utils
+import { showWarnToast } from "utils/toast";
 import createSafeFileName from "utils/files/createSafeFileName";
 import resolveDocumentFile from "utils/files/resolveDocumentFile";
-import { showWarnToast } from "utils/toast";
 
 /**
  * Hook for download operator documents

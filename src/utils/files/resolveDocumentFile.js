@@ -9,7 +9,7 @@ export default async function resolveDocumentFile(document, index) {
     document?.name || document?.fileName || `document-${index + 1}`;
 
   // Get file
-  const file = document?.file ?? document?.file?.file;
+  const file = document?.file || document?.file?.file || document?.blob?.file;
 
   // File object
   if (file instanceof File || file instanceof Blob) {
