@@ -12,6 +12,35 @@ export default function UpcomingRenewals() {
   const [search, setSearch] = useState("");
   const insuranceContracts = useGetInsurance();
   const units = useGetUnits();
+  const unitsMap = new Map();
+
+    units.forEach((unit) => {
+
+      if (unit.soat) {
+        unitsMap.set(unit.soat, unit);
+      }
+
+      if (unit.polizaVehicular) {
+        unitsMap.set(
+          unit.polizaVehicular,
+          unit
+        );
+      }
+
+      if (unit.polizaCarga) {
+        unitsMap.set(
+          unit.polizaCarga,
+          unit
+        );
+      }
+
+      if (unit.polizaEndoso) {
+        unitsMap.set(
+          unit.polizaEndoso,
+          unit
+        );
+      }
+    });
 
   const [editModal, setEditModal] =
   useState(false);
@@ -73,11 +102,9 @@ export default function UpcomingRenewals() {
   const filteredRenovaciones =
   renovaciones
     .filter((item) =>
-      (
-        item.poliza +
-        " " +
-        item.tipo
-      )
+      item.poliza
+        .replace("SOAT-", "")
+        .replace("POLIZA-", "")
         .toLowerCase()
         .includes(search.toLowerCase())
     )
@@ -207,38 +234,10 @@ export default function UpcomingRenewals() {
         {filteredRenovaciones.map((insurance) => {
 
           // BUSCAR UNIDAD RELACIONADA
-          const linkedUnit = units.find((unit) => {
-
-            if (insurance.tipo === "SOAT") {
-              return unit.soat === insurance.poliza;
-            }
-
-            if (insurance.tipo === "Poliza Vehicular") {
-              return (
-                unit.polizaVehicular ===
-                insurance.poliza
-              );
-            }
-
-            if (
-              insurance.tipo ===
-              "Polizas de Carga y Contenedor"
-            ) {
-              return (
-                unit.polizaCarga ===
-                insurance.poliza
-              );
-            }
-
-            if (insurance.tipo === "Endoso") {
-              return (
-                unit.polizaEndoso ===
-                insurance.poliza
-              );
-            }
-
-            return false;
-          });
+          const linkedUnit =
+          unitsMap.get(
+            insurance.poliza
+          );
  
         const {
                 status,
