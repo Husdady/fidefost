@@ -160,7 +160,7 @@ const formatDate = (dateString) => {
                 </div>
               </td>
 
-              <td>
+              <td className="col-tarjetas">
                 <strong>
                   MTC: {unit.mtc}
                 </strong>
@@ -178,7 +178,7 @@ const formatDate = (dateString) => {
                     )
                   }
                 >
-                  {formatDate(unit.revisionFechaPT)}
+                  PT:{" "}{formatDate(unit.revisionFechaPT)}
                 </span>
                 <span
                   className={
@@ -187,7 +187,7 @@ const formatDate = (dateString) => {
                     )
                   }
                 >
-                  {formatDate(unit.revisionFechaPC)}
+                  PC:{" "}{formatDate(unit.revisionFechaPC)}
                 </span>
                </div>
               </td>
