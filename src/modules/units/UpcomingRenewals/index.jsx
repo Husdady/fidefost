@@ -209,13 +209,35 @@ export default function UpcomingRenewals() {
           // BUSCAR UNIDAD RELACIONADA
           const linkedUnit = units.find((unit) => {
 
-            // SI ES SOAT
             if (insurance.tipo === "SOAT") {
               return unit.soat === insurance.poliza;
             }
 
-            // SI ES POLIZA
-            return unit.poliza === insurance.poliza;
+            if (insurance.tipo === "Poliza Vehicular") {
+              return (
+                unit.polizaVehicular ===
+                insurance.poliza
+              );
+            }
+
+            if (
+              insurance.tipo ===
+              "Polizas de Carga y Contenedor"
+            ) {
+              return (
+                unit.polizaCarga ===
+                insurance.poliza
+              );
+            }
+
+            if (insurance.tipo === "Endoso") {
+              return (
+                unit.polizaEndoso ===
+                insurance.poliza
+              );
+            }
+
+            return false;
           });
  
         const {
@@ -249,11 +271,22 @@ export default function UpcomingRenewals() {
                   </p>
 
                   {/* PLACA + FECHA */}
-                  <p>
-                    Unidad {linkedUnit?.placa || "Sin unidad"}
-                    {" • "}
-                    Vence el {formatDate(insurance.fechaFin)}
-                  </p>
+                 <p>
+                  {insurance.tipo === "SOAT" ? (
+                    <>
+                      PLACA TRACTOR: {linkedUnit?.placaTractor || "Sin unidad"}
+                    </>
+                  ) : (
+                    <>
+                      TRACTOR: {linkedUnit?.placaTractor || "Sin unidad"}
+                      {" / "}
+                      CARRETA: {linkedUnit?.placaCarreta || "Sin unidad"}
+                    </>
+                  )}
+
+                  {" • "}
+                  Vence el {formatDate(insurance.fechaFin)}
+                </p>
 
                   <span className="renewal-status">
                     {status}
