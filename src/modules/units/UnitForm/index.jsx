@@ -41,7 +41,8 @@ export default function UnitForm({ show, onHide, initialData = null,
   polizaEndoso: "",
   placaTractor: "",
   placaCarreta: "",
-  revisionFecha: "",
+  revisionFechaPT: "",
+  revisionFechaPC: "",
   mtc: "",
   poliza: "",
   soat: "",
@@ -232,8 +233,11 @@ const handleSubmit = async () => {
       tarjetaVehicularInfo:
         form.documentos.tarjetaVehicularInfo,
 
-      revisionFecha:
-        form.revisionFecha,
+      revisionFechaPT:
+        form.revisionFechaPT,
+
+      revisionFechaPC:
+        form.revisionFechaPC,
 
       soat: form.soat,
       polizaVehicular:
@@ -709,7 +713,8 @@ const isFormValid =
  // CAMPOS
   form.marca &&
   form.mtc &&
-  form.revisionFecha &&
+  form.revisionFechaPT &&
+  form.revisionFechaPC &&
   form.soat &&
   form.polizaVehicular &&
   form.polizaCarga &&
@@ -788,55 +793,74 @@ const usedSoats = units
               placeholder="Ej. VOLVO"
             />
 
-            <label className="label">
-              PLACA TRACTOR
-            </label>
+            <label className="label">TRACTOR</label>
 
-            <input
-              className="uppercase-input"
-              type="text"
-              value={form.placaTractor}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  placaTractor: e.target.value.toUpperCase()
-                })
-              }
-              placeholder="TRACTOR"               
-            />
+            <div className="date-placa-revision">
 
-            <label className="label">
-              PLACA CARRETA
-            </label>
+                <label className="label">
+                  PLACA
+                </label>
 
-            <input
-              className="uppercase-input"
-              type="text"
-              value={form.placaCarreta}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  placaCarreta: e.target.value.toUpperCase()
-                })
-              }
-              placeholder="CARRETA"
-            />
+                <input
+                  className="uppercase-input"
+                  type="text"
+                  value={form.placaTractor}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      placaTractor: e.target.value.toUpperCase()
+                    })
+                  }
+                  placeholder="PLACA TRACTOR"               
+                />
+                <label className="label">
+                  REVISION TECNICA (FECHA VENCIMIENTO)
+                </label>
+                <input
+                  type="date"
+                  value={form.revisionFechaPT}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      revisionFechaPT: e.target.value
+                    })
+                  }
+                />
 
-            <label className="label">
-              REVISION TECNICA (FECHA VENCIMIENTO)
-            </label>
+            </div>
 
-            <input
-              type="date"
-              value={form.revisionFecha}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  revisionFecha: e.target.value
-                })
-              }
-            />
+            <label className="label">CARRETA</label>
+            <div className="date-placa-revision">
 
+                <label className="label">
+                  PLACA
+                </label>
+                <input
+                  className="uppercase-input"
+                  type="text"
+                  value={form.placaCarreta}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      placaCarreta: e.target.value.toUpperCase()
+                    })
+                  }
+                  placeholder="PLACA CARRETA"
+                />
+                <label className="label">
+                  REVISION TECNICA (FECHA VENCIMIENTO)
+                </label>
+                <input
+                  type="date"
+                  value={form.revisionFechaPC}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      revisionFechaPC: e.target.value
+                    })
+                  }
+                />
+            </div>
           </div>
 
           {/* RIGHT */}
@@ -847,6 +871,7 @@ const usedSoats = units
             </label>
 
             <input
+              className="uppercase-input"
               type="text"
               value={form.mtc}
               onChange={(e) =>
@@ -1139,6 +1164,7 @@ const usedSoats = units
                 </label>
                   <div className="label">
                     <input
+                      className="uppercase-input"
                       type="text"
                       name="tarjetaVehicularInfo"
                       value={form.documentos.tarjetaVehicularInfo || ""}

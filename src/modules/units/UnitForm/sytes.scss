@@ -38,11 +38,16 @@
   border: 1px solid #dcdfe4;
   border-radius: 10px;
 
-  font-size: 14px;
+  font-size: 10px;
 
   background: white;
   cursor: text;
 }
+
+.date-placa-revision{
+  padding-left: 14px;
+}
+
 .uppercase-input {
   text-transform: uppercase;
 }
@@ -60,11 +65,11 @@ select{
   color:#0f172a;
   padding:0 16px;
   box-sizing:border-box;
-  font-size:14px;
+  font-size:13px;
 }
 
-input::placeholder{
-  color:#94a3b8;
+.uppercase-input::placeholder{
+  color: #94a3b8;
   font-size: 12px;
 }
 

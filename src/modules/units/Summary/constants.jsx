@@ -82,7 +82,7 @@ export default function useSummaryUnits(){
 
     const status =
       getRevisionStatus(
-        unit.revisionFecha
+        unit.revisionFechaPT
       );
 
     return status === "badge-warning";

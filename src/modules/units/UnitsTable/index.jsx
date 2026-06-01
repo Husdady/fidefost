@@ -40,9 +40,6 @@ const query =
 const filteredUnits = units.filter((unit) => {
 
   return (
-    unit.placa
-      ?.toLowerCase()
-      .includes(query) ||
     
     unit.placaTractor
       ?.toLowerCase()
@@ -117,7 +114,7 @@ const formatDate = (dateString) => {
         <div className="units-table-search">
           <input
             type="text"
-            placeholder="Buscar Placa de Unidad/Tractor/Carreta,  Marca,  SOAT,  Pólizas,  MTC,  T. Identificación Vehicular"
+            placeholder="Buscar Placa de Tractor o Carreta,  Marca,  SOAT,  Pólizas,  MTC,  T. Identificación Vehicular"
             value={search}
             onChange={(e) =>
               setSearch(e.target.value)
@@ -155,7 +152,7 @@ const formatDate = (dateString) => {
                   
 
                   <div>
-                    <strong>{unit.placa}</strong>
+                    <strong>{unit.placaTractor}</strong>
                     <p>{unit.marca}</p>
                   </div>
 
@@ -175,11 +172,11 @@ const formatDate = (dateString) => {
                 <span
                   className={
                     getRevisionStatus(
-                      unit.revisionFecha
+                      unit.revisionFechaPT
                     )
                   }
                 >
-                  {formatDate(unit.revisionFecha)}
+                  {formatDate(unit.revisionFechaPT)}
                 </span>
               </td>
 
