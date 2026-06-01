@@ -36,7 +36,6 @@ export default function UnitForm({ show, onHide, initialData = null,
 
  const emptyForm = {
   marca: "",
-  placa: "",
   polizaVehicular: "",
   polizaCarga: "",
   polizaEndoso: "",
@@ -222,7 +221,6 @@ const handleSubmit = async () => {
 
       _id: currentUnitId,
 
-      placa: form.placa,
       marca: form.marca,
 
       placaTractor: form.placaTractor,
@@ -291,16 +289,6 @@ const validateUniqueFields = () => {
       unit._id === initialData?._id
     ) {
       return;
-    }
-
-    // PLACA
-    if (
-      unit.placa === form.placa &&
-      form.placa
-    ) {
-      duplicatedFields.push(
-        `PLACA: ${form.placa}`
-      );
     }
 
     // PLACA TRACTOR
@@ -719,7 +707,6 @@ useEffect(() => {
 
 const isFormValid =
  // CAMPOS
-  form.placa &&
   form.marca &&
   form.mtc &&
   form.revisionFecha &&
