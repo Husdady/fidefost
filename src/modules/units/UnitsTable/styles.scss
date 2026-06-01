@@ -107,6 +107,13 @@ input::placeholder{
   flex-direction: column;
 }
 
+.unit-revision{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap:5px;
+}
+
 /* BADGES */
 
 .badge-success {

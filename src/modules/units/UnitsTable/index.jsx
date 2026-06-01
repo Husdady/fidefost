@@ -170,6 +170,7 @@ const formatDate = (dateString) => {
               </td>
 
               <td>
+               <div className="unit-revision">
                 <span
                   className={
                     getRevisionStatus(
@@ -179,6 +180,16 @@ const formatDate = (dateString) => {
                 >
                   {formatDate(unit.revisionFechaPT)}
                 </span>
+                <span
+                  className={
+                    getRevisionStatus(
+                      unit.revisionFechaPC
+                    )
+                  }
+                >
+                  {formatDate(unit.revisionFechaPC)}
+                </span>
+               </div>
               </td>
 
               <td className="col-seguros">
