@@ -151,8 +151,9 @@ const formatDate = (dateString) => {
                   </div>
                   
 
-                  <div>
-                    <strong>{unit.placaTractor}</strong>
+                  <div className="unit-plate">
+                    <strong>PT: {unit.placaTractor}</strong>
+                    <strong>PC: {unit.placaCarreta}</strong>
                     <p>{unit.marca}</p>
                   </div>
 
