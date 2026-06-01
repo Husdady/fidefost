@@ -802,24 +802,6 @@ const usedSoats = units
             />
 
             <label className="label">
-              PLACA UNIDAD
-              (TRACTOR/CARRETA)
-            </label>
-
-            <input
-              className="uppercase-input"
-              type="text"
-              value={form.placa}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  placa: e.target.value.toUpperCase()
-                })
-              }
-               placeholder="ABC-123"
-            />
-
-            <label className="label">
               PLACA TRACTOR
             </label>
 
