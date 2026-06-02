@@ -374,7 +374,7 @@ const handleInsuranceSelect = async (
     insuranceContracts.find((item) => {
 
         if (
-    type === "polizaVehicular"
+    type === "vehicular"
   ) {
     return (
       item.tipo

@@ -14,33 +14,70 @@ export default function UpcomingRenewals() {
   const units = useGetUnits();
   const unitsMap = new Map();
 
-    units.forEach((unit) => {
+  units.forEach((unit) => {
 
-      if (unit.soat) {
-        unitsMap.set(unit.soat, unit);
-      }
+    if (unit.soat) {
+      unitsMap.set(unit.soat, unit);
+    }
 
-      if (unit.polizaVehicular) {
-        unitsMap.set(
-          unit.polizaVehicular,
-          unit
-        );
-      }
+    if (unit.polizaVehicular) {
+      unitsMap.set(
+        unit.polizaVehicular,
+        unit
+      );
+    }
 
-      if (unit.polizaCarga) {
-        unitsMap.set(
-          unit.polizaCarga,
-          unit
-        );
-      }
+  });
 
-      if (unit.polizaEndoso) {
-        unitsMap.set(
-          unit.polizaEndoso,
-          unit
-        );
-      }
-    });
+  const usageMap = new Map();
+
+  units.forEach((unit) => {
+
+    if (unit.polizaCarga) {
+
+      const current =
+        usageMap.get(unit.polizaCarga) || {
+          tractors: 0,
+          trailers: 0,
+        };
+
+      usageMap.set(
+        unit.polizaCarga,
+        {
+          tractors:
+            current.tractors +
+            (unit.placaTractor ? 1 : 0),
+
+          trailers:
+            current.trailers +
+            (unit.placaCarreta ? 1 : 0),
+        }
+      );
+    }
+
+    if (unit.polizaEndoso) {
+
+      const current =
+        usageMap.get(unit.polizaEndoso) || {
+          tractors: 0,
+          trailers: 0,
+        };
+
+      usageMap.set(
+        unit.polizaEndoso,
+        {
+          tractors:
+            current.tractors +
+            (unit.placaTractor ? 1 : 0),
+
+          trailers:
+            current.trailers +
+            (unit.placaCarreta ? 1 : 0),
+        }
+      );
+    }
+
+  });
 
   const [editModal, setEditModal] =
   useState(false);
@@ -103,6 +140,8 @@ export default function UpcomingRenewals() {
   search
     .toLowerCase()
     .trim();
+  
+  
 
 const filteredRenovaciones =
   renovaciones
@@ -240,14 +279,18 @@ const filteredRenovaciones =
       <div className="renewal-cards">
 
         {filteredRenovaciones.map((insurance) => {
-
+          const usage =
+          usageMap.get(insurance.poliza) || {
+            tractors: 0,
+            trailers: 0,
+          };
           // BUSCAR UNIDAD RELACIONADA
           const linkedUnit =
           unitsMap.get(
             insurance.poliza
           );
  
-        const {
+          const {
                 status,
                 statusClass
               } = getInsuranceStatus(
@@ -280,15 +323,37 @@ const filteredRenovaciones =
                   {/* PLACA + FECHA */}
                  <p>
                   {insurance.tipo === "SOAT" ? (
+
                     <>
-                      PLACA TRACTOR: {linkedUnit?.placaTractor || "Sin unidad"}
+                      PLACA TRACTOR:
+                      {linkedUnit?.placaTractor || "Sin unidad"}
                     </>
-                  ) : (
+
+                  ) : insurance.tipo === "Poliza Vehicular" ? (
+
                     <>
-                      TRACTOR: {linkedUnit?.placaTractor || "Sin unidad"}
+                      TRACTOR:
+                      {linkedUnit?.placaTractor || "Sin unidad"}
                       {" / "}
-                      CARRETA: {linkedUnit?.placaCarreta || "Sin unidad"}
+                      CARRETA:
+                      {linkedUnit?.placaCarreta || "Sin unidad"}
                     </>
+
+                  ) : (
+
+                    <>
+                      UTILIZADO EN:{" "}
+                      {usage.tractors}{" "}
+                      {usage.tractors === 1
+                        ? "tractor"
+                        : "tractores"}
+                      {" / "}
+                      {usage.trailers}{" "}
+                      {usage.trailers === 1
+                        ? "carreta"
+                        : "carretas"}
+                    </>
+
                   )}
 
                   {" • "}
