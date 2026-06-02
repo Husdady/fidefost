@@ -152,7 +152,7 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
 };
 
   useEffect(() => {
-    console.log("FORM COMPLETO:", form);
+    
     if (!contractData) return;
 
     setForm((prev) => ({
@@ -396,7 +396,7 @@ const handleSubmit = async () => {
     auditOperationalStatus:
       "EN RUTA"
   };
-  console.log("NEW AUDIT:", newAudit);
+  
 
   onSave(newAudit, !!contractData);
 };
