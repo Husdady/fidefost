@@ -100,7 +100,7 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
   const availableUnits = units.filter((unit) => {
 
   const unitValue =
-    `${unit.placaTractor} - ${unit.marca}`;
+    `${unit.placaTractor} - ${unit.placaCarreta} - ${unit.marca}`;
 
   // SI ESTÁ EDITANDO
   // DEJAR SU UNIDAD ACTUAL
@@ -430,7 +430,7 @@ const isFormValid =
               {availableUnits.map((unit) => (
                 <option
                   key={unit._id}
-                  value={`${unit.placaTractor} - ${unit.marca}`}
+                  value={`${unit.placaTractor} - ${unit.placaCarreta} - ${unit.marca}`}
                 >
                   {unit.placaTractor} - {unit.marca}
                 </option>

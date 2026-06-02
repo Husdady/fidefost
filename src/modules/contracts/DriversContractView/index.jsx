@@ -50,7 +50,7 @@ const diffDays = expirationDate
   ? expirationDate.toLocaleDateString("es-PE")
   : "";
 
-  const [placa, marca] = (contractData.auditUnidad || "").split("-");
+  const [placaTractor, placaCarreta, marca] = (contractData.auditUnidad || "").split("-");
   
   if (!contractData) return null;
   const gpsContracts =
@@ -141,7 +141,8 @@ const diffDays = expirationDate
               </div>
 
               <div className="contract-unit__info">
-                <h3>{placa}</h3>
+                <h3>{placaTractor}</h3>
+                <h3>{placaCarreta}</h3>
                 <p>{marca}</p>
               </div>
             </div>
