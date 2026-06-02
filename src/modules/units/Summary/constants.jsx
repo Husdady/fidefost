@@ -78,16 +78,29 @@ export default function useSummaryUnits(){
 
 //REVISIONES TECNICAS
   const revisionWarningCount =
-  units.filter((unit) => {
+  units.reduce((total, unit) => {
 
-    const status =
+    const ptStatus =
       getRevisionStatus(
         unit.revisionFechaPT
       );
 
-    return status === "badge-warning";
+    const pcStatus =
+      getRevisionStatus(
+        unit.revisionFechaPC
+      );
 
-  }).length;
+    if (ptStatus === "badge-warning") {
+      total++;
+    }
+
+    if (pcStatus === "badge-warning") {
+      total++;
+    }
+
+    return total;
+
+  }, 0);
 
   return [
   {
