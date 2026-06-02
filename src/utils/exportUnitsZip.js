@@ -16,21 +16,23 @@ export default async function exportUnitZip(unit, insuranceContracts) {
 
   const data = [
     {
-          // UNIDAD
+    // UNIDAD /PT
     MARCA: unit.marca,
-    PLACA_UNIDAD: unit.placa,
     PLACA_TRACTOR: unit.placaTractor,
+    // REVISION TEC
+    F_VENCIMIENTO_REVISION_TEC_TRACTOR:
+      unit.revisionFechaPT,
+    //PLACA CARRETA  
     PLACA_CARRETA: unit.placaCarreta,
+    //REVISION TEC
+    F_VENCIMIENTO_REVISION_TEC_CARRETA:
+      unit.revisionFechaPC,
 
     // MTC / PROPIEDAD
     MTC: unit.mtc,
 
     TARJETA_VEHICULAR:
       unit.tarjetaVehicularInfo,
-
-    // REVISION
-    F_VENCIMIENTO_REVISION_TECNICA:
-      unit.revisionFecha,
 
     // SEGUROS
     SOAT: unit.soat,
@@ -96,7 +98,7 @@ export default async function exportUnitZip(unit, insuranceContracts) {
 
   // AGREGAR EXCEL AL ZIP
   zip.file(
-    `UNIDAD-${unit.placa}.xlsx`,
+    `UNIDAD-${unit.placaTractor}.xlsx`,
     excelBuffer
   );
 
@@ -255,6 +257,6 @@ for (const file of insuranceFiles) {
 
   saveAs(
     content,
-    `UNIDAD-${unit.placa}.zip`
+    `UNIDAD-${unit.placaTractor}.zip`
   );
 }
