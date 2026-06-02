@@ -13,6 +13,7 @@ import { useGetUnits } from "context/units/useUnits";
 export default function DriverContractForm({ onHide, onSave, contractData }) {
 
     const units = useGetUnits();
+    
     const getGpsStatus = (endDate) => {
     const today = new Date();
 
@@ -50,7 +51,11 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
     licencia: "",
     inducciones: "",
     fechaVencimiento: "",
-    unidad: "",
+    unidad: {
+      placaTractor: "",
+      placaCarreta: "",
+      marca: "",
+    },
     fechaInicio: "",
     fechaFin: "",
     documentos: {
@@ -94,24 +99,26 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
 
   //SELECT UNIDADES UNICAS
   const usedUnits = contracts
-  .filter((contract) => contract.auditUnidad)
-  .map((contract) => contract.auditUnidad);
+  .map((contract) => contract.auditUnidad)
+  .filter(Boolean)
+  .map((u) =>
+    `${u.placaTractor}-${u.placaCarreta}-${u.marca}`
+  );
 
   const availableUnits = units.filter((unit) => {
 
   const unitValue =
-    `${unit.placaTractor} - ${unit.placaCarreta} - ${unit.marca}`;
+    `${unit.placaTractor}-${unit.placaCarreta}-${unit.marca}`;
 
-  // SI ESTÁ EDITANDO
-  // DEJAR SU UNIDAD ACTUAL
   if (
     contractData &&
-    unitValue === contractData.auditUnidad
+    contractData.auditUnidad &&
+    unitValue ===
+      `${contractData.auditUnidad.placaTractor}-${contractData.auditUnidad.placaCarreta}-${contractData.auditUnidad.marca}`
   ) {
     return true;
   }
 
-  // OCULTAR UNIDADES YA USADAS
   return !usedUnits.includes(unitValue);
 });
 
@@ -145,12 +152,17 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
 };
 
   useEffect(() => {
+    console.log("FORM COMPLETO:", form);
     if (!contractData) return;
 
     setForm((prev) => ({
       ...prev,
       conductor: contractData.auditDriver,
-      unidad: contractData.auditUnidad || "",
+      unidad: contractData.auditUnidad || {
+        placaTractor: "",
+        placaCarreta: "",
+        marca: "",
+      },
       gpsId: contractData.gpsId || "",
       licencia: contractData.auditLicense || "",
       fechaInicio: contractData.auditContract?.start,
@@ -193,6 +205,26 @@ setOriginalFiles(files);
   }
     setForm({ ...form, [name]: newValue });
   };
+
+  const handleUnitChange = (e) => {
+  const selectedId = e.target.value;
+
+  const selectedUnit = units.find(
+    (u) => u._id === selectedId
+  );
+
+  if (!selectedUnit) return;
+
+  setForm((prev) => ({
+    ...prev,
+    unidad: {
+      _id: selectedUnit._id, // 👈 CLAVE
+      placaTractor: selectedUnit.placaTractor,
+      placaCarreta: selectedUnit.placaCarreta,
+      marca: selectedUnit.marca,
+    },
+  }));
+};
   
 
   const handleCheckbox = (name) => {
@@ -255,6 +287,7 @@ setOriginalFiles(files);
 };
 
 const handleSubmit = async () => {
+  
   const driverAlreadyExists = contracts.some(
     (contract) => {
 
@@ -363,6 +396,7 @@ const handleSubmit = async () => {
     auditOperationalStatus:
       "EN RUTA"
   };
+  console.log("NEW AUDIT:", newAudit);
 
   onSave(newAudit, !!contractData);
 };
@@ -425,12 +459,17 @@ const isFormValid =
           <div className="col">
 
             <label className="label">UNIDAD (TRACTOR/MARCA)</label>
-            <select name="unidad" value={form.unidad || ""} onChange={handleChange}>
+            <select
+              name="unidad"
+              value={form.unidad?._id || ""}
+              onChange={handleUnitChange}
+            >
               <option value="">Seleccionar unidad...</option>
+
               {availableUnits.map((unit) => (
                 <option
                   key={unit._id}
-                  value={`${unit.placaTractor} - ${unit.placaCarreta} - ${unit.marca}`}
+                  value={unit._id}
                 >
                   {unit.placaTractor} - {unit.marca}
                 </option>

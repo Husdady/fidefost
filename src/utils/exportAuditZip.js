@@ -27,11 +27,8 @@ export default async function exportAuditZip(
 
   const excelData = [{
 
-    Conductor:
+        Conductor:
           audit.auditDriver,
-
-        Unidad:
-          audit.auditUnidad,
 
         Licencia:
           audit.auditLicense,
@@ -54,6 +51,15 @@ export default async function exportAuditZip(
         Estado:
           audit.auditOperationalStatus,
         
+        Placa_Tractor:
+          audit.auditUnidad?.placaTractor,
+
+        Placa_Carreta:
+          audit.auditUnidad?.placaCarreta,
+        
+        Marca:
+          audit.auditUnidad?.marca,
+
         GPS:
           audit.gps ? "SI" : "NO",
         

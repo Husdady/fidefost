@@ -37,9 +37,6 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
         Conductor:
           audit.auditDriver,
 
-        Unidad:
-          audit.auditUnidad,
-
         Licencia:
           audit.auditLicense,
         
@@ -61,6 +58,15 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
         Estado:
           audit.auditOperationalStatus,
         
+        Placa_Tractor:
+          audit.auditUnidad?.placaTractor,
+
+        Placa_Carreta:
+          audit.auditUnidad?.placaCarreta,
+        
+        Marca:
+          audit.auditUnidad?.marca,
+
         GPS:
           audit.gps ? "SI" : "NO",
         
