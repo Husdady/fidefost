@@ -9,12 +9,14 @@ export default function ContractsGPSItems({
 }) {
 
   const [search, setSearch] = useState("");
-  const filteredItems = items.filter(
-  (item) =>
-    (item.id || "")
+  const query = search.trim().toLowerCase();
+
+  const filteredItems = items.filter((item) =>
+    (item.id ?? "")
+      .trim()
       .toLowerCase()
-      .includes(search.toLowerCase())
-);
+      .includes(query)
+  );
 
   const getGpsStatus = (endDate) => {
   const today = new Date();

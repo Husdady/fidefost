@@ -28,13 +28,17 @@ function RapidUnitAudit({ title, children, className = "",  accent = "default", 
   const [search, setSearch] =
   useState("");
 
+  const query =
+  search
+    .toLowerCase()
+    .trim();
+
   const filteredAudits =
   audits.filter((item) =>
     item.auditDriver
       ?.toLowerCase()
-      .includes(
-        search.toLowerCase()
-      )
+      .trim()
+      .includes(query)
   );
 
   useEffect(() => {

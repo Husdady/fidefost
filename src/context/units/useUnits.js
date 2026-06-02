@@ -27,6 +27,69 @@ const useUnitsStore = create(
               : unit
           )
         })),
+      
+      removeInsuranceFromUnits: (insuranceNumber) =>
+        set((state) => ({
+          units: state.units.map((unit) => ({
+
+            ...unit,
+
+            soat:
+              unit.soat === insuranceNumber
+                ? ""
+                : unit.soat,
+
+            polizaVehicular:
+              unit.polizaVehicular === insuranceNumber
+                ? ""
+                : unit.polizaVehicular,
+
+            polizaCarga:
+              unit.polizaCarga === insuranceNumber
+                ? ""
+                : unit.polizaCarga,
+
+            polizaEndoso:
+              unit.polizaEndoso === insuranceNumber
+                ? ""
+                : unit.polizaEndoso,
+
+            archivos: (unit.archivos || []).filter(
+              (file) => {
+
+                if (
+                  file.insuranceType === "soat" &&
+                  unit.soat === insuranceNumber
+                ) {
+                  return false;
+                }
+
+                if (
+                  file.insuranceType === "polizaVehicular" &&
+                  unit.polizaVehicular === insuranceNumber
+                ) {
+                  return false;
+                }
+
+                if (
+                  file.insuranceType === "polizaCarga" &&
+                  unit.polizaCarga === insuranceNumber
+                ) {
+                  return false;
+                }
+
+                if (
+                  file.insuranceType === "polizaEndoso" &&
+                  unit.polizaEndoso === insuranceNumber
+                ) {
+                  return false;
+                }
+
+                return true;
+              }
+            )
+          }))
+        })),
 
     }),
     {
@@ -46,3 +109,6 @@ export const useDeleteUnit = () =>
 
 export const useUpdateUnit = () =>
   useUnitsStore((state) => state.updateUnit);
+
+export const useRemoveInsuranceFromUnits = () =>
+  useUnitsStore((state) => state.removeInsuranceFromUnits);

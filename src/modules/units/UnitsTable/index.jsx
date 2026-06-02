@@ -35,7 +35,9 @@ const insuranceContracts =
   useGetInsurance();
   
 const query =
-    search.toLowerCase();
+    search
+    .toLowerCase()
+    .trim();
 
 const filteredUnits = units.filter((unit) => {
 
@@ -53,20 +55,24 @@ const filteredUnits = units.filter((unit) => {
       ?.toLowerCase()
       .includes(query) ||
 
-    unit.soat
-      ?.toLowerCase()
+    (unit.soat
+      ?.split("-")[1] || "")
+      .toLowerCase()
       .includes(query) ||
 
-    unit.polizaVehicular
-      ?.toLowerCase()
+    (unit.polizaVehicular
+      ?.split("-")[1] || "")
+      .toLowerCase()
       .includes(query) ||
     
-    unit.polizaCarga
-      ?.toLowerCase()
+    (unit.polizaCarga
+      ?.split("-")[1] || "")
+      .toLowerCase()
       .includes(query) ||
     
-    unit.polizaEndoso
-      ?.toLowerCase()
+    (unit.polizaEndoso
+      ?.split("-")[1] || "")
+      .toLowerCase()
       .includes(query) ||
     
     unit.mtc
@@ -194,7 +200,8 @@ const formatDate = (dateString) => {
 
               <td className="col-seguros">
                 <strong className="soat">
-                  {unit.soat}
+                  SOAT:{" "}
+                  {unit.soat?.split("-")[1]|| "-"}
                 </strong>
 
                 <p>

@@ -8,12 +8,17 @@ import {useGetInsurance} from "context/contracts/useInsurance"
 import DateRange from "../DateRange";
 import {useState} from "react";
 import { useDeleteInsurance } from "context/contracts/useInsurance";
+import { useRemoveInsuranceFromUnits } from "context/units/useUnits";
 import deleteDocument from "database/deleteDocument";
 import downloadInsuranceZip from "utils/downloadInsuranceZip";
 
 function InsuranceContracts({ title, datefilter, className = "",  accent = "default" 
 }) {
   const deleteInsurance = useDeleteInsurance();
+ //actualizar en Tabla units
+  const removeInsuranceFromUnits =
+  useRemoveInsuranceFromUnits();
+
   const [desde, setDesde] = useState("");
   const [hasta, setHasta] = useState("");
   const insuranceContracts = useGetInsurance();
@@ -179,9 +184,14 @@ function InsuranceContracts({ title, datefilter, className = "",  accent = "defa
 
                             await deleteDocument(file.id);
                           }
+                          //actualizar en tabla units
+                          removeInsuranceFromUnits(
+                            insurance.poliza
+                          );
 
-                          // ELIMINAR CONTRATO ZUSTAND
-                          deleteInsurance(insurance._id);
+                          deleteInsurance(
+                            insurance._id
+                          );
                         }}
                       >
                         Eliminar

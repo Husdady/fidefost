@@ -31,8 +31,15 @@ export default function useOperatorList() {
     }
 
     return validOperators.filter((operator) => {
-      const operatorName = operator?.operatorName?.toLowerCase?.() || "";
-      const ruc = operator?.ruc?.toLowerCase?.() || "";
+      const operatorName =
+        operator?.operatorName
+          ?.trim()
+          .toLowerCase() || "";
+
+      const ruc =
+        operator?.ruc
+          ?.trim()
+          .toLowerCase() || "";
 
       return (
         operatorName.includes(normalizedSearch) ||

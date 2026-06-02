@@ -99,14 +99,22 @@ export default function UpcomingRenewals() {
   };
 };
 
-  const filteredRenovaciones =
+  const query =
+  search
+    .toLowerCase()
+    .trim();
+
+const filteredRenovaciones =
   renovaciones
     .filter((item) =>
+
       item.poliza
-        .replace("SOAT-", "")
-        .replace("POLIZA-", "")
-        .toLowerCase()
-        .includes(search.toLowerCase())
+        ?.replace("SOAT-", "")
+        ?.replace("POLIZA-", "")
+        ?.toLowerCase()
+        ?.trim()
+        .includes(query)
+
     )
 
     .filter((item) => {
