@@ -54,8 +54,10 @@ const diffDays = expirationDate
   const units = useGetUnits();
 
   const currentUnit = units.find(
-    (u) => u._id === contractData.auditUnidad?._id
-  );
+  (u) => u._id === contractData.auditUnidad?._id
+);
+
+const unitDeleted = !currentUnit;
 
   const placaTractor =
     currentUnit?.placaTractor ||
@@ -159,11 +161,18 @@ const diffDays = expirationDate
                 <UnitIcon />
               </div>
 
-              <div className="contract-unit__info">
-                <h3>{placaTractor}</h3>
-                <h3>{placaCarreta}</h3>
-                <p>{marca}</p>
-              </div>
+              {unitDeleted ? (
+                <div className="contract-unit__info">
+                  <h3>UNIDAD ELIMINADA</h3>
+                </div>
+              ) : (
+                <div className="contract-unit__info">
+                  <h3>{placaTractor}</h3>
+                  <h3>{placaCarreta}</h3>
+                  <p>{marca}</p>
+                </div>
+              )}
+
             </div>
 
           </div>
