@@ -6,6 +6,7 @@ import { useState, useEffect,useRef } from "react";
 
 import { useUpdateInsurance } from "context/contracts/useInsurance";
 import { useGetInsurance } from "context/contracts/useInsurance";
+import { useUpdateInsuranceInUnits } from "context/units/useUnits";
 
 export default function InsuranceContractForm({
   show,
@@ -32,9 +33,11 @@ if (!insuranceIdRef.current) {
     initialData?._id || crypto.randomUUID();
 }
 
-const insuranceId = insuranceIdRef.current;
+  const insuranceId = insuranceIdRef.current;
 
   const updateInsurance = useUpdateInsurance();
+
+  const updateInsuranceInUnits = useUpdateInsuranceInUnits();
 
   const insuranceContracts = useGetInsurance();
   
@@ -205,6 +208,20 @@ if (alreadyExists) {
 
   // EDITAR
   if (isEdit) {
+
+    const oldPolicy =
+      initialData.poliza;
+
+    const newPolicy =
+      newInsurance.poliza;
+
+    if (oldPolicy !== newPolicy) {
+
+      updateInsuranceInUnits(
+        oldPolicy,
+        newPolicy
+      );
+    }
 
     updateInsurance(
       insuranceId,

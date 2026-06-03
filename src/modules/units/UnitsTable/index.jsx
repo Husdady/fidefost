@@ -5,7 +5,7 @@ import { useDeleteUnit } from "context/units/useUnits";
 import { useGetInsurance } from "context/contracts/useInsurance";
 import deleteDocument from "database/deleteDocument";
 import getRevisionStatus from "utils/getRevisionStatus";
-
+import { useGetContracts, useUpdateContract} from "context/contracts/useContracts";
 //export 
 import exportUnitsExcel from "utils/exportUnitsExcel";
 import exportUnitsZip from "utils/exportUnitsZip";
@@ -19,6 +19,11 @@ import InsuranceContracts from "components/features/InsuranceContracts";
 export default function UnitsTable() {
 
 const deleteUnit = useDeleteUnit();
+
+const contracts = useGetContracts();
+
+const updateContract =
+  useUpdateContract();
 
 const [editModal, setEditModal] =
   useState(false);
@@ -244,7 +249,36 @@ const formatDate = (dateString) => {
                           await deleteDocument(file.id);
                         }
 
-                        // ELIMINAR UNIDAD ZUSTAND
+                        // limpiar contratos ligados
+                        contracts.forEach((contract) => {
+
+                        const auditUnit =
+                          contract.auditUnidad;
+
+                        if (!auditUnit) return;
+
+                        const sameUnit =
+                          auditUnit.placaTractor ===
+                            unit.placaTractor &&
+                          auditUnit.placaCarreta ===
+                            unit.placaCarreta &&
+                          auditUnit.marca ===
+                            unit.marca;
+
+                        if (sameUnit) {
+
+                          updateContract(
+                            contract._id,
+                            {
+                              auditUnidad: {
+                                placaTractor: "",
+                                placaCarreta: "",
+                                marca: "",
+                              },
+                            }
+                          );
+                        }
+                      });
                         deleteUnit(unit._id);
             
                       }}

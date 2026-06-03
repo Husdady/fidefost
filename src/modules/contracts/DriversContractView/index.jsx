@@ -1,5 +1,6 @@
 import { createPortal } from "react-dom";
 import useGpsContractsStore from "context/contracts/gpsContractsStore";
+import { useGetUnits } from "context/units/useUnits";
 import DriverIcon from "./Icons/driver-icon";
 import UnitIcon from "./Icons/unit-icon";
 import GpsIcon from "./Icons/gps-icon";
@@ -50,14 +51,26 @@ const diffDays = expirationDate
   ? expirationDate.toLocaleDateString("es-PE")
   : "";
 
+  const units = useGetUnits();
+
+  const currentUnit = units.find(
+    (u) => u._id === contractData.auditUnidad?._id
+  );
+
   const placaTractor =
-  contractData.auditUnidad?.placaTractor || "-";
+    currentUnit?.placaTractor ||
+    contractData.auditUnidad?.placaTractor ||
+    "-";
 
   const placaCarreta =
-    contractData.auditUnidad?.placaCarreta || "-";
+    currentUnit?.placaCarreta ||
+    contractData.auditUnidad?.placaCarreta ||
+    "-";
 
   const marca =
-    contractData.auditUnidad?.marca || "-";
+    currentUnit?.marca ||
+    contractData.auditUnidad?.marca ||
+    "-";
   
   if (!contractData) return null;
   const gpsContracts =
@@ -86,7 +99,6 @@ const diffDays = expirationDate
 
       return `${day}/${month}/${year}`;
     };
- 
 
   return createPortal(
     <div className="modal" onClick={onHide}>

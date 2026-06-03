@@ -373,16 +373,14 @@ const handleInsuranceSelect = async (
   const selectedInsurance =
     insuranceContracts.find((item) => {
 
-        if (
-    type === "vehicular"
-  ) {
-    return (
-      item.tipo
-        ?.toLowerCase()
-        .includes("vehicular") &&
-      item.poliza === value
-    );
-  }
+  if (
+  type === "polizaVehicular"
+) {
+  return (
+    item.tipo?.toLowerCase().includes("vehicular") &&
+    item.poliza === value
+  );
+}
 
   if (
     type === "polizaCarga"
@@ -741,6 +739,10 @@ const handleClose = () => {
 };
 
 const usedSoats = units
+  .filter(
+    (unit) =>
+      unit._id !== initialData?._id
+  )
   .map((unit) => unit.soat)
   .filter(Boolean);
   
@@ -912,12 +914,20 @@ const usedSoats = units
                           ?.toLowerCase()
                           .includes("vehicular")
                     )
-                    .filter(
-                      (insurance) =>
-                        !usedVehicularPolicies.includes(
-                          insurance.poliza
-                        )
-                    )
+                    .filter((insurance) => {
+
+                      // EN EDICION PERMITIR LA ACTUAL
+                      if (
+                        isEdit &&
+                        form.polizaVehicular === insurance.poliza
+                      ) {
+                        return true;
+                      }
+
+                      return !usedVehicularPolicies.includes(
+                        insurance.poliza
+                      );
+                    })
                     .map((insurance) => (
                       <option
                         key={insurance._id}

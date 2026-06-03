@@ -91,6 +91,38 @@ const useUnitsStore = create(
           }))
         })),
 
+        updateInsuranceInUnits: (
+          oldInsuranceNumber,
+          newInsuranceNumber
+        ) =>
+          set((state) => ({
+            units: state.units.map((unit) => ({
+
+              ...unit,
+
+              soat:
+                unit.soat === oldInsuranceNumber
+                  ? newInsuranceNumber
+                  : unit.soat,
+
+              polizaVehicular:
+                unit.polizaVehicular === oldInsuranceNumber
+                  ? newInsuranceNumber
+                  : unit.polizaVehicular,
+
+              polizaCarga:
+                unit.polizaCarga === oldInsuranceNumber
+                  ? newInsuranceNumber
+                  : unit.polizaCarga,
+
+              polizaEndoso:
+                unit.polizaEndoso === oldInsuranceNumber
+                  ? newInsuranceNumber
+                  : unit.polizaEndoso,
+
+            }))
+          })),
+
     }),
     {
       name: "units-storage",
@@ -112,3 +144,8 @@ export const useUpdateUnit = () =>
 
 export const useRemoveInsuranceFromUnits = () =>
   useUnitsStore((state) => state.removeInsuranceFromUnits);
+
+export const useUpdateInsuranceInUnits = () =>
+  useUnitsStore(
+    (state) => state.updateInsuranceInUnits
+  );
