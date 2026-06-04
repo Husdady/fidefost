@@ -433,7 +433,7 @@ const isFormValid =
                   <p>Arrastra archivos aqui</p>
 
                   <span>
-                    PDF JPG o PNG hasta 10MB
+                    PDF JPG o PNG
                   </span>
                 </>
               ) : (

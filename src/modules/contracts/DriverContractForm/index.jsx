@@ -655,7 +655,7 @@ const isFormValid =
               {form.archivos.length === 0 ? (
                 <>
                   <p>Arrastra archivos aquí</p>
-                  <span>PDF, JPG o PNG hasta 10MB</span>
+                  <span>PDF, JPG o PNG</span>
                 </>
               ) : (
                 <>
