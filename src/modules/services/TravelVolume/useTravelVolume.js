@@ -17,15 +17,28 @@ export default function useTravelVolume() {
       (accumulator, service) => {
         const totalGuides = Number(service?.totalGuides) || 0;
         const tripsPerDay = Number(service?.tripsPerDay) || 0;
+        
+        const years = service?.years || [];
+        const months = service?.months || [];
 
         accumulator.totalGuides += totalGuides;
         accumulator.tripsPerDay += tripsPerDay;
 
+        years.forEach((year) =>
+          accumulator.years.add(year)
+        );
+
+        months.forEach((month) =>
+          accumulator.months.add(month)
+        );
+        
         return accumulator;
       },
       {
         totalGuides: 0,
         tripsPerDay: 0,
+        years: new Set(),
+        months: new Set(),
       }
     );
   }, [services]);
@@ -35,9 +48,16 @@ export default function useTravelVolume() {
     const value = data.tripsPerDay;
     return Number.isInteger(value) ? value : value.toFixed(2);
   }, [data.tripsPerDay]);
+  console.log({
+  years: [...data.years],
+  months: [...data.months],
+});
 
   return {
     tripsPerDay: tripsPerDay,
     totalGuides: data.totalGuides,
+
+    years: [...data.years],
+    months: [...data.months],
   };
 }

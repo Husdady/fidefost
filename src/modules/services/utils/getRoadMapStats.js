@@ -11,6 +11,9 @@ export async function getRoadMapStats(file) {
 
   let totalGuides = 0;
   const travelDays = new Set();
+  
+  const years = new Set();
+  const months = new Set();
 
   workbook.SheetNames.forEach((sheetName) => {
     const sheet = workbook.Sheets[sheetName];
@@ -41,6 +44,14 @@ export async function getRoadMapStats(file) {
                 travelDays.add(
                   date.toISOString().slice(0, 10)
                 );
+
+                years.add(date.getFullYear());
+
+                months.add(
+                  date.toLocaleString("es-PE", {
+                    month: "short",
+                  })
+                );
               }
             }
           }
@@ -51,6 +62,11 @@ export async function getRoadMapStats(file) {
 
   return {
     totalGuides: totalGuides,
-    tripsPerDay: travelDays.size ? totalGuides / travelDays.size : 0,
+    tripsPerDay: travelDays.size
+      ? totalGuides / travelDays.size
+      : 0,
+
+    years: [...years],
+    months: [...months],
   };
 }
