@@ -21,18 +21,29 @@ export async function getRoadMapStats(file) {
         if (cell === "GUIA") {
           const dateColIndex = colIndex - 1;
 
-          rows.slice(rowIndex + 1).forEach((dataRow) => {
+          for (let i = rowIndex + 1; i < rows.length; i++) {
+            const dataRow = rows[i];
             const guide = dataRow[colIndex];
             const date = dataRow[dateColIndex];
 
-            if (guide && typeof guide === "string" && guide.includes("-")) {
+            // Fin de la tabla
+            if (!guide) {
+              break;
+            }
+
+            if (
+              typeof guide === "string" &&
+              guide.includes("-")
+            ) {
               totalGuides += 1;
 
               if (date instanceof Date) {
-                travelDays.add(date.toISOString().slice(0, 10));
+                travelDays.add(
+                  date.toISOString().slice(0, 10)
+                );
               }
             }
-          });
+          }
         }
       });
     });
