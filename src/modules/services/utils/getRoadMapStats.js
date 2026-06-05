@@ -1,6 +1,6 @@
 // Librarys
 import * as XLSX from "xlsx";
-
+import normalizeDate from "./normalizeDate";
 /**
  * Callback for get road maps stats
  * @param {File|FileList} file File
@@ -14,6 +14,9 @@ export async function getRoadMapStats(file) {
   
   const years = new Set();
   const months = new Set();
+  const guides = [];
+
+  const timeline = {};
 
   workbook.SheetNames.forEach((sheetName) => {
     const sheet = workbook.Sheets[sheetName];
@@ -30,7 +33,7 @@ export async function getRoadMapStats(file) {
             const date = dataRow[dateColIndex];
 
             // Fin de la tabla
-            if (!guide) {
+            if (guide == null || guide === "") {
               break;
             }
 
@@ -39,20 +42,39 @@ export async function getRoadMapStats(file) {
               guide.includes("-")
             ) {
               totalGuides += 1;
+            
+            const d = normalizeDate(date);
 
-              if (date instanceof Date) {
-                travelDays.add(
-                  date.toISOString().slice(0, 10)
-                );
+            if (d) {
+              const year = d.getFullYear();
+              const month = d.toLocaleString("es-PE", {
+                month: "short",
+              });
 
-                years.add(date.getFullYear());
-
-                months.add(
-                  date.toLocaleString("es-PE", {
-                    month: "short",
-                  })
-                );
+              if (!timeline[year]) {
+                timeline[year] = new Set();
               }
+
+              timeline[year].add(month);
+              
+              guides.push({
+                year: d.getFullYear(),
+                month: d.toLocaleString("es-PE", {
+                  month: "short",
+                }),
+                date: d,
+              });
+
+              travelDays.add(d.toISOString().slice(0, 10));
+
+              years.add(d.getFullYear());
+
+              months.add(
+                d.toLocaleString("es-PE", {
+                  month: "short",
+                })
+              );
+            }
             }
           }
         }
@@ -61,12 +83,13 @@ export async function getRoadMapStats(file) {
   });
 
   return {
-    totalGuides: totalGuides,
+    totalGuides,
     tripsPerDay: travelDays.size
       ? totalGuides / travelDays.size
       : 0,
 
     years: [...years],
     months: [...months],
+    guides,
   };
 }

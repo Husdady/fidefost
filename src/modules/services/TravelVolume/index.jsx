@@ -3,18 +3,20 @@ import useTravelVolume from "./useTravelVolume";
 
 
 export default function TravelVolume() {
+  const [selectedYear, setSelectedYear] =
+  useState("Todos");
+
+  const [selectedMonth, setSelectedMonth] =
+  useState("Todos");
   const {
   totalGuides,
   tripsPerDay,
   years,
   months,
-} = useTravelVolume();
-
-const [selectedYear, setSelectedYear] =
-  useState("Todos");
-
-const [selectedMonth, setSelectedMonth] =
-  useState("Todos");
+} = useTravelVolume({
+  selectedYear,
+  selectedMonth,
+});
 
   return (
     <section className="travel-volume mt-2">
