@@ -13,6 +13,7 @@ export default function TravelVolume() {
   useState("Todos");
   const {
   totalGuides,
+  totalTrips,
   calendarData,
   days,
 } = useTravelVolume({
@@ -88,7 +89,7 @@ console.log("days:", days);
 
         <article className="travel-volume-card">
           <span>N° de Viajes</span>
-          <strong>{totalGuides}</strong>
+          <strong>{totalTrips}</strong>
         </article>
       </div>
     </section>

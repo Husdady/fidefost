@@ -38,13 +38,18 @@ export async function getRoadMapStats(file) {
             const rawComment = dataRow[commentColIndex];
 
             if (rawDate) {
-              lastDate = rawDate;
+              const currentDate = normalizeDate(rawDate);
+              const previousDate = normalizeDate(lastDate);
 
-              // Si comienza un nuevo bloque sin comentario,
-              // eliminamos el comentario heredado anterior
-              if (!rawComment) {
+              const changedDate =
+                !previousDate ||
+                currentDate?.getTime() !== previousDate?.getTime();
+
+              if (changedDate && !rawComment) {
                 lastComment = null;
               }
+
+              lastDate = rawDate;
             }
 
             if (rawComment) {
@@ -63,10 +68,12 @@ export async function getRoadMapStats(file) {
               guide.includes("-")
             ) {
               totalGuides += 1;
-            console.log({
+              console.log("ROW", i, {
+  rawComment,
+  rawDate,
   guide,
-  comment,
 });
+
             const d = normalizeDate(date);
 
             if (d) {
@@ -80,6 +87,12 @@ export async function getRoadMapStats(file) {
               }
 
               timeline[year].add(month);
+             console.log("PUSH", {
+  guide,
+  rawComment,
+  lastComment,
+  comment,
+});
               
               guides.push({
                 year: d.getFullYear(),

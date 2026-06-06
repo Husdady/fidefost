@@ -72,7 +72,9 @@ export default function useTravelVolume(params = {}) {
       matchDay
     );
     });
-    console.log("FILTERED GUIDES:", result);
+    console.log(
+  result.filter((g) => g.comment)
+);
 
   return result;
     
@@ -114,8 +116,33 @@ const days = useMemo(() => {
     [filteredGuides]
   );
 
+  const totalTrips = useMemo(() => {
+    let trips = 0;
+    let previousWasGrouped = false;
+
+    filteredGuides.forEach((guide) => {
+      const grouped =
+        guide.comment ===
+        "SE CARGO EN UN SOLO VIAJE";
+
+      if (grouped) {
+        if (!previousWasGrouped) {
+          trips += 1;
+        }
+
+        previousWasGrouped = true;
+      } else {
+        trips += 1;
+        previousWasGrouped = false;
+      }
+    });
+
+    return trips;
+  }, [filteredGuides]);
+
   return {
     totalGuides,
+    totalTrips,
     calendarData,
     days,
   };
