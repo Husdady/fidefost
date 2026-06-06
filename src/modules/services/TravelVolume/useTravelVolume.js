@@ -64,9 +64,24 @@ export default function useTravelVolume(params = {}) {
     const date =
       normalizeDate(g.date);
 
-    const matchDay =
-      selectedDay === "Todos" ||
-      date?.getDate() === selectedDay;
+    let matchDay = false;
+
+    if (selectedDay === "Todos") {
+      matchDay = true;
+    } else if (
+      typeof selectedDay === "string" &&
+      selectedDay.includes("-")
+    ) {
+      const [start, end] =
+        selectedDay.split("-").map(Number);
+
+      matchDay =
+        date?.getDate() === start ||
+        date?.getDate() === end;
+    } else {
+      matchDay =
+        date?.getDate() === selectedDay;
+    }
 
     return (
       matchYear &&
@@ -83,34 +98,74 @@ export default function useTravelVolume(params = {}) {
   }, [guides, selectedYear, selectedMonth, selectedDay,]);
 
 const days = useMemo(() => {
-  const set = new Set();
+  const result = [];
+  const usedDays = new Set();
 
-  guides
-    .filter((g) => {
-      const matchYear =
-        selectedYear === "Todos" ||
-        g.year === selectedYear;
+  const filtered = guides.filter((g) => {
+    const matchYear =
+      selectedYear === "Todos" ||
+      g.year === selectedYear;
 
-      const matchMonth =
-        selectedMonth === "Todos" ||
-        g.month === selectedMonth;
+    const matchMonth =
+      selectedMonth === "Todos" ||
+      g.month === selectedMonth;
 
-      return matchYear && matchMonth;
-    })
-    .forEach((g) => {
-      const d = normalizeDate(g.date);
+    return matchYear && matchMonth;
+  });
 
-      if (d) {
-        set.add(d.getDate());
+  filtered.forEach((g, index) => {
+    const d = normalizeDate(g.date);
+
+    if (!d) return;
+
+    const day = d.getDate();
+
+    if (usedDays.has(day)) {
+      return;
+    }
+
+    if (
+      g.comment ===
+      "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE"
+    ) {
+      const next = filtered[index + 1];
+
+      if (
+        next?.comment ===
+        "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE"
+      ) {
+        const nextDay = normalizeDate(
+          next.date
+        )?.getDate();
+
+        result.push(`${day}-${nextDay}`);
+
+        usedDays.add(day);
+        usedDays.add(nextDay);
+
+        return;
       }
-    });
+    }
 
-  return [...set].sort((a, b) => a - b);
+    result.push(day);
+    usedDays.add(day);
+  });
+
+  return result.sort((a, b) => {
+    const getStartDay = (value) => {
+      if (typeof value === "string") {
+        return Number(value.split("-")[0]);
+      }
+
+      return value;
+    };
+
+    return getStartDay(a) - getStartDay(b);
+  });
 }, [
   guides,
   selectedYear,
   selectedMonth,
-  selectedDay,
 ]);
 
   const totalGuides = useMemo(

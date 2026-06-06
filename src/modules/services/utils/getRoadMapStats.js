@@ -30,6 +30,7 @@ export async function getRoadMapStats(file) {
           
           let lastDate = null;
           let lastComment = null;
+          let propagateNextRowComment = null;
 
           for (let i = rowIndex + 1; i < rows.length; i++) {
             const dataRow = rows[i];
@@ -52,12 +53,28 @@ export async function getRoadMapStats(file) {
               lastDate = rawDate;
             }
 
+            if (
+              rawComment ===
+              "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE"
+            ) {
+              propagateNextRowComment = rawComment;
+            }
+
             if (rawComment) {
               lastComment = rawComment;
             }
 
             const date = rawDate || lastDate;
-            const comment = rawComment || lastComment;
+
+            let comment = rawComment || lastComment;
+
+            if (
+              !rawComment &&
+              propagateNextRowComment
+            ) {
+              comment = propagateNextRowComment;
+              propagateNextRowComment = null;
+            }
             // Fin de la tabla
             if (guide == null || guide === "") {
               break;
