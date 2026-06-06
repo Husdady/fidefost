@@ -6,6 +6,10 @@ import { useGetServices } from "context/services/useServices";
 import createValidArray from "utils/createValidArray";
 import normalizeDate from "../utils/normalizeDate";
 
+const MONTH_ORDER = [
+    "Ene.", "Feb.", "Mar.", "Abr.", "May.", "Jun.",
+    "Jul.", "Ago.", "Sep.", "Oct.", "Nov.", "Dic."
+  ];
 
 export default function useTravelVolume(params = {}) {
   const services = useGetServices();
@@ -18,26 +22,30 @@ export default function useTravelVolume(params = {}) {
     );
   }, [services]);
 
-  const years = useMemo(() => {
-  const set = new Set();
-    guides.forEach((g) => set.add(g.year));
+  const calendar = useMemo(() => {
+    const map = {};
 
-    return [...set].sort((a, b) => a - b);
+    guides.forEach((g) => {
+      if (!map[g.year]) {
+        map[g.year] = new Set();
+      }
+
+      map[g.year].add(g.month);
+    });
+
+    return map;
   }, [guides]);
 
-  const MONTH_ORDER = [
-    "Ene.", "Feb.", "Mar.", "Abr.", "May.", "Jun.",
-    "Jul.", "Ago.", "Sep.", "Oct.", "Nov.", "Dic."
-  ];
-
-  const months = useMemo(() => {
-  const set = new Set();
-  guides.forEach((g) => set.add(g.month));
-
-    return [...set].sort(
-      (a, b) => MONTH_ORDER.indexOf(a) - MONTH_ORDER.indexOf(b)
-    );
-  }, [guides]);
+  const calendarData = useMemo(() => {
+    return Object.keys(calendar)
+      .sort((a, b) => a - b)
+      .map((year) => ({
+        year: Number(year),
+        months: [...calendar[year]].sort(
+          (a, b) => MONTH_ORDER.indexOf(a) - MONTH_ORDER.indexOf(b)
+        ),
+      }));
+  }, [calendar]);
   
 
   const filteredGuides = useMemo(() => {
@@ -57,6 +65,22 @@ export default function useTravelVolume(params = {}) {
   return result;
     
   }, [guides, selectedYear, selectedMonth]);
+
+  const months = useMemo(() => {
+  const set = new Set();
+
+  guides
+    .filter((g) =>
+      selectedYear === "Todos"
+        ? true
+        : g.year === selectedYear
+    )
+    .forEach((g) => set.add(g.month));
+
+  return [...set].sort(
+    (a, b) => MONTH_ORDER.indexOf(a) - MONTH_ORDER.indexOf(b)
+  );
+}, [guides, selectedYear]);
 
   const data = useMemo(() => {
     const travelDays = new Set();
@@ -92,7 +116,6 @@ export default function useTravelVolume(params = {}) {
     totalGuides: data.totalGuides,
     tripsPerDay,
 
-    years,
-    months,
+    calendarData,
   };
 }
