@@ -24,13 +24,35 @@ export async function getRoadMapStats(file) {
     rows.forEach((row, rowIndex) => {
       row.forEach((cell, colIndex) => {
         if (cell === "GUIA") {
+          const commentColIndex = colIndex - 2;
+          
           const dateColIndex = colIndex - 1;
+          
+          let lastDate = null;
+          let lastComment = null;
 
           for (let i = rowIndex + 1; i < rows.length; i++) {
             const dataRow = rows[i];
             const guide = dataRow[colIndex];
-            const date = dataRow[dateColIndex];
+            const rawDate = dataRow[dateColIndex];
+            const rawComment = dataRow[commentColIndex];
 
+            if (rawDate) {
+              lastDate = rawDate;
+
+              // Si comienza un nuevo bloque sin comentario,
+              // eliminamos el comentario heredado anterior
+              if (!rawComment) {
+                lastComment = null;
+              }
+            }
+
+            if (rawComment) {
+              lastComment = rawComment;
+            }
+
+            const date = rawDate || lastDate;
+            const comment = rawComment || lastComment;
             // Fin de la tabla
             if (guide == null || guide === "") {
               break;
@@ -41,7 +63,10 @@ export async function getRoadMapStats(file) {
               guide.includes("-")
             ) {
               totalGuides += 1;
-            
+            console.log({
+  guide,
+  comment,
+});
             const d = normalizeDate(date);
 
             if (d) {
@@ -62,6 +87,7 @@ export async function getRoadMapStats(file) {
                   month: "short",
                 }),
                 date: d,
+                comment,
               });
 
               years.add(d.getFullYear());
