@@ -22,6 +22,8 @@ export default function useTravelVolume(params = {}) {
     );
   }, [services]);
 
+  console.log("ALL GUIDES", guides);
+
   const calendar = useMemo(() => {
     const map = {};
 
@@ -121,9 +123,15 @@ const days = useMemo(() => {
     let previousWasGrouped = false;
 
     filteredGuides.forEach((guide) => {
+      const groupedComments = [
+        "SE CARGO EN UN SOLO VIAJE",
+        "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE",
+      ];
+
       const grouped =
-        guide.comment ===
-        "SE CARGO EN UN SOLO VIAJE";
+        groupedComments.includes(
+          guide.comment
+        );
 
       if (grouped) {
         if (!previousWasGrouped) {
