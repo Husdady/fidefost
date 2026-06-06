@@ -13,7 +13,6 @@ export default function TravelVolume() {
   useState("Todos");
   const {
   totalGuides,
-  tripsPerDay,
   calendarData,
   days,
 } = useTravelVolume({

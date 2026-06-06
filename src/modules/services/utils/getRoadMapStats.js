@@ -10,7 +10,6 @@ export async function getRoadMapStats(file) {
   const workbook = XLSX.read(buffer, { type: "array", cellDates: true });
 
   let totalGuides = 0;
-  const travelDays = new Set();
   
   const years = new Set();
   const months = new Set();
@@ -65,8 +64,6 @@ export async function getRoadMapStats(file) {
                 date: d,
               });
 
-              travelDays.add(d.toISOString().slice(0, 10));
-
               years.add(d.getFullYear());
 
               months.add(
@@ -84,9 +81,6 @@ export async function getRoadMapStats(file) {
 
   return {
     totalGuides,
-    tripsPerDay: travelDays.size
-      ? totalGuides / travelDays.size
-      : 0,
 
     years: [...years],
     months: [...months],

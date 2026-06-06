@@ -78,22 +78,6 @@ export default function useTravelVolume(params = {}) {
     
   }, [guides, selectedYear, selectedMonth, selectedDay,]);
 
-  const months = useMemo(() => {
-  const set = new Set();
-
-  guides
-    .filter((g) =>
-      selectedYear === "Todos"
-        ? true
-        : g.year === selectedYear
-    )
-    .forEach((g) => set.add(g.month));
-
-  return [...set].sort(
-    (a, b) => MONTH_ORDER.indexOf(a) - MONTH_ORDER.indexOf(b)
-  );
-}, [guides, selectedYear]);
-console.log("guides sample:", guides.slice(0, 5));
 const days = useMemo(() => {
   const set = new Set();
 
@@ -125,41 +109,13 @@ const days = useMemo(() => {
   selectedDay,
 ]);
 
-  const data = useMemo(() => {
-    
-    const travelDays = new Set();
-
-    const totalGuides = filteredGuides.length;
-
-    filteredGuides.forEach((g) => {
-      
-      const d = normalizeDate(g.date);
-
-      if (d instanceof Date && !isNaN(d)) {
-        travelDays.add(
-          d.toISOString().slice(0, 10)
-        );
-      }
-    });
-
-    return {
-      totalGuides,
-      tripsPerDay: travelDays.size
-        ? totalGuides / travelDays.size
-        : 0,
-    };
-  }, [filteredGuides]);
-
-  const tripsPerDay = useMemo(() => {
-    const value = data.tripsPerDay;
-    return Number.isInteger(value)
-      ? value
-      : value.toFixed(2);
-  }, [data.tripsPerDay]);
+  const totalGuides = useMemo(
+    () => filteredGuides.length,
+    [filteredGuides]
+  );
 
   return {
-    totalGuides: data.totalGuides,
-    tripsPerDay,
+    totalGuides,
     calendarData,
     days,
   };
