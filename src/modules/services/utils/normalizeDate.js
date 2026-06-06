@@ -6,6 +6,18 @@ export default function normalizeDate(value) {
     return value;
   }
 
+  // si es ISO string
+  if (
+    typeof value === "string" &&
+    /^\d{4}-\d{2}-\d{2}T/.test(value)
+  ) {
+    const date = new Date(value);
+
+    return isNaN(date)
+      ? null
+      : date;
+  }
+
   let str = String(value)
     .replace(/^'/, "")
     .trim();

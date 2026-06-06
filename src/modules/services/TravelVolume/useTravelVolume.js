@@ -14,7 +14,7 @@ const MONTH_ORDER = [
 export default function useTravelVolume(params = {}) {
   const services = useGetServices();
 
-  const { selectedYear, selectedMonth } = params;
+  const { selectedYear, selectedMonth, selectedDay, } = params;
 
   const guides = useMemo(() => {
     return createValidArray(services).flatMap(
@@ -51,20 +51,32 @@ export default function useTravelVolume(params = {}) {
   const filteredGuides = useMemo(() => {
 
     const result = guides.filter((g) => {
-      const matchYear =
-        selectedYear === "Todos" ||
-        g.year === selectedYear;
+    const matchYear =
+      selectedYear === "Todos" ||
+      g.year === selectedYear;
 
-      const matchMonth =
-        selectedMonth === "Todos" ||
-        g.month === selectedMonth;
-      return matchYear && matchMonth;
+    const matchMonth =
+      selectedMonth === "Todos" ||
+      g.month === selectedMonth;
+
+    const date =
+      normalizeDate(g.date);
+
+    const matchDay =
+      selectedDay === "Todos" ||
+      date?.getDate() === selectedDay;
+
+    return (
+      matchYear &&
+      matchMonth &&
+      matchDay
+    );
     });
     console.log("FILTERED GUIDES:", result);
 
   return result;
     
-  }, [guides, selectedYear, selectedMonth]);
+  }, [guides, selectedYear, selectedMonth, selectedDay,]);
 
   const months = useMemo(() => {
   const set = new Set();
@@ -81,13 +93,46 @@ export default function useTravelVolume(params = {}) {
     (a, b) => MONTH_ORDER.indexOf(a) - MONTH_ORDER.indexOf(b)
   );
 }, [guides, selectedYear]);
+console.log("guides sample:", guides.slice(0, 5));
+const days = useMemo(() => {
+  const set = new Set();
+
+  guides
+    .filter((g) => {
+      const matchYear =
+        selectedYear === "Todos" ||
+        g.year === selectedYear;
+
+      const matchMonth =
+        selectedMonth === "Todos" ||
+        g.month === selectedMonth;
+
+      return matchYear && matchMonth;
+    })
+    .forEach((g) => {
+      const d = normalizeDate(g.date);
+
+      if (d) {
+        set.add(d.getDate());
+      }
+    });
+
+  return [...set].sort((a, b) => a - b);
+}, [
+  guides,
+  selectedYear,
+  selectedMonth,
+  selectedDay,
+]);
 
   const data = useMemo(() => {
+    
     const travelDays = new Set();
 
     const totalGuides = filteredGuides.length;
 
     filteredGuides.forEach((g) => {
+      
       const d = normalizeDate(g.date);
 
       if (d instanceof Date && !isNaN(d)) {
@@ -115,7 +160,7 @@ export default function useTravelVolume(params = {}) {
   return {
     totalGuides: data.totalGuides,
     tripsPerDay,
-
     calendarData,
+    days,
   };
 }

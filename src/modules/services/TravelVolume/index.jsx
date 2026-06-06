@@ -8,20 +8,25 @@ export default function TravelVolume() {
 
   const [selectedMonth, setSelectedMonth] =
   useState("Todos");
+
+  const [selectedDay, setSelectedDay] =
+  useState("Todos");
   const {
   totalGuides,
   tripsPerDay,
   calendarData,
+  days,
 } = useTravelVolume({
   selectedYear,
   selectedMonth,
+  selectedDay,
 });
 
   const monthsToShow =
     selectedYear === "Todos"
       ? []
       : calendarData.find((y) => y.year === selectedYear)?.months || [];
-
+console.log("days:", days);
   return (
     <section className="travel-volume mt-2">
       <header className="travel-volume-header d-flex align-items-center justify-content-between">
@@ -35,6 +40,7 @@ export default function TravelVolume() {
               onClick={() => {
                 setSelectedYear(year);
                 setSelectedMonth("Todos");
+                setSelectedDay("Todos");
               }}
               className={selectedYear === year ? "active" : undefined}
             >
@@ -46,7 +52,10 @@ export default function TravelVolume() {
           {["Todos", ...monthsToShow].map((month) => (
             <span
               key={month}
-              onClick={() => setSelectedMonth(month)}
+              onClick={() => {
+                setSelectedMonth(month);
+                setSelectedDay("Todos");
+              }}
               className={selectedMonth === month ? "active" : undefined}
             >
               {month}
@@ -54,6 +63,23 @@ export default function TravelVolume() {
           ))}
         </div>
       </div>
+      {selectedMonth !== "Todos" && (
+        <div className="travel-volume-days">
+          {["Todos", ...days].map((day) => (
+            <span
+              key={day}
+              onClick={() => setSelectedDay(day)}
+              className={
+                selectedDay === day
+                  ? "active"
+                  : undefined
+              }
+            >
+              {day}
+            </span>
+          ))}
+        </div>
+      )}
             
       <div className="travel-volume-cards d-flex align-items-center">
         <article className="travel-volume-card">
@@ -62,8 +88,8 @@ export default function TravelVolume() {
         </article>
 
         <article className="travel-volume-card">
-          <span>Viajes/Día</span>
-          <strong>{tripsPerDay}</strong>
+          <span>N° de Viajes</span>
+          <strong>{totalGuides}</strong>
         </article>
       </div>
     </section>
