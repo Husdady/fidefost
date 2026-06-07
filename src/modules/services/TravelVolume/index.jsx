@@ -65,17 +65,31 @@ console.log("days:", days);
       </div>
       {selectedMonth !== "Todos" && (
         <div className="travel-volume-days">
-          {["Todos", ...days].map((day) => (
+          <span
+            onClick={() => setSelectedDay("Todos")}
+            className={
+              selectedDay === "Todos"
+                ? "active"
+                : undefined
+            }
+          >
+            Todos
+          </span>
+
+          {days.map((day) => (
             <span
-              key={day}
-              onClick={() => setSelectedDay(day)}
+              key={day.label}
+              title={day.comment || ""}
+              onClick={() =>
+                setSelectedDay(day.label)
+              }
               className={
-                selectedDay === day
+                selectedDay === day.label
                   ? "active"
                   : undefined
               }
             >
-              {day}
+              {day.label}
             </span>
           ))}
         </div>

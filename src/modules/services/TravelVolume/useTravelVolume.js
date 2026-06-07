@@ -139,9 +139,15 @@ const days = useMemo(() => {
         )?.getDate();
 
         if (day === nextDay) {
-          result.push(day);
+          result.push({
+            label: day,
+            comment: g.comment,
+          });
         } else {
-          result.push(`${day}-${nextDay}`);
+          result.push({
+            label: `${day}-${nextDay}`,
+            comment: g.comment,
+          });
         }
 
         usedDays.add(day);
@@ -151,21 +157,34 @@ const days = useMemo(() => {
       }
     }
 
-    result.push(day);
+    result.push({
+      label: day,
+      comment: g.comment || null,
+    });
     usedDays.add(day);
   });
-
+console.log("DAYS", result);
   return result.sort((a, b) => {
-    const getStartDay = (value) => {
-      if (typeof value === "string") {
-        return Number(value.split("-")[0]);
-      }
+  const getStartDay = (item) => {
+    const label = item.label;
 
-      return value;
-    };
+    if (
+      typeof label === "string" &&
+      label.includes("-")
+    ) {
+      return Number(
+        label.split("-")[0]
+      );
+    }
 
-    return getStartDay(a) - getStartDay(b);
-  });
+    return Number(label);
+  };
+
+  return (
+    getStartDay(a) -
+    getStartDay(b)
+  );
+});
 }, [
   guides,
   selectedYear,
