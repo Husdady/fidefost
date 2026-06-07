@@ -3,7 +3,7 @@ import Navigation from "components/features/Navigation";
 import PageHeader from "components/features/PageHeader";
 import UnitsSummary from "modules/units/Summary";
 import AddButton from "components/features/PageHeader/AddButton";
-import UnitForm from "modules/units/UnitForm"
+import UnitForm from "modules/units/UnitForm";
 import UnitsTable from "modules/units/UnitsTable";
 import UpcomingRenewals from "modules/units/UpcomingRenewals";
 
@@ -31,11 +31,10 @@ export default function Units() {
         <UnitsTable />
         <UpcomingRenewals />
       </aside>
-        <UnitForm
-          show={createUnitModal.isShowing}
-          onHide={createUnitModal.hide}
-        />
-
+      <UnitForm
+        show={createUnitModal.isShowing}
+        onHide={createUnitModal.hide}
+      />
     </main>
   );
 }
