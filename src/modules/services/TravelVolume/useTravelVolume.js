@@ -121,6 +121,25 @@ const days = useMemo(() => {
     const day = d.getDate();
 
     if (usedDays.has(day)) {
+      const existing = result.find(
+        (item) => item.label === day
+      );
+
+      if (existing && g.comment) {
+        const comments = (
+          existing.comment || ""
+        )
+          .split(", ")
+          .filter(Boolean);
+
+        if (!comments.includes(g.comment)) {
+          comments.push(g.comment);
+        }
+
+        existing.comment =
+          comments.join(", ");
+      }
+
       return;
     }
 
@@ -198,19 +217,21 @@ console.log("DAYS", result);
 
   const totalTrips = useMemo(() => {
   let trips = 0;
+  let blockCounter = 0;
+
+  const maxTwoGuidesComments = [
+    "SE CARGO EN UN SOLO VIAJE",
+    "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE",
+  ];
 
   filteredGuides.forEach((guide, index) => {
-    const groupedComments = [
-      "SE CARGO EN UN SOLO VIAJE",
-      "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE",
-    ];
-
     const grouped =
-      groupedComments.includes(
+      maxTwoGuidesComments.includes(
         guide.comment
       );
 
     if (!grouped) {
+      blockCounter = 0;
       trips += 1;
       return;
     }
@@ -218,18 +239,26 @@ console.log("DAYS", result);
     const previous =
       filteredGuides[index - 1];
 
-    const sameComment =
+    const sameBlock =
       previous?.comment ===
       guide.comment;
 
-    if (!sameComment) {
+    if (!sameBlock) {
+      blockCounter = 1;
       trips += 1;
+      return;
+    }
+
+    blockCounter += 1;
+
+    if (blockCounter > 2) {
+      trips += 1;
+      blockCounter = 1;
     }
   });
 
   return trips;
 }, [filteredGuides]);
-
  
 
   return {
