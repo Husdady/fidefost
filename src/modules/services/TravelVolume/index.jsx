@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useGetServices } from "context/services/useServices";
 import useTravelVolume from "./useTravelVolume";
 
 
 export default function TravelVolume() {
+
+  const services = useGetServices();
   const [selectedYear, setSelectedYear] =
   useState("Todos");
 
@@ -11,6 +14,13 @@ export default function TravelVolume() {
 
   const [selectedDay, setSelectedDay] =
   useState("Todos");
+
+  useEffect(() => {
+  setSelectedYear("Todos");
+  setSelectedMonth("Todos");
+  setSelectedDay("Todos");
+}, [services.length]);
+
   const {
   totalGuides,
   totalTrips,
