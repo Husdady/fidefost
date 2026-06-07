@@ -138,7 +138,11 @@ const days = useMemo(() => {
           next.date
         )?.getDate();
 
-        result.push(`${day}-${nextDay}`);
+        if (day === nextDay) {
+          result.push(day);
+        } else {
+          result.push(`${day}-${nextDay}`);
+        }
 
         usedDays.add(day);
         usedDays.add(nextDay);
