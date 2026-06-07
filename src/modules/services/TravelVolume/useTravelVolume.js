@@ -174,34 +174,40 @@ const days = useMemo(() => {
   );
 
   const totalTrips = useMemo(() => {
-    let trips = 0;
-    let previousWasGrouped = false;
+  let trips = 0;
 
-    filteredGuides.forEach((guide) => {
-      const groupedComments = [
-        "SE CARGO EN UN SOLO VIAJE",
-        "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE",
-      ];
+  filteredGuides.forEach((guide, index) => {
+    const groupedComments = [
+      "SE CARGO EN UN SOLO VIAJE",
+      "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE",
+    ];
 
-      const grouped =
-        groupedComments.includes(
-          guide.comment
-        );
+    const grouped =
+      groupedComments.includes(
+        guide.comment
+      );
 
-      if (grouped) {
-        if (!previousWasGrouped) {
-          trips += 1;
-        }
+    if (!grouped) {
+      trips += 1;
+      return;
+    }
 
-        previousWasGrouped = true;
-      } else {
-        trips += 1;
-        previousWasGrouped = false;
-      }
-    });
+    const previous =
+      filteredGuides[index - 1];
 
-    return trips;
-  }, [filteredGuides]);
+    const sameComment =
+      previous?.comment ===
+      guide.comment;
+
+    if (!sameComment) {
+      trips += 1;
+    }
+  });
+
+  return trips;
+}, [filteredGuides]);
+
+ 
 
   return {
     totalGuides,

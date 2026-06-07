@@ -31,6 +31,7 @@ export async function getRoadMapStats(file) {
           let lastDate = null;
           let lastComment = null;
           let propagateNextRowComment = null;
+          let emptyRows = 0;
 
           for (let i = rowIndex + 1; i < rows.length; i++) {
             const dataRow = rows[i];
@@ -77,8 +78,16 @@ export async function getRoadMapStats(file) {
             }
             // Fin de la tabla
             if (guide == null || guide === "") {
-              break;
+              emptyRows += 1;
+
+              if (emptyRows >= 3) {
+                break;
+              }
+
+              continue;
             }
+
+            emptyRows = 0;
 
             if (
               typeof guide === "string" &&
