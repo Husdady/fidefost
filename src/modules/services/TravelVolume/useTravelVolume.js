@@ -5,6 +5,7 @@ import { useGetServices } from "context/services/useServices";
 // Utils
 import createValidArray from "utils/createValidArray";
 import normalizeDate from "../utils/normalizeDate";
+import calculateTrips from "../utils/calculateTrips";
 
 const MONTH_ORDER = [
     "Ene.", "Feb.", "Mar.", "Abr.", "May.", "Jun.",
@@ -214,51 +215,22 @@ console.log("DAYS", result);
     () => filteredGuides.length,
     [filteredGuides]
   );
+  console.table(
+  filteredGuides
+    .filter((g) => {
+      const day = new Date(g.date).getDate();
+      return day === 17 || day === 18;
+    })
+    .map((g) => ({
+      day: new Date(g.date).getDate(),
+      comment: g.comment,
+    }))
+);
 
-  const totalTrips = useMemo(() => {
-  let trips = 0;
-  let blockCounter = 0;
-
-  const maxTwoGuidesComments = [
-    "SE CARGO EN UN SOLO VIAJE",
-    "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE",
-  ];
-
-  filteredGuides.forEach((guide, index) => {
-    const grouped =
-      maxTwoGuidesComments.includes(
-        guide.comment
-      );
-
-    if (!grouped) {
-      blockCounter = 0;
-      trips += 1;
-      return;
-    }
-
-    const previous =
-      filteredGuides[index - 1];
-
-    const sameBlock =
-      previous?.comment ===
-      guide.comment;
-
-    if (!sameBlock) {
-      blockCounter = 1;
-      trips += 1;
-      return;
-    }
-
-    blockCounter += 1;
-
-    if (blockCounter > 2) {
-      trips += 1;
-      blockCounter = 1;
-    }
-  });
-
-  return trips;
-}, [filteredGuides]);
+  const totalTrips = useMemo(
+  () => calculateTrips(filteredGuides),
+  [filteredGuides]
+);
  
 
   return {

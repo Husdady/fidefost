@@ -35,6 +35,9 @@ export async function getRoadMapStats(file) {
 
           for (let i = rowIndex + 1; i < rows.length; i++) {
             const dataRow = rows[i];
+            if (i >= 13 && i <= 15) {
+  console.log("RAW ROW", i, dataRow);
+}
             const guide = dataRow[colIndex];
             const rawDate = dataRow[dateColIndex];
             const rawComment = dataRow[commentColIndex];
@@ -76,6 +79,14 @@ export async function getRoadMapStats(file) {
               comment = propagateNextRowComment;
               propagateNextRowComment = null;
             }
+            if (
+              lastComment ===
+                "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE" &&
+              !propagateNextRowComment &&
+              !rawComment
+            ) {
+              lastComment = null;
+            }
             // Fin de la tabla
             if (guide == null || guide === "") {
               emptyRows += 1;
@@ -94,12 +105,12 @@ export async function getRoadMapStats(file) {
               guide.includes("-")
             ) {
               totalGuides += 1;
-              console.log("ROW", i, {
-  rawComment,
-  rawDate,
+              console.log({
+  row: i,
   guide,
+  comment,
+  rawComment,
 });
-
             const d = normalizeDate(date);
 
             if (d) {
@@ -113,11 +124,11 @@ export async function getRoadMapStats(file) {
               }
 
               timeline[year].add(month);
-             console.log("PUSH", {
+             console.log({
+  row: i,
   guide,
-  rawComment,
-  lastComment,
   comment,
+  rawComment,
 });
               
               guides.push({
