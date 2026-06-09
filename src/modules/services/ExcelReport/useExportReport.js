@@ -17,44 +17,60 @@ export default function useExportReport() {
   const getDay = (date) =>
     new Date(date).getDate();
 
+  //
   const getTripSpans = (guides = []) => {
-    const spans = [];
+  const spans = [];
 
-    let index = 0;
+  let index = 0;
 
-    while (index < guides.length) {
-      const current = guides[index];
-      const next = guides[index + 1];
+  while (index < guides.length) {
+    const current = guides[index];
+    const next = guides[index + 1];
 
-      let size = 1;
+    let size = 1;
 
-      if (
-        current.comment ===
-          "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE" &&
-        next?.comment === current.comment
-      ) {
-        size = 2;
-      }
-
-      if (
-        current.comment ===
-          "SE CARGO EN UN SOLO VIAJE" &&
-        next?.comment === current.comment &&
-        getDay(current.date) === getDay(next.date)
-      ) {
-        size = 2;
-      }
-
-      spans.push({
-        index,
-        size,
-      });
-
-      index += size;
+    if (
+      current.comment ===
+        "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE" &&
+      next?.comment === current.comment
+    ) {
+      size = 2;
     }
 
-    return spans;
-  };
+    if (
+      current.comment ===
+        "SE CARGO EN UN SOLO VIAJE" &&
+      next?.comment === current.comment &&
+      getDay(current.date) === getDay(next.date)
+    ) {
+      size = 2;
+    }
+
+    const tripGuides =
+      guides.slice(index, index + size);
+
+    const joinUnique = (field) =>
+      [
+        ...new Set(
+          tripGuides
+            .map((g) => g[field])
+            .filter(Boolean)
+        ),
+      ].join(", ");
+
+    spans.push({
+      index,
+      size,
+      provider: joinUnique("provider"),
+      product: joinUnique("product"),
+      driver: joinUnique("driver"),
+    });
+
+    index += size;
+  }
+
+  return spans;
+};
   //  
 
   const handleDownloadReport = useCallback(() => {
@@ -71,9 +87,9 @@ export default function useExportReport() {
         "FECHA",
         "GUIA",
         "N° VIAJES",
-        "CHOFER",
         "PROVED",
         "PRODUCT",
+        "CHOFER",
       ],
     ];
 
@@ -88,9 +104,9 @@ export default function useExportReport() {
           formatDate(item.date),
           item.guide,
           "",
-          group.driver,
-          group.provider,
-          group.product,
+          "",
+          "",
+          "",
         ]);
       });
 
@@ -105,12 +121,17 @@ export default function useExportReport() {
           tripStartRow + span.size - 1;
 
         reportRows[tripStartRow][3] = 1;
+        reportRows[tripStartRow][4] = span.provider;
+        reportRows[tripStartRow][5] = span.product;
+        reportRows[tripStartRow][6] = span.driver;
 
         if (tripEndRow > tripStartRow) {
-          merges.push({
-            s: { r: tripStartRow, c: 3 },
-            e: { r: tripEndRow, c: 3 },
-          });
+          merges.push(
+            { s: { r: tripStartRow, c: 3 }, e: { r: tripEndRow, c: 3 } },
+            { s: { r: tripStartRow, c: 4 }, e: { r: tripEndRow, c: 4 } },
+            { s: { r: tripStartRow, c: 5 }, e: { r: tripEndRow, c: 5 } },
+            { s: { r: tripStartRow, c: 6 }, e: { r: tripEndRow, c: 6 } }
+          );
         }
       });
 
@@ -118,10 +139,7 @@ export default function useExportReport() {
 
       if (endRow > startRow) {
         merges.push(
-          { s: { r: startRow, c: 0 }, e: { r: endRow, c: 0 } },
-          { s: { r: startRow, c: 4 }, e: { r: endRow, c: 4 } },
-          { s: { r: startRow, c: 5 }, e: { r: endRow, c: 5 } },
-          { s: { r: startRow, c: 6 }, e: { r: endRow, c: 6 } }
+          { s: { r: startRow, c: 0 }, e: { r: endRow, c: 0 } }
         );
       }
     });

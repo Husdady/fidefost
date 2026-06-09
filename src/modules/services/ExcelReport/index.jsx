@@ -22,7 +22,7 @@ export default function ExportReport() {
         </h2>
 
         <p className="export-report-description mb-0">
-          Genera reportes operativos consolidados para cierre de mes en
+          Genera reportes operativos consolidados por mes en
           segundos.
         </p>
 
@@ -37,7 +37,7 @@ export default function ExportReport() {
 
           <div className="export-report-field d-flex align-items-center justify-content-between">
             <span>Formato</span>
-            <strong>EXCEL PREMIUM</strong>
+            <strong>EXCEL</strong>
           </div>
         </div>
 

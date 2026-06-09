@@ -15,9 +15,9 @@ export default function buildMonthlyReport(guides = []) {
 
         guides: [],
 
-        provider: guide.provider,
-        product: guide.product,
-        driver: guide.driver,
+        providers: new Set(),
+        products: new Set(),
+        drivers: new Set(),
 
         totalGuides: 0,
         };
@@ -25,11 +25,28 @@ export default function buildMonthlyReport(guides = []) {
 
     groups[comment].guides.push(guide);
     groups[comment].totalGuides += 1;
+
+    if (guide.provider) {
+      groups[comment].providers.add(guide.provider);
+    }
+
+    if (guide.product) {
+      groups[comment].products.add(guide.product);
+    }
+
+    if (guide.driver) {
+      groups[comment].drivers.add(guide.driver);
+    }
   });
 
   Object.values(groups).forEach((group) => {
     group.totalTrips = calculateTrips(group.guides);
   });
 
-  return Object.values(groups);
+  return Object.values(groups).map((group) => ({
+  ...group,
+  provider: [...group.providers].join(", "),
+  product: [...group.products].join(", "),
+  driver: [...group.drivers].join(", "),
+}));
 }
