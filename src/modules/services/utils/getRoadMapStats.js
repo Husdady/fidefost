@@ -89,9 +89,13 @@ export async function getRoadMapStats(file) {
               lastDate = rawDate;
             }
 
+            const maxTwoGuidesComments = [
+              "SE CARGO EN UN SOLO VIAJE",
+              "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE",
+            ];
+
             if (
-              rawComment ===
-              "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE"
+              maxTwoGuidesComments.includes(rawComment)
             ) {
               propagateNextRowComment = rawComment;
             }
@@ -112,8 +116,7 @@ export async function getRoadMapStats(file) {
               propagateNextRowComment = null;
             }
             if (
-              lastComment ===
-                "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE" &&
+              maxTwoGuidesComments.includes(lastComment) &&
               !propagateNextRowComment &&
               !rawComment
             ) {
