@@ -1,11 +1,14 @@
 // Librarys
 import * as XLSX from "xlsx";
 import normalizeDate from "./normalizeDate";
+import buildMonthlyReport from "./buildMonthlyReport";
+
 /**
  * Callback for get road maps stats
  * @param {File|FileList} file File
  */
 export async function getRoadMapStats(file) {
+
   const buffer = await file.arrayBuffer();
   const workbook = XLSX.read(buffer, { type: "array", cellDates: true });
 
@@ -24,12 +27,17 @@ export async function getRoadMapStats(file) {
     rows.forEach((row, rowIndex) => {
       row.forEach((cell, colIndex) => {
         if (cell === "GUIA") {
+          console.log("CABECERA COMPLETA", row);
           const commentColIndex = colIndex - 2;
           
           const dateColIndex = colIndex - 1;
           
           let lastDate = null;
           let lastComment = null;
+          let lastProvider = null;
+          let lastProduct = null;
+          let lastDriver = null;
+          
           let propagateNextRowComment = null;
           let emptyRows = 0;
 
@@ -39,6 +47,30 @@ export async function getRoadMapStats(file) {
   console.log("RAW ROW", i, dataRow);
 }
             const guide = dataRow[colIndex];
+
+            let provider = dataRow[colIndex + 2];
+            let product = dataRow[colIndex + 5];
+            let driver = dataRow[colIndex + 19];
+            
+            // HEREDAR CELDAS FUSIONADAS
+            if (provider) {
+              lastProvider = provider;
+            } else {
+              provider = lastProvider;
+            }
+
+            if (product) {
+              lastProduct = product;
+            } else {
+              product = lastProduct;
+            }
+
+            if (driver) {
+              lastDriver = driver;
+            } else {
+              driver = lastDriver;
+            }
+
             const rawDate = dataRow[dateColIndex];
             const rawComment = dataRow[commentColIndex];
 
@@ -111,6 +143,12 @@ export async function getRoadMapStats(file) {
   comment,
   rawComment,
 });
+console.log({
+  guide,
+  provider,
+  product,
+  driver,
+});
             const d = normalizeDate(date);
 
             if (d) {
@@ -138,6 +176,10 @@ export async function getRoadMapStats(file) {
                 }),
                 date: d,
                 comment,
+                guide,
+                provider,
+                product,
+                driver,
               });
 
               years.add(d.getFullYear());
@@ -154,7 +196,24 @@ export async function getRoadMapStats(file) {
       });
     });
   });
+console.log("GUIAS REPORTE", guides.slice(0, 5));
+console.log(
+  "FIRST_20_GUIDES",
+  guides.slice(0, 20)
+);
+console.log(
+  "GUIDES_WITH_NULLS",
+  guides.filter(
+    (g) =>
+      !g.provider ||
+      !g.product ||
+      !g.driver
+  )
+);
+  const reportData = buildMonthlyReport(guides);
 
+console.log("REPORT_DATA", reportData);
+console.log("TOTAL_GUIDES", guides.length);
   return {
     totalGuides,
 
