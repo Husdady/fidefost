@@ -270,7 +270,7 @@ const handleSubmit = async () => {
 
   } catch (error) {
 
-    console.error(error);
+    console.error("Error saving unit:", error);
 
   } finally {
 

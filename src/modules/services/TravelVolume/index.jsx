@@ -35,7 +35,6 @@ export default function TravelVolume({
     selectedYear === "Todos"
       ? []
       : calendarData.find((y) => y.year === selectedYear)?.months || [];
-console.log("days:", days);
   return (
     <section className="travel-volume mt-2">
       <header className="travel-volume-header d-flex align-items-center justify-content-between">

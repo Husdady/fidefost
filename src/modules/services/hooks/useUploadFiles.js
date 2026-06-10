@@ -39,8 +39,6 @@ export default function useUploadFiles(params) {
       };
 
       const stats = await getRoadMapStats(file);
-console.log("STATS:", stats);
-console.log(stats);
 
       // Add service
       services.push({ ...item, ...stats });

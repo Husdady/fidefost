@@ -23,8 +23,6 @@ export default function useTravelVolume(params = {}) {
     );
   }, [services]);
 
-  console.log("ALL GUIDES", guides);
-
   const calendar = useMemo(() => {
     const map = {};
 
@@ -90,9 +88,6 @@ export default function useTravelVolume(params = {}) {
       matchDay
     );
     });
-    console.log(
-  result.filter((g) => g.comment)
-);
 
   return result;
     
@@ -183,7 +178,7 @@ const days = useMemo(() => {
     });
     usedDays.add(day);
   });
-console.log("DAYS", result);
+
   return result.sort((a, b) => {
   const getStartDay = (item) => {
     const label = item.label;
@@ -215,17 +210,6 @@ console.log("DAYS", result);
     () => filteredGuides.length,
     [filteredGuides]
   );
-  console.table(
-  filteredGuides
-    .filter((g) => {
-      const day = new Date(g.date).getDate();
-      return day === 17 || day === 18;
-    })
-    .map((g) => ({
-      day: new Date(g.date).getDate(),
-      comment: g.comment,
-    }))
-);
 
   const totalTrips = useMemo(
   () => calculateTrips(filteredGuides),

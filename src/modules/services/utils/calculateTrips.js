@@ -19,10 +19,7 @@ export default function calculateTrips(guides = []) {
   };
 
   guides.forEach((g, index) => {
-    console.log(index, {
-    day: new Date(g.date).getDate(),
-    comment: g.comment,
-  });
+    
     const isGrouped = groupedComments.has(g.comment);
 
     //  caso NO agrupado → viaje individual
@@ -65,8 +62,6 @@ export default function calculateTrips(guides = []) {
   });
 
   pushTrip();
-
-  console.log("GUIDES:", guides.length, "TRIPS:", trips);
 
   return trips;
 }
