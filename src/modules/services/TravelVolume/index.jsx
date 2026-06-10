@@ -1,20 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useGetServices } from "context/services/useServices";
 import useTravelVolume from "./useTravelVolume";
 
 
-export default function TravelVolume() {
+export default function TravelVolume({
+  selectedYear,
+  setSelectedYear,
+  selectedMonth,
+  setSelectedMonth,
+  selectedDay,
+  setSelectedDay,
+}) {
 
   const services = useGetServices();
-  const [selectedYear, setSelectedYear] =
-  useState("Todos");
-
-  const [selectedMonth, setSelectedMonth] =
-  useState("Todos");
-
-  const [selectedDay, setSelectedDay] =
-  useState("Todos");
-
+ 
   useEffect(() => {
   setSelectedYear("Todos");
   setSelectedMonth("Todos");

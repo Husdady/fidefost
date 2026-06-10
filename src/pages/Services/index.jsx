@@ -1,3 +1,4 @@
+import { useState } from "react";
 // Components
 import RoadMaps from "modules/services/RoadMaps";
 import Navigation from "components/features/Navigation";
@@ -9,10 +10,15 @@ import UploadRoadMap from "modules/services/UploadRoadMap";
 import RecentActivity from "modules/services/RecentActivity";
 import UploadRoadMapButton from "modules/services/UploadRoadMapButton";
 
-// Hooks
-import useShowModal from "hooks/useShowModal";
-
 export default function Services() {
+  const [selectedYear, setSelectedYear] =
+    useState("Todos");
+
+  const [selectedMonth, setSelectedMonth] =
+    useState("Todos");
+
+  const [selectedDay, setSelectedDay] =
+    useState("Todos");
   return (
     <main className="services-page main-container h-100">
       <Navigation />
@@ -35,8 +41,19 @@ export default function Services() {
           </aside>
 
           <aside className="right-content d-flex flex-column row-gap-3">
-            <ExportReport />
-            <TravelVolume />
+            <ExportReport
+              selectedYear={selectedYear}
+              selectedMonth={selectedMonth}
+            />
+
+            <TravelVolume
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+              selectedMonth={selectedMonth}
+              setSelectedMonth={setSelectedMonth}
+              selectedDay={selectedDay}
+              setSelectedDay={setSelectedDay}
+            />
             <RecentActivity />
           </aside>
         </div>

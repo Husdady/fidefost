@@ -1,4 +1,4 @@
-import * as XLSX from "xlsx";
+import * as XLSX from "xlsx-js-style";
 
 // Hooks
 import { useCallback } from "react";
@@ -8,10 +8,23 @@ import { useGetServices } from "context/services/useServices";
 import formatDate from "utils/format/formatDate";
 import buildMonthlyReport from "../utils/buildMonthlyReport";
 
-/**
- * Hook for implements ExportReport logic
- */
-export default function useExportReport() {
+//format date
+const formatExcelDate = (date) => {
+  if (!date) return "";
+
+  const d = new Date(date);
+
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = String(d.getFullYear()).slice(-2);
+
+  return `${day}/${month}/${year}`;
+};
+
+export default function useExportReport({
+    selectedYear,
+    selectedMonth,
+  } = {}) {
   const services = useGetServices();
   //
   const getDay = (date) =>
@@ -74,14 +87,29 @@ export default function useExportReport() {
   //  
 
   const handleDownloadReport = useCallback(() => {
-    const guides = services.flatMap(
-      (service) => service.guides || []
-    );
+    if (
+      selectedYear === "Todos" ||
+      selectedMonth === "Todos"
+    ) {
+      return;
+    }
+    const guides = services
+      .flatMap((service) => service.guides || [])
+      .filter((guide) => {
+        return (
+          guide.year === selectedYear &&
+          guide.month === selectedMonth
+        );
+      });
 
     const reportData =
       buildMonthlyReport(guides);
 
     const reportRows = [
+      [
+        `REPORTE MES DE ${selectedMonth.toUpperCase()} ${selectedYear}`
+      ],
+      [],
       [
         "COMENTARIO",
         "FECHA",
@@ -95,13 +123,16 @@ export default function useExportReport() {
 
     const merges = [];
 
+    const rowColors = {};
+    let tripColorIndex = 0;
+
     reportData.forEach((group) => {
       const startRow = reportRows.length;
 
       group.guides.forEach((item) => {
         reportRows.push([
           group.comment,
-          formatDate(item.date),
+          formatExcelDate(item.date),
           item.guide,
           "",
           "",
@@ -119,6 +150,21 @@ export default function useExportReport() {
 
         const tripEndRow =
           tripStartRow + span.size - 1;
+        
+        const tripColor =
+          tripColorIndex % 2 === 0
+            ? "F3F2F2"
+            : "D9D9D9";
+
+        for (
+          let r = tripStartRow;
+          r <= tripEndRow;
+          r++
+        ) {
+          rowColors[r] = tripColor;
+        }
+
+        tripColorIndex++;
 
         reportRows[tripStartRow][3] = 1;
         reportRows[tripStartRow][4] = span.provider;
@@ -155,8 +201,8 @@ export default function useExportReport() {
     );
 
     reportRows.push([
-      "TOTAL",
       "",
+      "TOTAL",
       totalGuides,
       totalTrips,
       "",
@@ -171,7 +217,7 @@ export default function useExportReport() {
       ["MÉTRICA", "VALOR"],
       ["Total guías", totalGuides],
       ["Total viajes", totalTrips],
-      ["Fecha de generación", formatDate(new Date())],
+      ["Fecha de generación", formatExcelDate(new Date())],
     ];
 
     const workbook =
@@ -179,6 +225,66 @@ export default function useExportReport() {
 
     const summarySheet =
       XLSX.utils.aoa_to_sheet(summaryData);
+    
+    const summaryRange =
+      XLSX.utils.decode_range(
+        summarySheet["!ref"]
+      );
+
+    for (
+      let row = summaryRange.s.r;
+      row <= summaryRange.e.r;
+      row++
+    ) {
+      for (
+        let col = summaryRange.s.c;
+        col <= summaryRange.e.c;
+        col++
+      ) {
+        const cellAddress =
+          XLSX.utils.encode_cell({
+            r: row,
+            c: col,
+          });
+
+        if (!summarySheet[cellAddress]) {
+          continue;
+        }
+
+        const isTitle = row === 1;
+        const isHeader = row === 3;
+
+        summarySheet[cellAddress].s = {
+          font: {
+            bold: isTitle || isHeader,
+            sz: isTitle ? 16 : 11,
+            color: {
+              rgb: isTitle ? "FFFFFF" : "000000",
+            },
+          },
+          fill: isTitle
+            ? {
+                fgColor: { rgb: "1F4E78" },
+              }
+            : isHeader
+            ? {
+                fgColor: { rgb: "D9D9D9" },
+              }
+            : undefined,
+          border: {
+            top: { style: "thin" },
+            bottom: { style: "thin" },
+            left: { style: "thin" },
+            right: { style: "thin" },
+          },
+          alignment: {
+            horizontal: "center",
+            vertical: "center",
+            wrapText: true,
+          },
+        };
+      }
+    }
 
     summarySheet["!cols"] = [
       { wch: 38 },
@@ -194,17 +300,109 @@ export default function useExportReport() {
 
     const reportSheet =
       XLSX.utils.aoa_to_sheet(reportRows);
+    const range =
+      XLSX.utils.decode_range(
+        reportSheet["!ref"]
+      );
 
-    reportSheet["!merges"] = merges;
+    for (
+      let row = range.s.r;
+      row <= range.e.r;
+      row++
+    ) {
+      for (
+        let col = range.s.c;
+        col <= range.e.c;
+        col++
+      ) {
+        const cellAddress =
+          XLSX.utils.encode_cell({
+            r: row,
+            c: col,
+          });
+
+        if (!reportSheet[cellAddress]) {
+          continue;
+        }
+
+        const isTitle = row === 0;
+        const isHeader = row === 2;
+        const isTotalRow =
+          reportRows[row]?.[1] === "TOTAL";
+
+        const isTotal =
+          isTotalRow && col >= 1 && col <= 3;
+
+        reportSheet[cellAddress].s = {
+          font: {
+            bold: isTitle || isHeader || isTotal,
+            sz: isTitle
+              ? 18
+              : isTotal
+              ? 16
+              : 11,
+            color: {
+              rgb:
+                isTitle || isHeader
+                  ? "FFFFFF"
+                  : "000000",
+            },
+          },
+
+          fill: isTitle
+            ? {
+                fgColor: { rgb: "44546A" }
+              }
+            : isHeader
+            ? {
+                fgColor: { rgb: "1F4E78" },
+              }
+            : isTotal
+            ? {
+                fgColor: { rgb: "D9D9D9" },
+              }
+            : col === 0 && !isTotalRow
+            ? {
+                fgColor: { rgb: "FFFF00" }
+              }
+            : rowColors[row]
+            ? {
+                fgColor: { rgb: rowColors[row] }
+              }
+            : undefined,
+
+          border: isTotal || !isTotalRow
+            ? {
+                top: { style: isTotal ? "medium" : "thin" },
+                bottom: { style: isTotal ? "medium" : "thin" },
+                left: { style: isTotal ? "medium" : "thin" },
+                right: { style: isTotal ? "medium" : "thin" },
+              }
+            : undefined,
+          alignment: {
+            horizontal: "center",
+            vertical: "center",
+            wrapText: true,
+          },
+        };
+      }
+    }
+    reportSheet["!merges"] = [
+      {
+        s: { r: 0, c: 0 },
+        e: { r: 0, c: 6 },
+      },
+      ...merges,
+    ];
 
     reportSheet["!cols"] = [
-      { wch: 38 },
-      { wch: 16 },
-      { wch: 20 },
-      { wch: 14 },
-      { wch: 24 },
-      { wch: 24 },
-      { wch: 35 },
+      { wch: 15 }, // COMENTARIO
+      { wch: 10 }, // FECHA
+      { wch: 18 }, // GUIA
+      { wch: 10 }, // N° VIAJES
+      { wch: 16 }, // PROVED
+      { wch: 24 }, // PRODUCT
+      { wch: 20 }, // CHOFER
     ];
 
     XLSX.utils.book_append_sheet(
@@ -221,9 +419,9 @@ export default function useExportReport() {
 
     XLSX.writeFile(
       workbook,
-      "reporte_operativo.xlsx"
+      `reporte_${selectedMonth}_${selectedYear}.xlsx`
     );
-  }, [services]);
+  }, [services, selectedYear, selectedMonth]);
 
   return {
     handleDownloadReport,

@@ -1,16 +1,21 @@
-// Librarys
-import dayjs from "libs/dayjs";
-
 // Hooks
 import useExportReport from "./useExportReport";
 
 // Icons
 import DownloadIcon from "components/icons/download-icon";
 
-const date = dayjs();
-
-export default function ExportReport() {
-  const { handleDownloadReport } = useExportReport();
+export default function ExportReport({
+  selectedYear,
+  selectedMonth,
+}) {
+  const { handleDownloadReport } =
+    useExportReport({
+      selectedYear,
+      selectedMonth,
+    });
+  const canDownload =
+    selectedYear !== "Todos" &&
+    selectedMonth !== "Todos";
 
   return (
     <section className="export-report">
@@ -31,8 +36,11 @@ export default function ExportReport() {
             <span>Mes</span>
 
             <strong className="text-uppercase">
-              {date.format("MMMM")} {date.year()}
+              {selectedMonth === "Todos"
+                ? "SELECCIONA MES"
+                : `${selectedMonth} ${selectedYear}`}
             </strong>
+            
           </div>
 
           <div className="export-report-field d-flex align-items-center justify-content-between">
@@ -43,6 +51,7 @@ export default function ExportReport() {
 
         <button
           type="button"
+          disabled={!canDownload}
           className="export-report-button d-flex align-items-center justify-content-center"
           onClick={handleDownloadReport}
         >

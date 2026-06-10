@@ -110,5 +110,8 @@
       transform: translateY(-2px);
       box-shadow: 0 22px 42px rgba(0, 42, 51, 0.18);
     }
+    &:disabled{
+      color: #ffffff;
+    }
   }
 }

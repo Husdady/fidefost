@@ -3,6 +3,10 @@ import * as XLSX from "xlsx";
 import normalizeDate from "./normalizeDate";
 import buildMonthlyReport from "./buildMonthlyReport";
 
+const normalizeHeader = (value) =>
+  String(value || "")
+    .trim()
+    .toUpperCase();
 /**
  * Callback for get road maps stats
  * @param {File|FileList} file File
@@ -22,21 +26,64 @@ export async function getRoadMapStats(file) {
 
   workbook.SheetNames.forEach((sheetName) => {
     const sheet = workbook.Sheets[sheetName];
+    console.log("MERGES", sheet["!merges"]);
     const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null });
 
+    const getMergedCellValue = (rowIndex, colIndex) => {
+    const merges = sheet["!merges"] || [];
+
+    const merge = merges.find((item) => {
+      return (
+        rowIndex >= item.s.r &&
+        rowIndex <= item.e.r &&
+        colIndex >= item.s.c &&
+        colIndex <= item.e.c
+      );
+    });
+
+    if (!merge) {
+      return null;
+    }
+
+    return rows[merge.s.r]?.[merge.s.c] || null;
+  };
     rows.forEach((row, rowIndex) => {
       row.forEach((cell, colIndex) => {
         if (cell === "GUIA") {
-          console.log("CABECERA COMPLETA", row);
+          const normalizedHeaders = row.map(normalizeHeader);
+          //volumen//
           const commentColIndex = colIndex - 2;
-          
           const dateColIndex = colIndex - 1;
+          const guideColIndex = colIndex;
+
+          const findHeaderNearGuide = (headerName) => {
+          const start = colIndex;
+          const end = Math.min(row.length - 1, colIndex + 25);
+
+          for (let i = start; i <= end; i++) {
+            const header = String(row[i] || "")
+              .trim()
+              .toUpperCase();
+
+            if (header === headerName) {
+              return i;
+            }
+          }
+
+          return -1;
+        };
+
+          const providerColIndex =
+            findHeaderNearGuide("PROVED");
+
+          const productColIndex =
+            findHeaderNearGuide("PRODUCT");
+
+          const driverColIndex =
+            findHeaderNearGuide("CHOFER");
           
           let lastDate = null;
           let lastComment = null;
-          let lastProvider = null;
-          let lastProduct = null;
-          let lastDriver = null;
           
           let propagateNextRowComment = null;
           let emptyRows = 0;
@@ -46,33 +93,31 @@ export async function getRoadMapStats(file) {
             if (i >= 13 && i <= 15) {
   console.log("RAW ROW", i, dataRow);
 }
-            const guide = dataRow[colIndex];
+            const guide = dataRow[guideColIndex];
 
-            let provider = dataRow[colIndex + 2];
-            let product = dataRow[colIndex + 5];
-            let driver = dataRow[colIndex + 19];
-            
-            // HEREDAR CELDAS FUSIONADAS
-            if (provider) {
-              lastProvider = provider;
-            } else {
-              provider = lastProvider;
-            }
+            let provider =
+              providerColIndex >= 0
+                ? dataRow[providerColIndex] ||
+                  getMergedCellValue(i, providerColIndex)
+                : null;
 
-            if (product) {
-              lastProduct = product;
-            } else {
-              product = lastProduct;
-            }
+            let product =
+              productColIndex >= 0
+                ? dataRow[productColIndex] ||
+                  getMergedCellValue(i, productColIndex)
+                : null;
 
-            if (driver) {
-              lastDriver = driver;
-            } else {
-              driver = lastDriver;
-            }
+            let driver =
+              driverColIndex >= 0
+                ? dataRow[driverColIndex] ||
+                  getMergedCellValue(i, driverColIndex)
+                : null;
 
-            const rawDate = dataRow[dateColIndex];
-            const rawComment = dataRow[commentColIndex];
+            const rawDate =
+              dataRow[dateColIndex];
+
+            const rawComment =
+              dataRow[commentColIndex];
 
             if (rawDate) {
               const currentDate = normalizeDate(rawDate);
@@ -104,9 +149,44 @@ export async function getRoadMapStats(file) {
               lastComment = rawComment;
             }
 
-            const date = rawDate || lastDate;
+            const mergedDate =
+              getMergedCellValue(i, dateColIndex);
 
-            let comment = rawComment || lastComment;
+            const mergedComment =
+              getMergedCellValue(i, commentColIndex);
+
+            let comment =
+              rawComment || mergedComment || lastComment;
+            // Algunos Excel no reportan la fecha como combinada,
+            // pero si pertenece a los comentarios agrupados,
+            // puede heredar la última fecha válida.
+            const date =
+              rawDate ||
+              mergedDate ||
+              (
+                maxTwoGuidesComments.includes(comment)
+                  ? lastDate
+                  : null
+              );
+
+              const dTest = normalizeDate(date);
+
+if (
+  guide === "EG04-00000446" ||
+  guide === "EG04-00000447"
+) {
+  console.log("GUIA 19 DEBUG", {
+    row: i,
+    guide,
+    rawDate,
+    mergedDate,
+    date,
+    rawComment,
+    mergedComment,
+    lastComment,
+    comment,
+  });
+}
 
             if (
               !rawComment &&
@@ -139,22 +219,21 @@ export async function getRoadMapStats(file) {
               typeof guide === "string" &&
               guide.includes("-")
             ) {
-              totalGuides += 1;
-              console.log({
+              console.log("verificar",{
   row: i,
+  rawDate,
+  lastDate,
   guide,
   comment,
-  rawComment,
 });
-console.log({
-  guide,
-  provider,
-  product,
-  driver,
-});
-            const d = normalizeDate(date);
+              const d = normalizeDate(date);
 
-            if (d) {
+              if (!d) {
+                continue;
+              }
+
+              totalGuides += 1;
+
               const year = d.getFullYear();
               const month = d.toLocaleString("es-PE", {
                 month: "short",
@@ -165,13 +244,7 @@ console.log({
               }
 
               timeline[year].add(month);
-             console.log({
-  row: i,
-  guide,
-  comment,
-  rawComment,
-});
-              
+
               guides.push({
                 year: d.getFullYear(),
                 month: d.toLocaleString("es-PE", {
@@ -192,7 +265,6 @@ console.log({
                   month: "short",
                 })
               );
-            }
             }
           }
         }

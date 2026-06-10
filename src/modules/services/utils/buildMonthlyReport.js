@@ -4,11 +4,9 @@ export default function buildMonthlyReport(guides = []) {
   const groups = {};
 
   guides.forEach((guide) => {
-    const comment = (
-        guide.comment || "SIN COMENTARIO"
-        )
-        .trim()
-        .toUpperCase();
+    const comment = guide.comment
+      ? String(guide.comment).trim().toUpperCase()
+      : "SIN COMENTARIO";
     if (!groups[comment]) {
       groups[comment] = {
         comment,
