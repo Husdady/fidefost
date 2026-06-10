@@ -16,7 +16,9 @@ export async function getRoadMapStats(file) {
   const workbook = XLSX.read(buffer, { type: "array", cellDates: true });
 
   let totalGuides = 0;
-  
+
+  let invalidHeadersDetected = false;
+
   const years = new Set();
   const months = new Set();
   const guides = [];
@@ -91,6 +93,22 @@ export async function getRoadMapStats(file) {
 
           const driverColIndex =
             findHeaderNearGuide(["CHOFER", "CONDUCTOR"]);
+          
+          if (
+            providerColIndex === -1 ||
+            productColIndex === -1 ||
+            driverColIndex === -1
+          ) {
+            invalidHeadersDetected = true;
+
+            console.warn("Encabezados no encontrados", {
+              sheetName,
+              rowIndex,
+              providerColIndex,
+              productColIndex,
+              driverColIndex,
+            });
+          }
           
           let lastDate = null;
           let lastComment = null;
@@ -259,5 +277,6 @@ export async function getRoadMapStats(file) {
     years: [...years],
     months: [...months],
     guides,
+    invalidHeadersDetected,
   };
 }

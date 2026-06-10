@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx-js-style";
-
+import { showErrorToast } from "utils/toast";
 // Hooks
 import { useCallback } from "react";
 import { useGetServices } from "context/services/useServices";
@@ -87,6 +87,8 @@ export default function useExportReport({
   //  
 
   const handleDownloadReport = useCallback(() => {
+   try { 
+    
     if (
       selectedYear === "Todos" ||
       selectedMonth === "Todos"
@@ -421,6 +423,13 @@ export default function useExportReport({
       workbook,
       `reporte_${selectedMonth}_${selectedYear}.xlsx`
     );
+    } catch (error) {
+    console.error("Error exporting monthly report:", error);
+
+    showErrorToast(
+      "No se pudo exportar el reporte. Verifica los datos cargados."
+    );
+  }
   }, [services, selectedYear, selectedMonth]);
 
   return {

@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { useAddServices } from "context/services/useServices";
 
 // Utils
-import { showInfoToast } from "utils/toast";
+import { showInfoToast, showErrorToast } from "utils/toast";
 
 import generateId from "utils/generateId";
 import isValidFile from "../utils/isValidFile";
@@ -38,7 +38,25 @@ export default function useUploadFiles(params) {
         _id: serviceId,
       };
 
-      const stats = await getRoadMapStats(file);
+      let stats;
+
+      try {
+        stats = await getRoadMapStats(file);
+      } catch (error) {
+        console.error("Error reading road map Excel:", error);
+
+        showErrorToast(
+          `No se pudo leer el archivo ${file.name}. Verifica que sea un Excel válido.`
+        );
+
+        continue;
+      }
+
+      if (stats.invalidHeadersDetected) {
+        showInfoToast(
+          `El archivo ${file.name} tiene columnas no reconocidas. Algunas columnas del reporte pueden quedar vacías.`
+        );
+      }
 
       // Add service
       services.push({ ...item, ...stats });

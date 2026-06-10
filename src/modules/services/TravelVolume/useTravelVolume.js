@@ -122,14 +122,17 @@ const days = useMemo(() => {
       );
 
       if (existing && g.comment) {
-        const comments = (
+        const comments = String(
           existing.comment || ""
         )
           .split(", ")
           .filter(Boolean);
 
-        if (!comments.includes(g.comment)) {
-          comments.push(g.comment);
+        const currentComment =
+          String(g.comment);
+
+        if (!comments.includes(currentComment)) {
+          comments.push(currentComment);
         }
 
         existing.comment =
@@ -174,7 +177,9 @@ const days = useMemo(() => {
 
     result.push({
       label: day,
-      comment: g.comment || null,
+      comment: g.comment
+        ? String(g.comment)
+        : null,
     });
     usedDays.add(day);
   });
