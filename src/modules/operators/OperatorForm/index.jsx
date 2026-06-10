@@ -123,7 +123,7 @@ function OperatorForm({ title, onHide, onSubmit, isShowing, defaultValues }) {
                   </h6>
 
                   <p className="operator-form-dropzone-text mb-0">
-                    Documentos PDF, DOC o DOCX hasta 10MB
+                    Documentos PDF, DOC o DOCX
                   </p>
 
                   <p className="operator-form-dropzone-helper mb-0">
