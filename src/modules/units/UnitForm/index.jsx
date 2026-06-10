@@ -1254,15 +1254,17 @@ const usedSoats = units
 
                         </div>
 
-                        <button
-                          type="button"
-                          className="unit-file-delete"
-                          onClick={() =>
-                            removeFile(file.id || file.tempId)
-                          }
-                        >
-                          ✕
-                        </button>
+                        {!file.insuranceType && (
+                          <button
+                            type="button"
+                            className="unit-file-delete"
+                            onClick={() =>
+                              removeFile(file.id || file.tempId)
+                            }
+                          >
+                            ✕
+                          </button>
+                        )}
 
                       </div>
                     ))}
