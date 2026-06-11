@@ -4,15 +4,17 @@
   "version": "0.0.1",
   "type": "module",
   "author": {
-    "name": "Husdady Mena",
-    "email": "husdadymena@gmail.com",
-    "url": "https://github.com/Husdady"
+    "name": "Fidefost",
   },
   "contributors": [
     {
-      "url": "",
-      "name": "",
-      "email": ""
+      "name": "William Alburqueque",
+      "email": "pweb5002@gmail.com"
+    },
+    {
+      "name": "Imanol Mena",
+      "email": "husdadymena@gmail.com",
+      "url": "https://github.com/Husdady"
     }
   ],
   "scripts": {

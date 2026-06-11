@@ -1,7 +1,7 @@
 import { createPortal } from "react-dom";
 import { useState, useEffect, useRef } from "react";
 
-import { useAddUnit } from "context/units/useUnits";
+import {useAddUnit} from "context/units/useUnits";
 import { useGetUnits } from "context/units/useUnits";
 import { useGetInsurance } from "context/contracts/useInsurance";
 import { useUpdateUnit } from "context/units/useUnits";
@@ -10,12 +10,10 @@ import getInsuranceStatus from "utils/getInsuranceStatus";
 import saveDocument from "database/saveDocument";
 import deleteDocument from "database/deleteDocument";
 
-export default function UnitForm({
-  show,
-  onHide,
-  initialData = null,
-  isEdit = false,
-}) {
+
+export default function UnitForm({ show, onHide, initialData = null,
+  isEdit = false }) {
+
   const [isSaving, setIsSaving] = useState(false);
   const savingRef = useRef(false);
   const addUnit = useAddUnit();
@@ -23,60 +21,70 @@ export default function UnitForm({
   const insuranceContracts = useGetInsurance();
   const units = useGetUnits();
   const usedVehicularPolicies = units
-    .filter((unit) => unit._id !== initialData?._id)
-    .map((unit) => unit.polizaVehicular)
-    .filter(Boolean);
+  .filter(
+    (unit) =>
+      unit._id !== initialData?._id
+  )
+  .map(
+    (unit) => unit.polizaVehicular
+  )
+  .filter(Boolean);
 
-  const [deletedFiles, setDeletedFiles] = useState([]);
+ const [deletedFiles, setDeletedFiles] = useState([]);
 
-  const [originalFiles, setOriginalFiles] = useState([]);
+ const [originalFiles, setOriginalFiles] = useState([]);
 
-  const emptyForm = {
-    marca: "",
-    polizaVehicular: "",
-    polizaCarga: "",
-    polizaEndoso: "",
-    placaTractor: "",
-    placaCarreta: "",
-    revisionFechaPT: "",
-    revisionFechaPC: "",
-    mtc: "",
-    poliza: "",
-    soat: "",
-    documentos: {
-      mtcCheck: false,
-      revisionTecnicaCheck: false,
-      soatCheck: false,
-      polizaCheck: false,
-      tarjetaVehicularCheck: false,
-      tarjetaVehicularInfo: "",
-      permisoMunicipalCheck: false,
-    },
-    archivos: [],
-  };
-  const resetForm = () => {
-    setForm(emptyForm);
+ const emptyForm = {
+  marca: "",
+  polizaVehicular: "",
+  polizaCarga: "",
+  polizaEndoso: "",
+  placaTractor: "",
+  placaCarreta: "",
+  revisionFechaPT: "",
+  revisionFechaPC: "",
+  mtc: "",
+  poliza: "",
+  soat: "",
+  documentos: {
+    mtcCheck: false,
+    revisionTecnicaCheck: false,
+    soatCheck: false,
+    polizaCheck: false,
+    tarjetaVehicularCheck: false,
+    tarjetaVehicularInfo: "",
+    permisoMunicipalCheck: false,
+  },
+  archivos: []
+};
+const resetForm = () => {
 
-    setDeletedFiles([]);
+  setForm(emptyForm);
 
-    setOriginalFiles([]);
+  setDeletedFiles([]);
 
-    setIsSaving(false);
-  };
+  setOriginalFiles([]);
 
-  const [form, setForm] = useState(initialData || emptyForm);
+  setIsSaving(false);
+};
 
-  const [showMessageBox, setShowMessageBox] = useState(false);
+const [form, setForm] = useState(
+  initialData || emptyForm
+);
 
-  const [messageBoxText, setMessageBoxText] = useState("");
+const [showMessageBox, setShowMessageBox] =
+  useState(false);
 
-  const handleCheckbox = (name) => {
+const [messageBoxText, setMessageBoxText] =
+  useState("");
+
+const handleCheckbox = (name) => {
     setForm({
       ...form,
       documentos: {
         ...form.documentos,
-        [name]: !form.documentos[name],
-      },
+        [name]: !form.documentos[name]
+      }
     });
   };
 
@@ -84,54 +92,63 @@ export default function UnitForm({
     setForm({ ...form, [name]: !form[name] });
   };
 
-  const handleFiles = (e) => {
-    const uploadedFiles = Array.from(e.target.files);
+const handleFiles = (e) => {
 
-    const filesWithId = uploadedFiles.map((file) => ({
-      blob: file,
+  const uploadedFiles = Array.from(e.target.files);
 
-      tempId: crypto.randomUUID(),
+  const filesWithId = uploadedFiles.map((file) => ({
+    blob: file,
 
-      savedInDb: false,
+    tempId: crypto.randomUUID(),
 
-      name: file.name,
-      size: file.size,
-      type: file.type,
-    }));
+    savedInDb: false,
 
-    setForm((prev) => ({
-      ...prev,
-
-      archivos: [...prev.archivos, ...filesWithId],
-    }));
-
-    // PERMITIR SUBIR EL MISMO ARCHIVO OTRA VEZ
-    e.target.value = "";
-  };
-
-  const removeFile = (fileId) => {
-    const fileToDelete = form.archivos.find(
-      (f) => (f.id || f.tempId) === fileId
-    );
-
-    // SOLO SI YA ESTÁ EN DB
-    if (fileToDelete?.savedInDb) {
-      setDeletedFiles((prev) => [...prev, fileToDelete.id]);
-    }
-
-    setForm((prev) => ({
-      ...prev,
-      archivos: prev.archivos.filter((f) => (f.id || f.tempId) !== fileId),
-    }));
-  };
+    name: file.name,
+    size: file.size,
+    type: file.type
+  }));
 
   setForm((prev) => ({
     ...prev,
-    archivos: prev.archivos.filter((f) => (f.id || f.tempId) !== fileId),
+
+    archivos: [
+      ...prev.archivos,
+      ...filesWithId
+    ]
   }));
-}
+
+  // PERMITIR SUBIR EL MISMO ARCHIVO OTRA VEZ
+  e.target.value = "";
+};
+
+const removeFile = (fileId) => {
+
+  const fileToDelete =
+    form.archivos.find(
+      (f) =>
+        (f.id || f.tempId) === fileId
+    );
+
+  // SOLO SI YA ESTÁ EN DB
+  if (fileToDelete?.savedInDb) {
+
+    setDeletedFiles((prev) => [
+      ...prev,
+      fileToDelete.id
+    ]);
+  }
+
+  setForm((prev) => ({
+    ...prev,
+    archivos: prev.archivos.filter(
+      (f) =>
+        (f.id || f.tempId) !== fileId
+    )
+  }));
+};
 
 const handleSubmit = async () => {
+  
   if (!validateUniqueFields()) {
     return;
   }
@@ -144,12 +161,16 @@ const handleSubmit = async () => {
   setIsSaving(true);
 
   try {
+
     // NUEVO ID SIEMPRE
-    const currentUnitId = initialData?._id || crypto.randomUUID();
+    const currentUnitId =
+      initialData?._id || crypto.randomUUID();
 
     // ELIMINAR ARCHIVOS
     if (isEdit) {
+
       for (const fileId of deletedFiles) {
+
         await deleteDocument(fileId);
       }
     }
@@ -157,43 +178,48 @@ const handleSubmit = async () => {
     const storedFiles = [];
 
     for (const file of form.archivos) {
-      if (file.savedInDb) {
-        storedFiles.push({
-          id: file.id,
 
-          name: file.name,
+     if (file.savedInDb) {
 
-          size: file.size,
+  storedFiles.push({
+    id: file.id,
 
-          type: file.type,
+    name: file.name,
 
-          blob: file.blob || null,
+    size: file.size,
 
-          insuranceFileId: file.insuranceFileId,
+    type: file.type,
 
-          insuranceType: file.insuranceType,
+    blob: file.blob || null,
 
-          savedInDb: true,
-        });
+    insuranceFileId:
+      file.insuranceFileId,
 
-        continue;
-      }
+    insuranceType:
+      file.insuranceType,
+
+    savedInDb: true
+  });
+
+  continue;
+}
 
       // NUEVO ARCHIVO
       const saved = await saveDocument({
         file: file.blob || file,
         module: "units",
         relatedId: currentUnitId,
-        category: "legal",
+        category: "legal"
       });
 
       storedFiles.push({
         ...saved,
-        savedInDb: true,
+        savedInDb: true
       });
     }
 
     const unitData = {
+
       _id: currentUnitId,
 
       marca: form.marca,
@@ -204,18 +230,24 @@ const handleSubmit = async () => {
 
       mtc: form.mtc,
 
-      tarjetaVehicularInfo: form.documentos.tarjetaVehicularInfo,
+      tarjetaVehicularInfo:
+        form.documentos.tarjetaVehicularInfo,
 
-      revisionFechaPT: form.revisionFechaPT,
+      revisionFechaPT:
+        form.revisionFechaPT,
 
-      revisionFechaPC: form.revisionFechaPC,
+      revisionFechaPC:
+        form.revisionFechaPC,
 
       soat: form.soat,
-      polizaVehicular: form.polizaVehicular,
+      polizaVehicular:
+        form.polizaVehicular,
 
-      polizaCarga: form.polizaCarga,
+      polizaCarga:
+        form.polizaCarga,
 
-      polizaEndoso: form.polizaEndoso,
+      polizaEndoso:
+        form.polizaEndoso,
 
       archivos: storedFiles,
 
@@ -223,8 +255,11 @@ const handleSubmit = async () => {
     };
 
     if (isEdit) {
+
       updateUnit(unitData);
+
     } else {
+
       addUnit(unitData);
     }
 
@@ -232,9 +267,13 @@ const handleSubmit = async () => {
     resetForm();
 
     onHide();
+
   } catch (error) {
+
     console.error("Error saving unit:", error);
+
   } finally {
+
     setIsSaving(false);
 
     savingRef.current = false;
@@ -242,197 +281,138 @@ const handleSubmit = async () => {
 };
 
 //validacion datos
-const validateUniqueFields = async () => {
+const validateUniqueFields = () => {
+
   const duplicatedFields = [];
 
-  units.forEach(async (unit) => {
+  units.forEach((unit) => {
+
     // IGNORAR EL MISMO REGISTRO EN EDICIÓN
-    if (isEdit && unit._id === initialData?._id) {
+    if (
+      isEdit &&
+      unit._id === initialData?._id
+    ) {
       return;
     }
 
-    // BLOQUEAR DOBLE CLICK
-    if (savingRef.current) return;
+    // PLACA TRACTOR
+    if (
+      unit.placaTractor ===
+        form.placaTractor &&
+      form.placaTractor
+    ) {
+      duplicatedFields.push(
+        `PLACA TRACTOR: ${form.placaTractor}`
+      );
+    }
 
-    savingRef.current = true;
+    // PLACA CARRETA
+    if (
+      unit.placaCarreta ===
+        form.placaCarreta &&
+      form.placaCarreta
+    ) {
+      duplicatedFields.push(
+        `PLACA CARRETA: ${form.placaCarreta}`
+      );
+    }
 
-    setIsSaving(true);
+    // MTC
+    if (
+      unit.mtc === form.mtc &&
+      form.mtc
+    ) {
+      duplicatedFields.push(
+        `MTC: ${form.mtc}`
+      );
+    }
 
-    try {
-      // NUEVO ID SIEMPRE
-      const currentUnitId = initialData?._id || crypto.randomUUID();
-
-      // ELIMINAR ARCHIVOS
-      if (isEdit) {
-        for (const fileId of deletedFiles) {
-          await deleteDocument(fileId);
-        }
-      }
-
-      const storedFiles = [];
-
-      for (const file of form.archivos) {
-        if (file.savedInDb) {
-          storedFiles.push({
-            id: file.id,
-
-            name: file.name,
-
-            size: file.size,
-
-            type: file.type,
-
-            blob: file.blob || null,
-
-            insuranceFileId: file.insuranceFileId,
-
-            insuranceType: file.insuranceType,
-
-            savedInDb: true,
-          });
-
-          continue;
-        }
-
-        // NUEVO ARCHIVO
-        const saved = await saveDocument({
-          file: file.blob || file,
-          module: "units",
-          relatedId: currentUnitId,
-          category: "legal",
-        });
-
-        storedFiles.push({
-          ...saved,
-          savedInDb: true,
-        });
-      }
-
-      const unitData = {
-        _id: currentUnitId,
-
-        marca: form.marca,
-
-        placaTractor: form.placaTractor,
-
-        placaCarreta: form.placaCarreta,
-
-        mtc: form.mtc,
-
-        tarjetaVehicularInfo: form.documentos.tarjetaVehicularInfo,
-
-        revisionFechaPT: form.revisionFechaPT,
-
-        revisionFechaPC: form.revisionFechaPC,
-
-        soat: form.soat,
-        polizaVehicular: form.polizaVehicular,
-
-        polizaCarga: form.polizaCarga,
-
-        polizaEndoso: form.polizaEndoso,
-
-        archivos: storedFiles,
-
-        documentos: form.documentos,
-      };
-
-      if (isEdit) {
-        updateUnit(unitData);
-      } else {
-        addUnit(unitData);
-      }
-
-      // LIMPIAR
-      resetForm();
-
-      onHide();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsSaving(false);
-
-      savingRef.current = false;
+    // IDENTIFICACION VEHICULAR
+    if (
+      unit.tarjetaVehicularInfo ===
+        form.documentos
+          .tarjetaVehicularInfo &&
+      form.documentos
+        .tarjetaVehicularInfo
+    ) {
+      duplicatedFields.push(
+        `IDENTIFICACIÓN VEHICULAR: ${
+          form.documentos
+            .tarjetaVehicularInfo
+        }`
+      );
     }
   });
 
-  //validacion datos
-  const validateUniqueFields = () => {
-    const duplicatedFields = [];
+  // ELIMINAR DUPLICADOS REPETIDOS
+  const uniqueDuplicatedFields = [
+    ...new Set(duplicatedFields)
+  ];
 
-    units.forEach((unit) => {
-      // IGNORAR EL MISMO REGISTRO EN EDICIÓN
-      if (isEdit && unit._id === initialData?._id) {
-        return;
-      }
+  if (
+    uniqueDuplicatedFields.length > 0
+  ) {
 
-      // PLACA TRACTOR
-      if (unit.placaTractor === form.placaTractor && form.placaTractor) {
-        duplicatedFields.push(`PLACA TRACTOR: ${form.placaTractor}`);
-      }
+    setMessageBoxText(
+      uniqueDuplicatedFields.join("\n")
+    );
 
-      // PLACA CARRETA
-      if (unit.placaCarreta === form.placaCarreta && form.placaCarreta) {
-        duplicatedFields.push(`PLACA CARRETA: ${form.placaCarreta}`);
-      }
+    setShowMessageBox(true);
 
-      // MTC
-      if (unit.mtc === form.mtc && form.mtc) {
-        duplicatedFields.push(`MTC: ${form.mtc}`);
-      }
+    return false;
+  }
 
-      // IDENTIFICACION VEHICULAR
-      if (
-        unit.tarjetaVehicularInfo === form.documentos.tarjetaVehicularInfo &&
-        form.documentos.tarjetaVehicularInfo
-      ) {
-        duplicatedFields.push(
-          `IDENTIFICACIÓN VEHICULAR: ${form.documentos.tarjetaVehicularInfo}`
-        );
-      }
-    });
+  return true;
+};
 
-    // ELIMINAR DUPLICADOS REPETIDOS
-    const uniqueDuplicatedFields = [...new Set(duplicatedFields)];
+const handleInsuranceSelect = async (
+  type,
+  value
+) => {
 
-    if (uniqueDuplicatedFields.length > 0) {
-      setMessageBoxText(uniqueDuplicatedFields.join("\n"));
+  const selectedInsurance =
+    insuranceContracts.find((item) => {
 
-      setShowMessageBox(true);
+  if (
+  type === "polizaVehicular"
+) {
+  return (
+    item.tipo?.toLowerCase().includes("vehicular") &&
+    item.poliza === value
+  );
+}
 
-      return false;
-    }
+  if (
+    type === "polizaCarga"
+  ) {
+    return (
+      item.tipo
+        ?.toLowerCase()
+        .includes("carga") &&
+      item.poliza === value
+    );
+  }
 
-    return true;
-  };
+  if (
+    type === "polizaEndoso"
+  ) {
+    return (
+      item.tipo
+        ?.toLowerCase()
+        .includes("endoso") &&
+      item.poliza === value
+    );
+  }
 
-  const handleInsuranceSelect = async (type, value) => {
-    const selectedInsurance = insuranceContracts.find((item) => {
-      if (type === "polizaVehicular") {
-        return (
-          item.tipo?.toLowerCase().includes("vehicular") &&
-          item.poliza === value
-        );
-      }
+        if (type === "soat") {
+          return (
+            item.tipo === "SOAT" &&
+            item.poliza === value
+          );
+        }
 
-      if (type === "polizaCarga") {
-        return (
-          item.tipo?.toLowerCase().includes("carga") && item.poliza === value
-        );
-      }
-
-      if (type === "polizaEndoso") {
-        return (
-          item.tipo?.toLowerCase().includes("endoso") && item.poliza === value
-        );
-      }
-
-      if (type === "soat") {
-        return item.tipo === "SOAT" && item.poliza === value;
-      }
-
-      return false;
-    });
+        return false;
+      });
 
     if (!selectedInsurance) {
       return;
@@ -442,7 +422,10 @@ const validateUniqueFields = async () => {
     // GUARDAR ARCHIVOS EN INDEXEDDB
     // =========================
 
-    const savedFiles = (selectedInsurance.archivos || []).map((file) => ({
+  const savedFiles =
+  (selectedInsurance.archivos || []).map(
+    (file) => ({
+
       id: file.id,
 
       tempId: crypto.randomUUID(),
@@ -459,215 +442,310 @@ const validateUniqueFields = async () => {
 
       insuranceFileId: file.id,
 
-      insuranceType: type,
-    }));
+      insuranceType: type
+    })
+  );  
     // =========================
     // ACTUALIZAR FORM
     // =========================
 
     setForm((prev) => {
+
       // ELIMINAR ARCHIVOS ANTERIORES
-      const filteredFiles = prev.archivos.filter((file) => {
-        if (type === "soat" && file.insuranceType === "SOAT") {
+      const filteredFiles =
+        prev.archivos.filter((file) => {
+
+        if (
+          type === "soat" &&
+          file.insuranceType === "SOAT"
+        ) {
           return false;
         }
 
-        if (file.insuranceType === type) {
-          return false;
-        }
-
-        return true;
-      });
-
-      return {
-        ...prev,
-
-        [type]: value,
-
-        archivos: [...filteredFiles, ...savedFiles],
-
-        documentos: {
-          ...prev.documentos,
-
-          soatCheck: type === "soat" ? true : prev.documentos.soatCheck,
-
-          polizaCheck: type !== "soat" ? true : prev.documentos.polizaCheck,
-        },
-      };
-    });
-  };
-
-  useEffect(() => {
-    if (initialData) {
-      // VALIDAR SI LAS POLIZAS AUN EXISTEN
-      const vehicularExists = insuranceContracts.some(
-        (insurance) => insurance.poliza === initialData.polizaVehicular
-      );
-
-      const cargaExists = insuranceContracts.some(
-        (insurance) => insurance.poliza === initialData.polizaCarga
-      );
-
-      const endosoExists = insuranceContracts.some(
-        (insurance) => insurance.poliza === initialData.polizaEndoso
-      );
-
-      const soatExists = insuranceContracts.some(
-        (insurance) => insurance.poliza === initialData.soat
-      );
-
-      // FILTRAR ARCHIVOS HUERFANOS
-      const validFiles = (initialData.archivos || []).filter((file) => {
-        if (file.insuranceType === "polizaVehicular" && !vehicularExists) {
-          return false;
-        }
-
-        if (file.insuranceType === "polizaCarga" && !cargaExists) {
-          return false;
-        }
-
-        if (file.insuranceType === "polizaEndoso" && !endosoExists) {
-          return false;
-        }
-
-        if (file.insuranceType === "soat" && !soatExists) {
+        if (
+          file.insuranceType === type
+        ) {
           return false;
         }
 
         return true;
       });
 
-      setForm({
-        ...initialData,
+    return {
+      ...prev,
 
-        polizaVehicular: vehicularExists ? initialData.polizaVehicular : "",
+      [type]: value,
 
-        polizaCarga: cargaExists ? initialData.polizaCarga : "",
+      archivos: [
+        ...filteredFiles,
+        ...savedFiles
+      ],
 
-        polizaEndoso: endosoExists ? initialData.polizaEndoso : "",
+      documentos: {
+        ...prev.documentos,
 
-        soat: soatExists ? initialData.soat : "",
+        soatCheck:
+          type === "soat"
+            ? true
+            : prev.documentos.soatCheck,
 
-        archivos: validFiles.map((file) => ({
+        polizaCheck:
+          type !== "soat"
+            ? true
+            : prev.documentos.polizaCheck
+      }
+    };
+  });
+};
+
+useEffect(() => {
+
+  if (initialData) {
+
+    // VALIDAR SI LAS POLIZAS AUN EXISTEN
+    const vehicularExists =
+      insuranceContracts.some(
+        (insurance) =>
+          insurance.poliza ===
+          initialData.polizaVehicular
+      );
+
+    const cargaExists =
+      insuranceContracts.some(
+        (insurance) =>
+          insurance.poliza ===
+          initialData.polizaCarga
+      );
+
+    const endosoExists =
+      insuranceContracts.some(
+        (insurance) =>
+          insurance.poliza ===
+          initialData.polizaEndoso
+      );
+
+    const soatExists =
+      insuranceContracts.some(
+        (insurance) =>
+          insurance.poliza ===
+          initialData.soat
+      );
+
+    // FILTRAR ARCHIVOS HUERFANOS
+    const validFiles =
+      (initialData.archivos || []).filter(
+        (file) => {
+
+          if (
+            file.insuranceType === "polizaVehicular" &&
+            !vehicularExists
+          ) {
+            return false;
+          }
+
+          if (
+            file.insuranceType === "polizaCarga" &&
+            !cargaExists
+          ) {
+            return false;
+          }
+
+          if (
+            file.insuranceType === "polizaEndoso" &&
+            !endosoExists
+          ) {
+            return false;
+          }
+
+          if (
+            file.insuranceType === "soat" &&
+            !soatExists
+          ) {
+            return false;
+          }
+
+          return true;
+        }
+      );
+
+    setForm({
+      ...initialData,
+
+      polizaVehicular:
+        vehicularExists
+          ? initialData.polizaVehicular
+          : "",
+
+      polizaCarga:
+        cargaExists
+          ? initialData.polizaCarga
+          : "",
+
+      polizaEndoso:
+        endosoExists
+          ? initialData.polizaEndoso
+          : "",
+
+      soat:
+        soatExists
+          ? initialData.soat
+          : "",
+
+      archivos: validFiles.map(
+        (file) => ({
           ...file,
-          tempId: crypto.randomUUID(),
+          tempId:
+            crypto.randomUUID(),
 
-          savedInDb: true,
-        })),
-      });
+          savedInDb: true
+        })
+      )
+    });
 
-      setOriginalFiles(validFiles);
-    } else {
-      setForm(emptyForm);
-    }
-  }, [initialData, insuranceContracts]);
+    setOriginalFiles(validFiles);
 
-  useEffect(() => {
-    if (!show) return;
+  } else {
 
-    setForm((prev) => {
-      const insuranceFields = [
-        {
-          key: "polizaVehicular",
-          value: prev.polizaVehicular,
-        },
-        {
-          key: "polizaCarga",
-          value: prev.polizaCarga,
-        },
-        {
-          key: "polizaEndoso",
-          value: prev.polizaEndoso,
-        },
-        {
-          key: "soat",
-          value: prev.soat,
-        },
-      ];
+    setForm(emptyForm);
+  }
 
-      const manualFiles = prev.archivos.filter((file) => !file.insuranceType);
+}, [initialData, insuranceContracts]);
 
-      let syncedInsuranceFiles = [];
+useEffect(() => {
 
-      insuranceFields.forEach(({ key, value }) => {
+  if (!show) return;
+
+  setForm((prev) => {
+
+    const insuranceFields = [
+      {
+        key: "polizaVehicular",
+        value: prev.polizaVehicular
+      },
+      {
+        key: "polizaCarga",
+        value: prev.polizaCarga
+      },
+      {
+        key: "polizaEndoso",
+        value: prev.polizaEndoso
+      },
+      {
+        key: "soat",
+        value: prev.soat
+      }
+    ];
+
+    const manualFiles =
+      prev.archivos.filter(
+        (file) => !file.insuranceType
+      );
+
+    let syncedInsuranceFiles = [];
+
+    insuranceFields.forEach(
+      ({ key, value }) => {
+
         if (!value) return;
 
-        const insurance = insuranceContracts.find(
-          (item) => item.poliza === value
-        );
+        const insurance =
+          insuranceContracts.find(
+            (item) =>
+              item.poliza === value
+          );
 
         if (!insurance) return;
 
-        const files = (insurance.archivos || []).map((file) => ({
-          id: file.id,
+        const files =
+          (insurance.archivos || []).map(
+            (file) => ({
 
-          tempId: crypto.randomUUID(),
+              id: file.id,
 
-          savedInDb: true,
+              tempId:
+                crypto.randomUUID(),
 
-          name: file.name,
+              savedInDb: true,
 
-          size: file.size,
+              name: file.name,
 
-          type: file.type,
+              size: file.size,
 
-          blob: file.blob || null,
+              type: file.type,
 
-          insuranceFileId: file.id,
+              blob: file.blob || null,
 
-          insuranceType: key,
-        }));
+              insuranceFileId:
+                file.id,
 
-        syncedInsuranceFiles.push(...files);
-      });
+              insuranceType: key
+            })
+          );
 
-      return {
-        ...prev,
+        syncedInsuranceFiles.push(
+          ...files
+        );
+      }
+    );
 
-        archivos: [...manualFiles, ...syncedInsuranceFiles],
-      };
-    });
-  }, [
-    insuranceContracts,
-    form.polizaVehicular,
-    form.polizaCarga,
-    form.polizaEndoso,
-    form.soat,
-  ]);
+    return {
 
-  const isFormValid =
-    // CAMPOS
-    form.marca &&
-    form.mtc &&
-    form.revisionFechaPT &&
-    form.revisionFechaPC &&
-    form.soat &&
-    form.polizaVehicular &&
-    form.polizaCarga &&
-    form.placaTractor &&
-    form.placaCarreta &&
-    form.documentos.tarjetaVehicularInfo &&
-    // CHECKS
-    form.documentos.revisionTecnicaCheck &&
-    form.documentos.soatCheck &&
-    form.documentos.polizaCheck &&
-    form.documentos.tarjetaVehicularCheck &&
-    form.documentos.permisoMunicipalCheck &&
-    form.documentos.mtcCheck &&
-    // ARCHIVOS
-    form.archivos.length > 6;
+      ...prev,
 
-  const handleClose = () => {
-    resetForm();
+      archivos: [
+        ...manualFiles,
+        ...syncedInsuranceFiles
+      ]
+    };
+  });
 
-    onHide();
-  };
+}, [
+  insuranceContracts,
+  form.polizaVehicular,
+  form.polizaCarga,
+  form.polizaEndoso,
+  form.soat
+]);
 
-  const usedSoats = units
-    .filter((unit) => unit._id !== initialData?._id)
-    .map((unit) => unit.soat)
-    .filter(Boolean);
+const isFormValid =
+ // CAMPOS
+  form.marca &&
+  form.mtc &&
+  form.revisionFechaPT &&
+  form.revisionFechaPC &&
+  form.soat &&
+  form.polizaVehicular &&
+  form.polizaCarga &&
+  form.placaTractor &&
+  form.placaCarreta &&
 
+  form.documentos.tarjetaVehicularInfo &&
+
+  // CHECKS
+  form.documentos.revisionTecnicaCheck &&
+  form.documentos.soatCheck &&
+  form.documentos.polizaCheck &&
+  form.documentos.tarjetaVehicularCheck &&
+  form.documentos.permisoMunicipalCheck &&
+  form.documentos.mtcCheck &&
+// ARCHIVOS
+  form.archivos.length > 6;
+
+const handleClose = () => {
+
+  resetForm();
+
+  onHide();
+};
+
+const usedSoats = units
+  .filter(
+    (unit) =>
+      unit._id !== initialData?._id
+  )
+  .map((unit) => unit.soat)
+  .filter(Boolean);
+  
   if (!show) return null;
 
   return createPortal(
@@ -676,11 +754,14 @@ const validateUniqueFields = async () => {
         className="modal-content unit-form-modal"
         onClick={(e) => e.stopPropagation()}
       >
+
         {/* HEADER */}
         <div className="modal-header-custom">
           <div>
             <h2 className="title">
-              {isEdit ? "Editar Unidad" : "Registrar Nueva Unidad"}
+              {isEdit
+                ? "Editar Unidad"
+                : "Registrar Nueva Unidad"}
             </h2>
 
             <p className="subtitle">
@@ -693,9 +774,13 @@ const validateUniqueFields = async () => {
 
         {/* BODY */}
         <div className="grid">
+
           {/* LEFT */}
           <div className="col">
-            <label className="label">MARCA</label>
+
+            <label className="label">
+              MARCA
+            </label>
 
             <input
               className="uppercase-input"
@@ -704,7 +789,7 @@ const validateUniqueFields = async () => {
               onChange={(e) =>
                 setForm({
                   ...form,
-                  marca: e.target.value.toUpperCase(),
+                  marca: e.target.value.toUpperCase()
                 })
               }
               placeholder="Ej. VOLVO"
@@ -713,69 +798,79 @@ const validateUniqueFields = async () => {
             <label className="label">TRACTOR</label>
 
             <div className="date-placa-revision">
-              <label className="label">PLACA</label>
 
-              <input
-                className="uppercase-input"
-                type="text"
-                value={form.placaTractor}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    placaTractor: e.target.value.toUpperCase(),
-                  })
-                }
-                placeholder="PLACA TRACTOR"
-              />
-              <label className="label">
-                REVISION TECNICA (FECHA VENCIMIENTO)
-              </label>
-              <input
-                type="date"
-                value={form.revisionFechaPT}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    revisionFechaPT: e.target.value,
-                  })
-                }
-              />
+                <label className="label">
+                  PLACA
+                </label>
+
+                <input
+                  className="uppercase-input"
+                  type="text"
+                  value={form.placaTractor}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      placaTractor: e.target.value.toUpperCase()
+                    })
+                  }
+                  placeholder="PLACA TRACTOR"               
+                />
+                <label className="label">
+                  REVISION TECNICA (FECHA VENCIMIENTO)
+                </label>
+                <input
+                  type="date"
+                  value={form.revisionFechaPT}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      revisionFechaPT: e.target.value
+                    })
+                  }
+                />
+
             </div>
 
             <label className="label">CARRETA</label>
             <div className="date-placa-revision">
-              <label className="label">PLACA</label>
-              <input
-                className="uppercase-input"
-                type="text"
-                value={form.placaCarreta}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    placaCarreta: e.target.value.toUpperCase(),
-                  })
-                }
-                placeholder="PLACA CARRETA"
-              />
-              <label className="label">
-                REVISION TECNICA (FECHA VENCIMIENTO)
-              </label>
-              <input
-                type="date"
-                value={form.revisionFechaPC}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    revisionFechaPC: e.target.value,
-                  })
-                }
-              />
+
+                <label className="label">
+                  PLACA
+                </label>
+                <input
+                  className="uppercase-input"
+                  type="text"
+                  value={form.placaCarreta}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      placaCarreta: e.target.value.toUpperCase()
+                    })
+                  }
+                  placeholder="PLACA CARRETA"
+                />
+                <label className="label">
+                  REVISION TECNICA (FECHA VENCIMIENTO)
+                </label>
+                <input
+                  type="date"
+                  value={form.revisionFechaPC}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      revisionFechaPC: e.target.value
+                    })
+                  }
+                />
             </div>
           </div>
 
           {/* RIGHT */}
           <div className="col">
-            <label className="label">MTC</label>
+
+            <label className="label">
+              MTC
+            </label>
 
             <input
               className="uppercase-input"
@@ -784,165 +879,249 @@ const validateUniqueFields = async () => {
               onChange={(e) =>
                 setForm({
                   ...form,
-                  mtc: e.target.value,
+                  mtc: e.target.value
                 })
               }
               placeholder="Codigo de Registro MTC"
             />
 
-            <label className="label">POLIZAS:</label>
-            <div className="select-polizas">
-              <label className="label">POLIZA VEHICULAR</label>
+            <label className="label">
+              POLIZAS:
+            </label>
+              <div className="select-polizas">
+                <label className="label">
+                  POLIZA VEHICULAR
+                </label>
 
-              <select
-                name="polizaVehicular"
-                value={form.polizaVehicular || ""}
-                onChange={(e) =>
-                  handleInsuranceSelect("polizaVehicular", e.target.value)
-                }
-              >
-                <option value="">Seleccionar poliza...</option>
+                <select
+                  name="polizaVehicular"
+                  value={form.polizaVehicular || ""}
+                  onChange={(e) =>
+                    handleInsuranceSelect(
+                      "polizaVehicular",
+                      e.target.value
+                    )
+                  }
+                >
+                  <option value="">
+                    Seleccionar poliza...
+                  </option>
 
-                {insuranceContracts
-                  .filter((insurance) =>
-                    insurance.tipo?.toLowerCase().includes("vehicular")
-                  )
-                  .filter((insurance) => {
-                    // EN EDICION PERMITIR LA ACTUAL
-                    if (isEdit && form.polizaVehicular === insurance.poliza) {
-                      return true;
-                    }
+                  {insuranceContracts
+                    .filter(
+                      (insurance) =>
+                        insurance.tipo
+                          ?.toLowerCase()
+                          .includes("vehicular")
+                    )
+                    .filter((insurance) => {
 
-                    return !usedVehicularPolicies.includes(insurance.poliza);
-                  })
-                  .map((insurance) => (
-                    <option key={insurance._id} value={insurance.poliza}>
-                      {`${
-                        getInsuranceStatus(insurance.fechaFin).status ===
-                        "ACTIVO"
-                          ? "🟢"
-                          : getInsuranceStatus(insurance.fechaFin).status ===
-                            "PROX. EXPIRAR"
-                          ? "🟡"
-                          : "🔴"
-                      } ${insurance.poliza}`}
-                    </option>
-                  ))}
-              </select>
+                      // EN EDICION PERMITIR LA ACTUAL
+                      if (
+                        isEdit &&
+                        form.polizaVehicular === insurance.poliza
+                      ) {
+                        return true;
+                      }
 
-              <label className="label">POLIZAS CARGA Y CONTENEDOR</label>
+                      return !usedVehicularPolicies.includes(
+                        insurance.poliza
+                      );
+                    })
+                    .map((insurance) => (
+                      <option
+                        key={insurance._id}
+                        value={insurance.poliza}
+                        
+                      >
+                        {
+                          `${
+                            getInsuranceStatus(
+                              insurance.fechaFin
+                            ).status === "ACTIVO"
+                              ? "🟢"
+                              : getInsuranceStatus(
+                                  insurance.fechaFin
+                                ).status === "PROX. EXPIRAR"
+                              ? "🟡"
+                              : "🔴"
+                          } ${insurance.poliza}`
+                        }
+                      </option>
+                    ))}
+                </select>
 
-              <select
+                <label className="label">
+                  POLIZAS CARGA Y CONTENEDOR
+                </label>
+
+                <select
                 name="polizaCarga"
                 value={form.polizaCarga || ""}
                 onChange={(e) =>
-                  handleInsuranceSelect("polizaCarga", e.target.value)
+                  handleInsuranceSelect(
+                    "polizaCarga",
+                    e.target.value
+                  )
                 }
               >
-                <option value="">Seleccionar poliza...</option>
+                <option value="">
+                  Seleccionar poliza...
+                </option>
 
                 {insuranceContracts
-                  .filter((insurance) =>
-                    insurance.tipo?.toLowerCase().includes("carga")
+                  .filter(
+                    (insurance) =>
+                      insurance.tipo?.toLowerCase().includes("carga")
                   )
                   .map((insurance) => (
-                    <option key={insurance._id} value={insurance.poliza}>
-                      {`${
-                        getInsuranceStatus(insurance.fechaFin).status ===
-                        "ACTIVO"
-                          ? "🟢"
-                          : getInsuranceStatus(insurance.fechaFin).status ===
-                            "PROX. EXPIRAR"
-                          ? "🟡"
-                          : "🔴"
-                      } ${insurance.poliza}`}
+                    <option
+                      key={insurance._id}
+                      value={insurance.poliza}
+                    >
+                      {
+                          `${
+                            getInsuranceStatus(
+                              insurance.fechaFin
+                            ).status === "ACTIVO"
+                              ? "🟢"
+                              : getInsuranceStatus(
+                                  insurance.fechaFin
+                                ).status === "PROX. EXPIRAR"
+                              ? "🟡"
+                              : "🔴"
+                          } ${insurance.poliza}`
+                        }
                     </option>
                   ))}
               </select>
 
-              <label className="label">POLIZA ENDOSO</label>
-
+              <label className="label">
+                 POLIZA ENDOSO
+              </label>
+              
               <select
                 name="polizaEndoso"
                 value={form.polizaEndoso || ""}
                 onChange={(e) =>
-                  handleInsuranceSelect("polizaEndoso", e.target.value)
+                  handleInsuranceSelect(
+                    "polizaEndoso",
+                    e.target.value
+                  )
                 }
               >
-                <option value="">Seleccionar poliza...</option>
+                <option value="">
+                  Seleccionar poliza...
+                </option>
 
                 {insuranceContracts
-                  .filter((insurance) =>
-                    insurance.tipo?.toLowerCase().includes("endoso")
+                  .filter(
+                    (insurance) =>
+                      insurance.tipo?.toLowerCase().includes("endoso")
                   )
                   .map((insurance) => (
-                    <option key={insurance._id} value={insurance.poliza}>
-                      {`${
-                        getInsuranceStatus(insurance.fechaFin).status ===
-                        "ACTIVO"
-                          ? "🟢"
-                          : getInsuranceStatus(insurance.fechaFin).status ===
-                            "PROX. EXPIRAR"
-                          ? "🟡"
-                          : "🔴"
-                      } ${insurance.poliza}`}
+                    <option
+                      key={insurance._id}
+                      value={insurance.poliza}
+                    >
+                      {
+                          `${
+                            getInsuranceStatus(
+                              insurance.fechaFin
+                            ).status === "ACTIVO"
+                              ? "🟢"
+                              : getInsuranceStatus(
+                                  insurance.fechaFin
+                                ).status === "PROX. EXPIRAR"
+                              ? "🟡"
+                              : "🔴"
+                          } ${insurance.poliza}`
+                        }
                     </option>
                   ))}
               </select>
-            </div>
+              </div>
 
-            <label className="label">SOAT</label>
+            <label className="label">
+              SOAT
+            </label>
 
-            <select
-              name="soat"
-              value={form.soat || ""}
-              onChange={(e) => handleInsuranceSelect("soat", e.target.value)}
+            <select name="soat" 
+                    value={form.soat || ""} 
+                    onChange={(e)=>
+                       handleInsuranceSelect(
+                          "soat",
+                          e.target.value
+                        )
+                      }
             >
               <option value="">Seleccionar SOAT...</option>
+                
+                {insuranceContracts
+                  .filter((insurance) => {
 
-              {insuranceContracts
-                .filter((insurance) => {
-                  // SOLO SOAT
-                  if (!insurance.poliza?.startsWith("SOAT-")) {
-                    return false;
-                  }
+                    // SOLO SOAT
+                    if (
+                      !insurance.poliza?.startsWith(
+                        "SOAT-"
+                      )
+                    ) {
+                      return false;
+                    }
 
-                  // EN EDICION SI PERMITIR EL MISMO
-                  if (isEdit && form.soat === insurance.poliza) {
-                    return true;
-                  }
+                    // EN EDICION SI PERMITIR EL MISMO
+                    if (
+                      isEdit &&
+                      form.soat === insurance.poliza
+                    ) {
+                      return true;
+                    }
 
-                  // BLOQUEAR SI YA ESTÁ USADO
-                  return !usedSoats.includes(insurance.poliza);
-                })
-                .map((insurance) => (
-                  <option key={insurance._id} value={insurance.poliza}>
-                    {`${
-                      getInsuranceStatus(insurance.fechaFin).status === "ACTIVO"
-                        ? "🟢"
-                        : getInsuranceStatus(insurance.fechaFin).status ===
-                          "PROX. EXPIRAR"
-                        ? "🟡"
-                        : "🔴"
-                    } ${insurance.poliza}`}
-                  </option>
-                ))}
+                    // BLOQUEAR SI YA ESTÁ USADO
+                    return !usedSoats.includes(
+                      insurance.poliza
+                    );
+                  })
+                     .map((insurance) => (
+                      <option
+                        key={insurance._id}
+                        value={insurance.poliza}
+                        
+                      >
+                        {
+                          `${
+                            getInsuranceStatus(
+                              insurance.fechaFin
+                            ).status === "ACTIVO"
+                              ? "🟢"
+                              : getInsuranceStatus(
+                                  insurance.fechaFin
+                                ).status === "PROX. EXPIRAR"
+                              ? "🟡"
+                              : "🔴"
+                          } ${insurance.poliza}`
+                        }
+                      </option>
+              ))}
             </select>
+
           </div>
         </div>
 
         {/* CHECKLIST */}
-
-        <div className="list-checklist">
-          CHECKLIST DE DOCUMENTACION
-          <div className="checklist">
-            <div className="grid">
-              <div className="col">
+        
+            <div className="list-checklist"> 
+              CHECKLIST DE DOCUMENTACION
+              <div className="checklist">
+               <div className="grid">
+                <div className="col">
                 <label>
                   <input
                     type="checkbox"
                     checked={form.documentos.mtcCheck}
-                    onChange={() => handleCheckbox("mtcCheck")}
+                    onChange={() =>
+                      handleCheckbox("mtcCheck")
+                    }
                   />
                   MTC TRACTOR
                 </label>
@@ -951,7 +1130,9 @@ const validateUniqueFields = async () => {
                   <input
                     type="checkbox"
                     checked={form.documentos.revisionTecnicaCheck}
-                    onChange={() => handleCheckbox("revisionTecnicaCheck")}
+                    onChange={() =>
+                      handleCheckbox("revisionTecnicaCheck")
+                    }
                   />
                   REVISIÓN TÉCNICA
                 </label>
@@ -960,7 +1141,9 @@ const validateUniqueFields = async () => {
                   <input
                     type="checkbox"
                     checked={form.documentos.soatCheck}
-                    onChange={() => handleCheckbox("soatCheck")}
+                    onChange={() =>
+                      handleCheckbox("soatCheck")
+                    }
                   />
                   SOAT
                 </label>
@@ -969,7 +1152,9 @@ const validateUniqueFields = async () => {
                   <input
                     type="checkbox"
                     checked={form.documentos.polizaCheck}
-                    onChange={() => handleCheckbox("polizaCheck")}
+                    onChange={() =>
+                      handleCheckbox("polizaCheck")
+                    }
                   />
                   POLIZAS
                 </label>
@@ -977,14 +1162,16 @@ const validateUniqueFields = async () => {
 
               <div className="col">
                 <div className="check-item">
-                  <label className="check-row">
-                    <input
-                      type="checkbox"
-                      checked={form.documentos.tarjetaVehicularCheck}
-                      onChange={() => handleCheckbox("tarjetaVehicularCheck")}
-                    />
-                    TARJETA DE IDENTIFICACIÓN VEHICULAR
-                  </label>
+                <label className="check-row">
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.tarjetaVehicularCheck}
+                    onChange={() =>
+                      handleCheckbox("tarjetaVehicularCheck")
+                    }
+                  />
+                  TARJETA DE IDENTIFICACIÓN VEHICULAR
+                </label>
                   <div className="label">
                     <input
                       className="uppercase-input"
@@ -996,144 +1183,155 @@ const validateUniqueFields = async () => {
                           ...form,
                           documentos: {
                             ...form.documentos,
-                            tarjetaVehicularInfo: e.target.value,
-                          },
+                            tarjetaVehicularInfo: e.target.value
+                          }
                         })
                       }
                       placeholder="TARJETA DE I. VEHICULAR"
                     />
-                  </div>
+                    </div>
                 </div>
 
                 <label>
                   <input
                     type="checkbox"
                     checked={form.documentos.permisoMunicipalCheck}
-                    onChange={() => handleCheckbox("permisoMunicipalCheck")}
+                    onChange={() =>
+                      handleCheckbox("permisoMunicipalCheck")
+                    }
                   />
                   PERMISO DE LA MUNICIPALIDAD
                 </label>
+                </div>
               </div>
             </div>
-          </div>
         </div>
 
-        <div className="upload">
-          DOCUMENTACION LEGAL (SUBE LOS DOCUMENTOS CHECKEADOS)
-          <label className="upload-box">
-            <input type="file" multiple onChange={handleFiles} />
+          <div className="upload">
+            DOCUMENTACION LEGAL (SUBE LOS DOCUMENTOS CHECKEADOS)
+            <label className="upload-box">
+              
+              <input
+                type="file"
+                multiple
+                onChange={handleFiles}
+              />
 
-            <div className="upload-content">
-              <p>Subir archivos</p>
-            </div>
-          </label>
-          {form.archivos.length > 0 && (
-            <div className="unit-file-list">
-              {form.archivos.map((file) => (
-                <div key={file.id || file.tempId} className="unit-file-row">
-                  <div className="unit-file-info">
-                    <div className="unit-file-icon">📄</div>
+              <div className="upload-content">
+                <p>Subir archivos</p>
+              </div>
+            </label>
+            {form.archivos.length > 0 && (
+                  <div className="unit-file-list">
 
                     {form.archivos.map((file) => (
                       <div
                         key={file.id || file.tempId}
                         className="unit-file-row"
                       >
+
                         <div className="unit-file-info">
-                          <div className="unit-file-icon">📄</div>
+
+                          <div className="unit-file-icon">
+                            📄
+                          </div>
 
                           <div className="unit-file-text">
-                            <p className="unit-file-name">{file.name}</p>
+
+                            <p className="unit-file-name">
+                              {file.name}
+                            </p>
 
                             <span className="unit-file-size">
                               {(
                                 (file.blob?.size || file.size || 0) /
                                 1024 /
                                 1024
-                              ).toFixed(1)}{" "}
-                              MB
+                              ).toFixed(1)} MB
                             </span>
+
                           </div>
+
                         </div>
 
                         {!file.insuranceType && (
                           <button
                             type="button"
                             className="unit-file-delete"
-                            onClick={() => removeFile(file.id || file.tempId)}
+                            onClick={() =>
+                              removeFile(file.id || file.tempId)
+                            }
                           >
                             ✕
                           </button>
                         )}
+
                       </div>
                     ))}
 
-                    <span className="unit-file-size">
-                      {(
-                        (file.blob?.size || file.size || 0) /
-                        1024 /
-                        1024
-                      ).toFixed(1)}{" "}
-                      MB
-                    </span>
                   </div>
-
-                  {!form.documentos.soatCheck &&
-                    !form.documentos.polizaCheck && (
-                      <button
-                        type="button"
-                        className="unit-file-delete"
-                        onClick={() => removeFile(file.id || file.tempId)}
-                      >
-                        ✕
-                      </button>
-                    )}
-                </div>
-              ))}
-            </div>
-          )}
-          {showMessageBox && (
-            <div
-              className="message-box-overlay"
-              onClick={() => setShowMessageBox(false)}
-            >
-              <div className="message-box" onClick={(e) => e.stopPropagation()}>
-                <h3>Datos Duplicados</h3>
-
-                <p
-                  style={{
-                    whiteSpace: "pre-line",
-                  }}
-                >
-                  {messageBoxText}
-                </p>
-
-                <button
-                  className="message-box-btn"
-                  onClick={() => setShowMessageBox(false)}
-                >
-                  Entendido
-                </button>
-              </div>
-            </div>
-          )}
-          {/* ACTIONS */}
-          <div className="actions">
-            <button className="btn-secondary" onClick={handleClose}>
-              Cancelar
-            </button>
-
-            <button
-              className="btn-primary"
-              onClick={handleSubmit}
-              disabled={!isFormValid || isSaving}
-            >
-              {isEdit ? "Actualizar Unidad" : "Guardar Unidad"}
-            </button>
+                )}
           </div>
+          {showMessageBox && (
+          <div
+            className="message-box-overlay"
+            onClick={() =>
+              setShowMessageBox(false)
+            }
+          >
+            <div
+              className="message-box"
+              onClick={(e) =>
+                e.stopPropagation()
+              }
+            >
+              <h3>
+                Datos Duplicados
+              </h3>
+
+              <p
+                style={{
+                  whiteSpace: "pre-line"
+                }}
+              >
+                {messageBoxText}
+              </p>
+
+              <button
+                className="message-box-btn"
+                onClick={() =>
+                  setShowMessageBox(false)
+                }
+              >
+                Entendido
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ACTIONS */}
+        <div className="actions">
+          <button
+            className="btn-secondary"
+            onClick={handleClose}
+          >
+            Cancelar
+          </button>
+
+          <button
+            className="btn-primary"
+            onClick={handleSubmit}
+            disabled={!isFormValid || isSaving}
+          >
+            {isEdit
+              ? "Actualizar Unidad"
+              : "Guardar Unidad"}
+              
+          </button>
         </div>
+
       </div>
     </div>,
     document.body
   );
-};
+}
