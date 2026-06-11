@@ -125,21 +125,13 @@ export default function UnitForm({
     }));
   };
 
-<<<<<<< HEAD
-  const handleSubmit = async () => {
-    if (!validateUniqueFields()) {
-=======
   setForm((prev) => ({
     ...prev,
-    archivos: prev.archivos.filter(
-      (f) =>
-        (f.id || f.tempId) !== fileId
-    )
+    archivos: prev.archivos.filter((f) => (f.id || f.tempId) !== fileId),
   }));
-};
+}
 
 const handleSubmit = async () => {
-  
   if (!validateUniqueFields()) {
     return;
   }
@@ -152,16 +144,12 @@ const handleSubmit = async () => {
   setIsSaving(true);
 
   try {
-
     // NUEVO ID SIEMPRE
-    const currentUnitId =
-      initialData?._id || crypto.randomUUID();
+    const currentUnitId = initialData?._id || crypto.randomUUID();
 
     // ELIMINAR ARCHIVOS
     if (isEdit) {
-
       for (const fileId of deletedFiles) {
-
         await deleteDocument(fileId);
       }
     }
@@ -169,48 +157,43 @@ const handleSubmit = async () => {
     const storedFiles = [];
 
     for (const file of form.archivos) {
+      if (file.savedInDb) {
+        storedFiles.push({
+          id: file.id,
 
-     if (file.savedInDb) {
+          name: file.name,
 
-  storedFiles.push({
-    id: file.id,
+          size: file.size,
 
-    name: file.name,
+          type: file.type,
 
-    size: file.size,
+          blob: file.blob || null,
 
-    type: file.type,
+          insuranceFileId: file.insuranceFileId,
 
-    blob: file.blob || null,
+          insuranceType: file.insuranceType,
 
-    insuranceFileId:
-      file.insuranceFileId,
+          savedInDb: true,
+        });
 
-    insuranceType:
-      file.insuranceType,
-
-    savedInDb: true
-  });
-
-  continue;
-}
+        continue;
+      }
 
       // NUEVO ARCHIVO
       const saved = await saveDocument({
         file: file.blob || file,
         module: "units",
         relatedId: currentUnitId,
-        category: "legal"
+        category: "legal",
       });
 
       storedFiles.push({
         ...saved,
-        savedInDb: true
+        savedInDb: true,
       });
     }
 
     const unitData = {
-
       _id: currentUnitId,
 
       marca: form.marca,
@@ -221,24 +204,18 @@ const handleSubmit = async () => {
 
       mtc: form.mtc,
 
-      tarjetaVehicularInfo:
-        form.documentos.tarjetaVehicularInfo,
+      tarjetaVehicularInfo: form.documentos.tarjetaVehicularInfo,
 
-      revisionFechaPT:
-        form.revisionFechaPT,
+      revisionFechaPT: form.revisionFechaPT,
 
-      revisionFechaPC:
-        form.revisionFechaPC,
+      revisionFechaPC: form.revisionFechaPC,
 
       soat: form.soat,
-      polizaVehicular:
-        form.polizaVehicular,
+      polizaVehicular: form.polizaVehicular,
 
-      polizaCarga:
-        form.polizaCarga,
+      polizaCarga: form.polizaCarga,
 
-      polizaEndoso:
-        form.polizaEndoso,
+      polizaEndoso: form.polizaEndoso,
 
       archivos: storedFiles,
 
@@ -246,11 +223,8 @@ const handleSubmit = async () => {
     };
 
     if (isEdit) {
-
       updateUnit(unitData);
-
     } else {
-
       addUnit(unitData);
     }
 
@@ -258,13 +232,9 @@ const handleSubmit = async () => {
     resetForm();
 
     onHide();
-
   } catch (error) {
-
     console.error("Error saving unit:", error);
-
   } finally {
-
     setIsSaving(false);
 
     savingRef.current = false;
@@ -272,18 +242,12 @@ const handleSubmit = async () => {
 };
 
 //validacion datos
-const validateUniqueFields = () => {
-
+const validateUniqueFields = async () => {
   const duplicatedFields = [];
 
-  units.forEach((unit) => {
-
+  units.forEach(async (unit) => {
     // IGNORAR EL MISMO REGISTRO EN EDICIÓN
-    if (
-      isEdit &&
-      unit._id === initialData?._id
-    ) {
->>>>>>> 598c9e31ddfc32771e2a4db22c24e66a63234da3
+    if (isEdit && unit._id === initialData?._id) {
       return;
     }
 
@@ -390,7 +354,7 @@ const validateUniqueFields = () => {
 
       savingRef.current = false;
     }
-  };
+  });
 
   //validacion datos
   const validateUniqueFields = () => {
@@ -1070,65 +1034,48 @@ const validateUniqueFields = () => {
                   <div className="unit-file-info">
                     <div className="unit-file-icon">📄</div>
 
-<<<<<<< HEAD
-                    <div className="unit-file-text">
-                      <p className="unit-file-name">{file.name}</p>
-=======
                     {form.archivos.map((file) => (
                       <div
                         key={file.id || file.tempId}
                         className="unit-file-row"
                       >
-
                         <div className="unit-file-info">
-
-                          <div className="unit-file-icon">
-                            📄
-                          </div>
+                          <div className="unit-file-icon">📄</div>
 
                           <div className="unit-file-text">
-
-                            <p className="unit-file-name">
-                              {file.name}
-                            </p>
+                            <p className="unit-file-name">{file.name}</p>
 
                             <span className="unit-file-size">
                               {(
                                 (file.blob?.size || file.size || 0) /
                                 1024 /
                                 1024
-                              ).toFixed(1)} MB
+                              ).toFixed(1)}{" "}
+                              MB
                             </span>
-
                           </div>
-
                         </div>
 
                         {!file.insuranceType && (
                           <button
                             type="button"
                             className="unit-file-delete"
-                            onClick={() =>
-                              removeFile(file.id || file.tempId)
-                            }
+                            onClick={() => removeFile(file.id || file.tempId)}
                           >
                             ✕
                           </button>
                         )}
-
                       </div>
                     ))}
->>>>>>> 598c9e31ddfc32771e2a4db22c24e66a63234da3
 
-                      <span className="unit-file-size">
-                        {(
-                          (file.blob?.size || file.size || 0) /
-                          1024 /
-                          1024
-                        ).toFixed(1)}{" "}
-                        MB
-                      </span>
-                    </div>
+                    <span className="unit-file-size">
+                      {(
+                        (file.blob?.size || file.size || 0) /
+                        1024 /
+                        1024
+                      ).toFixed(1)}{" "}
+                      MB
+                    </span>
                   </div>
 
                   {!form.documentos.soatCheck &&
@@ -1145,49 +1092,48 @@ const validateUniqueFields = () => {
               ))}
             </div>
           )}
-        </div>
-        {showMessageBox && (
-          <div
-            className="message-box-overlay"
-            onClick={() => setShowMessageBox(false)}
-          >
-            <div className="message-box" onClick={(e) => e.stopPropagation()}>
-              <h3>Datos Duplicados</h3>
+          {showMessageBox && (
+            <div
+              className="message-box-overlay"
+              onClick={() => setShowMessageBox(false)}
+            >
+              <div className="message-box" onClick={(e) => e.stopPropagation()}>
+                <h3>Datos Duplicados</h3>
 
-              <p
-                style={{
-                  whiteSpace: "pre-line",
-                }}
-              >
-                {messageBoxText}
-              </p>
+                <p
+                  style={{
+                    whiteSpace: "pre-line",
+                  }}
+                >
+                  {messageBoxText}
+                </p>
 
-              <button
-                className="message-box-btn"
-                onClick={() => setShowMessageBox(false)}
-              >
-                Entendido
-              </button>
+                <button
+                  className="message-box-btn"
+                  onClick={() => setShowMessageBox(false)}
+                >
+                  Entendido
+                </button>
+              </div>
             </div>
+          )}
+          {/* ACTIONS */}
+          <div className="actions">
+            <button className="btn-secondary" onClick={handleClose}>
+              Cancelar
+            </button>
+
+            <button
+              className="btn-primary"
+              onClick={handleSubmit}
+              disabled={!isFormValid || isSaving}
+            >
+              {isEdit ? "Actualizar Unidad" : "Guardar Unidad"}
+            </button>
           </div>
-        )}
-
-        {/* ACTIONS */}
-        <div className="actions">
-          <button className="btn-secondary" onClick={handleClose}>
-            Cancelar
-          </button>
-
-          <button
-            className="btn-primary"
-            onClick={handleSubmit}
-            disabled={!isFormValid || isSaving}
-          >
-            {isEdit ? "Actualizar Unidad" : "Guardar Unidad"}
-          </button>
         </div>
       </div>
     </div>,
     document.body
   );
-}
+};
