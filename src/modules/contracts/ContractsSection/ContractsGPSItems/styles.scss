@@ -84,10 +84,13 @@
 }
 .contracts-gps__list {
   display: flex;
+
   max-height: 420px;
   overflow-y: auto;
   padding-right: 6px;
   padding-top: 10px;
+  align-items: center;
+  flex-direction: column;
 }
 .contracts-gps-results {
   margin-top: 16px;

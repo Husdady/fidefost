@@ -125,8 +125,165 @@ export default function UnitForm({
     }));
   };
 
+<<<<<<< HEAD
   const handleSubmit = async () => {
     if (!validateUniqueFields()) {
+=======
+  setForm((prev) => ({
+    ...prev,
+    archivos: prev.archivos.filter(
+      (f) =>
+        (f.id || f.tempId) !== fileId
+    )
+  }));
+};
+
+const handleSubmit = async () => {
+  
+  if (!validateUniqueFields()) {
+    return;
+  }
+
+  // BLOQUEAR DOBLE CLICK
+  if (savingRef.current) return;
+
+  savingRef.current = true;
+
+  setIsSaving(true);
+
+  try {
+
+    // NUEVO ID SIEMPRE
+    const currentUnitId =
+      initialData?._id || crypto.randomUUID();
+
+    // ELIMINAR ARCHIVOS
+    if (isEdit) {
+
+      for (const fileId of deletedFiles) {
+
+        await deleteDocument(fileId);
+      }
+    }
+
+    const storedFiles = [];
+
+    for (const file of form.archivos) {
+
+     if (file.savedInDb) {
+
+  storedFiles.push({
+    id: file.id,
+
+    name: file.name,
+
+    size: file.size,
+
+    type: file.type,
+
+    blob: file.blob || null,
+
+    insuranceFileId:
+      file.insuranceFileId,
+
+    insuranceType:
+      file.insuranceType,
+
+    savedInDb: true
+  });
+
+  continue;
+}
+
+      // NUEVO ARCHIVO
+      const saved = await saveDocument({
+        file: file.blob || file,
+        module: "units",
+        relatedId: currentUnitId,
+        category: "legal"
+      });
+
+      storedFiles.push({
+        ...saved,
+        savedInDb: true
+      });
+    }
+
+    const unitData = {
+
+      _id: currentUnitId,
+
+      marca: form.marca,
+
+      placaTractor: form.placaTractor,
+
+      placaCarreta: form.placaCarreta,
+
+      mtc: form.mtc,
+
+      tarjetaVehicularInfo:
+        form.documentos.tarjetaVehicularInfo,
+
+      revisionFechaPT:
+        form.revisionFechaPT,
+
+      revisionFechaPC:
+        form.revisionFechaPC,
+
+      soat: form.soat,
+      polizaVehicular:
+        form.polizaVehicular,
+
+      polizaCarga:
+        form.polizaCarga,
+
+      polizaEndoso:
+        form.polizaEndoso,
+
+      archivos: storedFiles,
+
+      documentos: form.documentos,
+    };
+
+    if (isEdit) {
+
+      updateUnit(unitData);
+
+    } else {
+
+      addUnit(unitData);
+    }
+
+    // LIMPIAR
+    resetForm();
+
+    onHide();
+
+  } catch (error) {
+
+    console.error("Error saving unit:", error);
+
+  } finally {
+
+    setIsSaving(false);
+
+    savingRef.current = false;
+  }
+};
+
+//validacion datos
+const validateUniqueFields = () => {
+
+  const duplicatedFields = [];
+
+  units.forEach((unit) => {
+
+    // IGNORAR EL MISMO REGISTRO EN EDICIÓN
+    if (
+      isEdit &&
+      unit._id === initialData?._id
+    ) {
+>>>>>>> 598c9e31ddfc32771e2a4db22c24e66a63234da3
       return;
     }
 
@@ -913,8 +1070,55 @@ export default function UnitForm({
                   <div className="unit-file-info">
                     <div className="unit-file-icon">📄</div>
 
+<<<<<<< HEAD
                     <div className="unit-file-text">
                       <p className="unit-file-name">{file.name}</p>
+=======
+                    {form.archivos.map((file) => (
+                      <div
+                        key={file.id || file.tempId}
+                        className="unit-file-row"
+                      >
+
+                        <div className="unit-file-info">
+
+                          <div className="unit-file-icon">
+                            📄
+                          </div>
+
+                          <div className="unit-file-text">
+
+                            <p className="unit-file-name">
+                              {file.name}
+                            </p>
+
+                            <span className="unit-file-size">
+                              {(
+                                (file.blob?.size || file.size || 0) /
+                                1024 /
+                                1024
+                              ).toFixed(1)} MB
+                            </span>
+
+                          </div>
+
+                        </div>
+
+                        {!file.insuranceType && (
+                          <button
+                            type="button"
+                            className="unit-file-delete"
+                            onClick={() =>
+                              removeFile(file.id || file.tempId)
+                            }
+                          >
+                            ✕
+                          </button>
+                        )}
+
+                      </div>
+                    ))}
+>>>>>>> 598c9e31ddfc32771e2a4db22c24e66a63234da3
 
                       <span className="unit-file-size">
                         {(

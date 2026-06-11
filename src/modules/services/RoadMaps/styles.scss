@@ -49,6 +49,9 @@
 
   & .empty-message {
     max-width: 550px;
+    span{
+      font-weight: 700;
+    }
   }
 
   & .empty-message-box,

@@ -43,9 +43,9 @@ export default function RoadMaps() {
         {!isValidArray(services) && (
           <div className="empty-message-box d-flex py-5 px-4 d-flex align-items-center justify-content-center">
             <p className="empty-message text-center m-0 small">
-              Actualmente no hay archivos cargados para mostrar. Sube archivos
-              CSV o Excel para visualizar y gestionar las hojas de ruta
-              recientes....
+              Actualmente no hay archivos cargados para mostrar. <span>Sube archivos
+              (CSV o Excel de hasta 10MB C/U)</span> para visualizar y gestionar las hojas de ruta
+              recientes....   <span >MAXIMO 12 ARCHIVOS</span>
             </p>
           </div>
         )}

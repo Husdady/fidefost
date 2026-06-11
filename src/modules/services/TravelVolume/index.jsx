@@ -1,16 +1,25 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useGetServices } from "context/services/useServices";
 import useTravelVolume from "./useTravelVolume";
 
 
-export default function TravelVolume() {
-  const [selectedYear, setSelectedYear] =
-  useState("Todos");
+export default function TravelVolume({
+  selectedYear,
+  setSelectedYear,
+  selectedMonth,
+  setSelectedMonth,
+  selectedDay,
+  setSelectedDay,
+}) {
 
-  const [selectedMonth, setSelectedMonth] =
-  useState("Todos");
+  const services = useGetServices();
+ 
+  useEffect(() => {
+  setSelectedYear("Todos");
+  setSelectedMonth("Todos");
+  setSelectedDay("Todos");
+}, [services.length]);
 
-  const [selectedDay, setSelectedDay] =
-  useState("Todos");
   const {
   totalGuides,
   totalTrips,
@@ -26,7 +35,6 @@ export default function TravelVolume() {
     selectedYear === "Todos"
       ? []
       : calendarData.find((y) => y.year === selectedYear)?.months || [];
-console.log("days:", days);
   return (
     <section className="travel-volume mt-2">
       <header className="travel-volume-header d-flex align-items-center justify-content-between">
@@ -65,17 +73,31 @@ console.log("days:", days);
       </div>
       {selectedMonth !== "Todos" && (
         <div className="travel-volume-days">
-          {["Todos", ...days].map((day) => (
+          <span
+            onClick={() => setSelectedDay("Todos")}
+            className={
+              selectedDay === "Todos"
+                ? "active"
+                : undefined
+            }
+          >
+            Todos
+          </span>
+
+          {days.map((day) => (
             <span
-              key={day}
-              onClick={() => setSelectedDay(day)}
+              key={day.label}
+              title={day.comment || ""}
+              onClick={() =>
+                setSelectedDay(day.label)
+              }
               className={
-                selectedDay === day
+                selectedDay === day.label
                   ? "active"
                   : undefined
               }
             >
-              {day}
+              {day.label}
             </span>
           ))}
         </div>

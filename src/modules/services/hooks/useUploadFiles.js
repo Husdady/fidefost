@@ -1,9 +1,12 @@
 // Hooks
 import { useRef } from "react";
-import { useAddServices } from "context/services/useServices";
+import {
+  useAddServices,
+  useGetServices,
+} from "context/services/useServices";
 
 // Utils
-import { showInfoToast } from "utils/toast";
+import { showInfoToast, showErrorToast } from "utils/toast";
 
 import generateId from "utils/generateId";
 import isValidFile from "../utils/isValidFile";
@@ -11,6 +14,9 @@ import saveDocument from "database/saveDocument";
 import createRoadMapFile from "../utils/createRoadMapFile";
 import { getRoadMapStats } from "../utils/getRoadMapStats";
 
+//limites de carga
+const MAX_FILES = 12;
+const MAX_FILE_SIZE_MB = 10;
 /**
  * Hook for upload Road Maps files
  * @param {object} params Params
@@ -18,13 +24,45 @@ import { getRoadMapStats } from "../utils/getRoadMapStats";
 export default function useUploadFiles(params) {
   const fileInputRef = useRef(null);
   const addServices = useAddServices();
+  const currentServices = useGetServices();
 
   /**
    * Handles uploaded files
    * @param {FileList|File[]} files Uploaded files
    */
   const handleFiles = async (files) => {
-    const validFiles = Array.from(files || []).filter(isValidFile);
+    const uploadedFiles = Array.from(files || []);
+
+    if (currentServices.length + uploadedFiles.length > MAX_FILES) {
+      showErrorToast(
+      `Solo puedes tener hasta ${MAX_FILES} archivos subidos.`
+    );
+
+      return;
+    }
+
+    const validFiles = uploadedFiles.filter((file) => {
+      const sizeInMb =
+        file.size / (1024 * 1024);
+
+      if (sizeInMb > MAX_FILE_SIZE_MB) {
+        showErrorToast(
+          `${file.name} supera los ${MAX_FILE_SIZE_MB} MB permitidos.`
+        );
+
+        return false;
+      }
+
+      if (!isValidFile(file)) {
+        showErrorToast(
+          `${file.name} no es un archivo Excel o CSV válido.`
+        );
+
+        return false;
+      }
+
+      return true;
+    });
 
     if (!validFiles.length) return;
 
@@ -38,9 +76,25 @@ export default function useUploadFiles(params) {
         _id: serviceId,
       };
 
-      const stats = await getRoadMapStats(file);
-console.log("STATS:", stats);
-console.log(stats);
+      let stats;
+
+      try {
+        stats = await getRoadMapStats(file);
+      } catch (error) {
+        console.error("Error reading road map Excel:", error);
+
+        showErrorToast(
+          `No se pudo leer el archivo ${file.name}. Verifica que sea un Excel válido.`
+        );
+
+        continue;
+      }
+
+      if (stats.invalidHeadersDetected) {
+        showInfoToast(
+          `El archivo ${file.name} tiene columnas no reconocidas. Algunas columnas del reporte pueden quedar vacías.`
+        );
+      }
 
       // Add service
       services.push({ ...item, ...stats });

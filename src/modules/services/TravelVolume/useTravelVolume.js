@@ -5,6 +5,7 @@ import { useGetServices } from "context/services/useServices";
 // Utils
 import createValidArray from "utils/createValidArray";
 import normalizeDate from "../utils/normalizeDate";
+import calculateTrips from "../utils/calculateTrips";
 
 const MONTH_ORDER = [
     "Ene.", "Feb.", "Mar.", "Abr.", "May.", "Jun.",
@@ -21,8 +22,6 @@ export default function useTravelVolume(params = {}) {
       (s) => s.guides || []
     );
   }, [services]);
-
-  console.log("ALL GUIDES", guides);
 
   const calendar = useMemo(() => {
     const map = {};
@@ -64,9 +63,24 @@ export default function useTravelVolume(params = {}) {
     const date =
       normalizeDate(g.date);
 
-    const matchDay =
-      selectedDay === "Todos" ||
-      date?.getDate() === selectedDay;
+    let matchDay = false;
+
+    if (selectedDay === "Todos") {
+      matchDay = true;
+    } else if (
+      typeof selectedDay === "string" &&
+      selectedDay.includes("-")
+    ) {
+      const [start, end] =
+        selectedDay.split("-").map(Number);
+
+      matchDay =
+        date?.getDate() === start ||
+        date?.getDate() === end;
+    } else {
+      matchDay =
+        date?.getDate() === selectedDay;
+    }
 
     return (
       matchYear &&
@@ -74,43 +88,127 @@ export default function useTravelVolume(params = {}) {
       matchDay
     );
     });
-    console.log(
-  result.filter((g) => g.comment)
-);
 
   return result;
     
   }, [guides, selectedYear, selectedMonth, selectedDay,]);
 
 const days = useMemo(() => {
-  const set = new Set();
+  const result = [];
+  const usedDays = new Set();
 
-  guides
-    .filter((g) => {
-      const matchYear =
-        selectedYear === "Todos" ||
-        g.year === selectedYear;
+  const filtered = guides.filter((g) => {
+    const matchYear =
+      selectedYear === "Todos" ||
+      g.year === selectedYear;
 
-      const matchMonth =
-        selectedMonth === "Todos" ||
-        g.month === selectedMonth;
+    const matchMonth =
+      selectedMonth === "Todos" ||
+      g.month === selectedMonth;
 
-      return matchYear && matchMonth;
-    })
-    .forEach((g) => {
-      const d = normalizeDate(g.date);
+    return matchYear && matchMonth;
+  });
 
-      if (d) {
-        set.add(d.getDate());
+  filtered.forEach((g, index) => {
+    const d = normalizeDate(g.date);
+
+    if (!d) return;
+
+    const day = d.getDate();
+
+    if (usedDays.has(day)) {
+      const existing = result.find(
+        (item) => item.label === day
+      );
+
+      if (existing && g.comment) {
+        const comments = String(
+          existing.comment || ""
+        )
+          .split(", ")
+          .filter(Boolean);
+
+        const currentComment =
+          String(g.comment);
+
+        if (!comments.includes(currentComment)) {
+          comments.push(currentComment);
+        }
+
+        existing.comment =
+          comments.join(", ");
       }
-    });
 
-  return [...set].sort((a, b) => a - b);
+      return;
+    }
+
+    if (
+      g.comment ===
+      "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE"
+    ) {
+      const next = filtered[index + 1];
+
+      if (
+        next?.comment ===
+        "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE"
+      ) {
+        const nextDay = normalizeDate(
+          next.date
+        )?.getDate();
+
+        if (day === nextDay) {
+          result.push({
+            label: day,
+            comment: g.comment,
+          });
+        } else {
+          result.push({
+            label: `${day}-${nextDay}`,
+            comment: g.comment,
+          });
+        }
+
+        usedDays.add(day);
+        usedDays.add(nextDay);
+
+        return;
+      }
+    }
+
+    result.push({
+      label: day,
+      comment: g.comment
+        ? String(g.comment)
+        : null,
+    });
+    usedDays.add(day);
+  });
+
+  return result.sort((a, b) => {
+  const getStartDay = (item) => {
+    const label = item.label;
+
+    if (
+      typeof label === "string" &&
+      label.includes("-")
+    ) {
+      return Number(
+        label.split("-")[0]
+      );
+    }
+
+    return Number(label);
+  };
+
+  return (
+    getStartDay(a) -
+    getStartDay(b)
+  );
+});
 }, [
   guides,
   selectedYear,
   selectedMonth,
-  selectedDay,
 ]);
 
   const totalGuides = useMemo(
@@ -118,35 +216,11 @@ const days = useMemo(() => {
     [filteredGuides]
   );
 
-  const totalTrips = useMemo(() => {
-    let trips = 0;
-    let previousWasGrouped = false;
-
-    filteredGuides.forEach((guide) => {
-      const groupedComments = [
-        "SE CARGO EN UN SOLO VIAJE",
-        "SE CARGO EN DOS PUNTOS EN UN SOLO VIAJE",
-      ];
-
-      const grouped =
-        groupedComments.includes(
-          guide.comment
-        );
-
-      if (grouped) {
-        if (!previousWasGrouped) {
-          trips += 1;
-        }
-
-        previousWasGrouped = true;
-      } else {
-        trips += 1;
-        previousWasGrouped = false;
-      }
-    });
-
-    return trips;
-  }, [filteredGuides]);
+  const totalTrips = useMemo(
+  () => calculateTrips(filteredGuides),
+  [filteredGuides]
+);
+ 
 
   return {
     totalGuides,

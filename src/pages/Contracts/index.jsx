@@ -50,7 +50,7 @@ export default function Contracts() {
   };
   
   const toggleEstado = (id) => {
-  console.log("Cambiar estado:", id);
+  //console.log("Cambiar estado:", id);
 };
   const createContractModal = useShowModal();
   const insuranceModal = useShowModal();
