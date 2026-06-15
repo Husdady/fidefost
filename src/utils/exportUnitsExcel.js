@@ -6,7 +6,7 @@ export default function exportUnitsExcel(units) {
   const data = units.map((unit) => ({
 
     // UNIDAD /PT
-    MARCA: unit.marca,
+    MARCA: unit.marcaTractor,
     PLACA_TRACTOR: unit.placaTractor,
     // REVISION TEC
     F_VENCIMIENTO_REVISION_TEC_TRACTOR:
@@ -18,7 +18,7 @@ export default function exportUnitsExcel(units) {
       unit.revisionFechaPC,
 
     // MTC / PROPIEDAD
-    MTC: unit.mtc,
+    MTC: unit.mtcTractor,
 
     TARJETA_VEHICULAR:
       unit.tarjetaVehicularInfo,

@@ -65,7 +65,7 @@ export default function exportAuditExcel(data, fileName = "auditoria") {
           audit.auditUnidad?.placaCarreta,
         
         Marca:
-          audit.auditUnidad?.marca,
+          audit.auditUnidad?.marcaTractor,
 
         GPS:
           audit.gps ? "SI" : "NO",

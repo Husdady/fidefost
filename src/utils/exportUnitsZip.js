@@ -17,7 +17,7 @@ export default async function exportUnitZip(unit, insuranceContracts) {
   const data = [
     {
     // UNIDAD /PT
-    MARCA: unit.marca,
+    MARCA: unit.marcaTractor,
     PLACA_TRACTOR: unit.placaTractor,
     // REVISION TEC
     F_VENCIMIENTO_REVISION_TEC_TRACTOR:
@@ -29,7 +29,7 @@ export default async function exportUnitZip(unit, insuranceContracts) {
       unit.revisionFechaPC,
 
     // MTC / PROPIEDAD
-    MTC: unit.mtc,
+    MTC: unit.mtcTractor,
 
     TARJETA_VEHICULAR:
       unit.tarjetaVehicularInfo,

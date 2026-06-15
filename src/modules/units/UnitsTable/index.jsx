@@ -56,7 +56,11 @@ const filteredUnits = units.filter((unit) => {
       ?.toLowerCase()
       .includes(query) ||
 
-    unit.marca
+    unit.marcaTractor
+      ?.toLowerCase()
+      .includes(query) ||
+    
+    unit.marcaCarreta
       ?.toLowerCase()
       .includes(query) ||
 
@@ -80,7 +84,11 @@ const filteredUnits = units.filter((unit) => {
       .toLowerCase()
       .includes(query) ||
     
-    unit.mtc
+    unit.mtcTractor
+      ?.toLowerCase()
+      .includes(query) ||
+
+    unit.mtcCarreta
       ?.toLowerCase()
       .includes(query) ||
 
@@ -164,8 +172,10 @@ const formatDate = (dateString) => {
 
                   <div className="unit-plate">
                     <strong>PT: {unit.placaTractor}</strong>
+                    <p>{unit.marcaTractor}</p>
                     <strong>PC: {unit.placaCarreta}</strong>
-                    <p>{unit.marca}</p>
+                    <p>{unit.marcaCarreta}</p>
+
                   </div>
 
                 </div>
@@ -173,7 +183,10 @@ const formatDate = (dateString) => {
 
               <td className="col-tarjetas">
                 <strong>
-                  MTC: {unit.mtc}
+                  MTC T: {unit.mtcTractor}
+                </strong>
+                <strong>
+                  MTC C: {unit.mtcCarreta}
                 </strong>
                 <p>
                   T.P: {unit.tarjetaVehicularInfo}
@@ -262,8 +275,10 @@ const formatDate = (dateString) => {
                             unit.placaTractor &&
                           auditUnit.placaCarreta ===
                             unit.placaCarreta &&
-                          auditUnit.marca ===
-                            unit.marca;
+                          auditUnit.marcaTractor ===
+                            unit.marcaTractor;
+                          auditUnit.marcaCarreta ===
+                            unit.marcaCarreta;
 
                         if (sameUnit) {
 
@@ -273,7 +288,8 @@ const formatDate = (dateString) => {
                               auditUnidad: {
                                 placaTractor: "",
                                 placaCarreta: "",
-                                marca: "",
+                                marcaTractor: "",
+                                marcaCarreta: "",
                               },
                             }
                           );

@@ -58,7 +58,7 @@ export default async function exportAuditZip(
           audit.auditUnidad?.placaCarreta,
         
         Marca:
-          audit.auditUnidad?.marca,
+          audit.auditUnidad?.marcaTractor,
 
         GPS:
           audit.gps ? "SI" : "NO",

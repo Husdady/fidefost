@@ -43,11 +43,30 @@
   background: white;
   cursor: text;
 }
-
-.date-placa-revision{
-  padding-left: 14px;
+.label-col-subtitle{
+  font-size:13px;
+  font-weight:700;
+  color:#64748b;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  
+}
+.label-subtitle{
+  font-size:13px;
+  font-weight:700;
+  color:#64748b;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  margin-top: 20px;
+  margin-bottom:8px;
 }
 
+.date-tractor{
+  padding-left: 14px;
+}
+.date-carreta{
+  padding-left: 14px;
+}
 .uppercase-input {
   text-transform: uppercase;
 }
@@ -75,7 +94,7 @@ select{
 
 /* CHECKLIST */
 .list-checklist{
-  margin-top:28px;
+  margin-top:10px;
   font-size:11px;
   font-weight:500;
   color:#0f172a;

@@ -69,9 +69,9 @@ const unitDeleted = !currentUnit;
     contractData.auditUnidad?.placaCarreta ||
     "-";
 
-  const marca =
-    currentUnit?.marca ||
-    contractData.auditUnidad?.marca ||
+  const marcaTractor=
+    currentUnit?.marcaTractor ||
+    contractData.auditUnidad?.marcaTractor ||
     "-";
   
   if (!contractData) return null;
@@ -169,7 +169,7 @@ const unitDeleted = !currentUnit;
                 <div className="contract-unit__info">
                   <h3>{placaTractor}</h3>
                   <h3>{placaCarreta}</h3>
-                  <p>{marca}</p>
+                  <p>{marcaTractor}</p>
                 </div>
               )}
 
