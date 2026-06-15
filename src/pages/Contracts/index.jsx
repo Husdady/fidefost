@@ -84,7 +84,7 @@ export default function Contracts() {
                 setSelectedContract(null);
                 createContractModal.show();
               }}
-              title="Nuevo Contrato de Unidades"
+              title="Nuevo Contrato de Conductor"
             />
           </div>
         </PageHeader>
@@ -92,7 +92,7 @@ export default function Contracts() {
         <ContractsSummary />
         <ContractsSection />
         <RapidUnitAudit 
-          title="Auditoría Rapida de Unidades"
+          title="Auditoría Rapida de Coductores"
           data={audits}
           onEdit={(audit) => {
           setSelectedContract(audit);
