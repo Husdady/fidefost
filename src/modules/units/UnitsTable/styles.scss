@@ -179,6 +179,14 @@ input::placeholder{
 
   transition: transform 0.2s ease,
               opacity 0.2s ease;
+  strong{
+    color: #1877f2;
+    font-size: 11px;
+  }
+  .btn-folder{
+    color: #eb9431;
+    font-size: 11px;
+  }
 }
 
 .btn-actions:hover {
@@ -188,6 +196,12 @@ input::placeholder{
 
 .btn-actions:active {
   transform: scale(0.95);
+}
+.btn-col-export{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
 }
 
 .unit-actions {

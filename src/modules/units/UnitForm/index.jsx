@@ -49,8 +49,10 @@ export default function UnitForm({ show, onHide, initialData = null,
   poliza: "",
   soat: "",
   documentos: {
-    mtcCheck: false,
-    revisionTecnicaCheck: false,
+    mtcCheckTractor: false,
+    mtcCheckCarreta: false,
+    revisionTecnicaTractorCheck: false,
+    revisionTecnicaCarretaCheck: false,
     soatCheck: false,
     polizaCheck: false,
     tarjetaVehicularCheck: false,
@@ -740,12 +742,14 @@ const isFormValid =
   form.documentos.tarjetaVehicularInfo &&
 
   // CHECKS
-  form.documentos.revisionTecnicaCheck &&
+  form.documentos.revisionTecnicaTractorCheck &&
+  form.documentos.revisionTecnicaCarretaCheck &&
   form.documentos.soatCheck &&
   form.documentos.polizaCheck &&
   form.documentos.tarjetaVehicularCheck &&
   form.documentos.permisoMunicipalCheck &&
-  form.documentos.mtcCheck &&
+  form.documentos.mtcCheckTractor &&
+  form.documentos.mtcCheckCarreta &&
 // ARCHIVOS
   form.archivos.length > 6;
 
@@ -1161,23 +1165,43 @@ const usedSoats = units
                 <label>
                   <input
                     type="checkbox"
-                    checked={form.documentos.mtcCheck}
+                    checked={form.documentos.mtcCheckTractor}
                     onChange={() =>
-                      handleCheckbox("mtcCheck")
+                      handleCheckbox("mtcCheckTractor")
                     }
                   />
-                  MTC
+                  MTC TRACTOR
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.mtcCheckCarreta}
+                    onChange={() =>
+                      handleCheckbox("mtcCheckCarreta")
+                    }
+                  />
+                  MTC CARRETA
                 </label>
 
                 <label>
                   <input
                     type="checkbox"
-                    checked={form.documentos.revisionTecnicaCheck}
+                    checked={form.documentos.revisionTecnicaTractorCheck}
                     onChange={() =>
-                      handleCheckbox("revisionTecnicaCheck")
+                      handleCheckbox("revisionTecnicaTractorCheck")
                     }
                   />
-                  REVISIÓN TÉCNICA
+                  REVISIÓN TÉCNICA TRACTOR
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.revisionTecnicaCarretaCheck}
+                    onChange={() =>
+                      handleCheckbox("revisionTecnicaCarretaCheck")
+                    }
+                  />
+                  REVISIÓN TÉCNICA CARRETA
                 </label>
 
                 <label>
@@ -1190,7 +1214,10 @@ const usedSoats = units
                   />
                   SOAT
                 </label>
+              </div>
 
+              <div className="col">
+                <div className="check-item">
                 <label>
                   <input
                     type="checkbox"
@@ -1201,10 +1228,6 @@ const usedSoats = units
                   />
                   POLIZAS
                 </label>
-              </div>
-
-              <div className="col">
-                <div className="check-item">
                 <label className="check-row">
                   <input
                     type="checkbox"
