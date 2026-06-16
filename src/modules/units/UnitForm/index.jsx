@@ -20,15 +20,6 @@ export default function UnitForm({ show, onHide, initialData = null,
   const updateUnit = useUpdateUnit();
   const insuranceContracts = useGetInsurance();
   const units = useGetUnits();
-  const usedVehicularPolicies = units
-  .filter(
-    (unit) =>
-      unit._id !== initialData?._id
-  )
-  .map(
-    (unit) => unit.polizaVehicular
-  )
-  .filter(Boolean);
 
  const [deletedFiles, setDeletedFiles] = useState([]);
 
@@ -759,7 +750,7 @@ const handleClose = () => {
 
   onHide();
 };
-
+//SEGUROS UNICOS//
 const usedSoats = units
   .filter(
     (unit) =>
@@ -767,7 +758,17 @@ const usedSoats = units
   )
   .map((unit) => unit.soat)
   .filter(Boolean);
-  
+
+const usedEndosos = units
+  .filter(
+    (unit) =>
+      unit._id !== initialData?._id
+  )
+  .map((unit) => unit.polizaEndoso)
+  .filter(Boolean);
+
+//
+ 
   if (!show) return null;
 
   return createPortal(
@@ -1027,20 +1028,6 @@ const usedSoats = units
                           ?.toLowerCase()
                           .includes("vehicular")
                     )
-                    .filter((insurance) => {
-
-                      // EN EDICION PERMITIR LA ACTUAL
-                      if (
-                        isEdit &&
-                        form.polizaVehicular === insurance.poliza
-                      ) {
-                        return true;
-                      }
-
-                      return !usedVehicularPolicies.includes(
-                        insurance.poliza
-                      );
-                    })
                     .map((insurance) => (
                       <option
                         key={insurance._id}
@@ -1126,13 +1113,28 @@ const usedSoats = units
                 <option value="">
                   Seleccionar poliza...
                 </option>
+                {/*poliza unica*/}
 
                 {insuranceContracts
-                  .filter(
-                    (insurance) =>
-                      insurance.tipo?.toLowerCase().includes("endoso")
-                  )
-                  .map((insurance) => (
+                    .filter(
+                      (insurance) =>
+                        insurance.tipo?.toLowerCase().includes("endoso")
+                    )
+                    .filter((insurance) => {
+                      if (
+                        isEdit &&
+                        form.polizaEndoso === insurance.poliza
+                      ) {
+                        return true;
+                      }
+
+                      return !usedEndosos.includes(
+                        insurance.poliza
+                      );
+                    })
+                    .map((insurance) => (
+                      
+  
                     <option
                       key={insurance._id}
                       value={insurance.poliza}
