@@ -1,6 +1,16 @@
 import * as XLSX from "xlsx-js-style";
 
 export default function exportUnitTractorExcel(unit) {
+  const formatDate = (dateString) => {
+    if (!dateString) {
+      return "-";
+    }
+
+    const [year, month, day] =
+      dateString.split("-");
+
+    return `${day}/${month}/${year}`;
+  };
   const data = [
     {
       MARCA: unit.marcaTractor,
@@ -9,7 +19,7 @@ export default function exportUnitTractorExcel(unit) {
         unit.placaTractor,
 
       F_VENCIMIENTO_REVISION_TEC_TRACTOR:
-        unit.revisionFechaPT,
+        formatDate(unit.revisionFechaPT),
 
       MTC:
         unit.mtcTractor,

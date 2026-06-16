@@ -1,17 +1,27 @@
 import * as XLSX from "xlsx-js-style";
 
 export default function exportUnitsExcel(units) {
+  const formatDate = (dateString) => {
+    if (!dateString) {
+      return "-";
+    }
+
+    const [year, month, day] =
+      dateString.split("-");
+
+    return `${day}/${month}/${year}`;
+  };
   const data = units.map((unit) => ({
     MARCA_TRACTOR: unit.marcaTractor,
     PLACA_TRACTOR: unit.placaTractor,
     F_VENCIMIENTO_REVISION_TEC_TRACTOR:
-      unit.revisionFechaPT,
+      formatDate(unit.revisionFechaPT),
     MTC_TRACTOR: unit.mtcTractor,
 
     MARCA_CARRETA: unit.marcaCarreta,
     PLACA_CARRETA: unit.placaCarreta,
     F_VENCIMIENTO_REVISION_TECNICA_CARRETA:
-      unit.revisionFechaPC,
+      formatDate(unit.revisionFechaPC),
     MTC_CARRETA: unit.mtcCarreta,
 
     TARJETA_VEHICULAR:

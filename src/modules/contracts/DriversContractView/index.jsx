@@ -73,6 +73,10 @@ const unitDeleted = !currentUnit;
     currentUnit?.marcaTractor ||
     contractData.auditUnidad?.marcaTractor ||
     "-";
+  const marcaCarreta=
+    currentUnit?.marcaCarreta ||
+    contractData.auditUnidad?.marcaCarreta ||
+    "-";
   
   if (!contractData) return null;
   const gpsContracts =
@@ -168,6 +172,7 @@ const unitDeleted = !currentUnit;
               ) : (
                 <div className="contract-unit__info">
                   <h3>{placaTractor}</h3>
+                  <p>{marcaCarreta}</p>
                   <h3>{placaCarreta}</h3>
                   <p>{marcaTractor}</p>
                 </div>
