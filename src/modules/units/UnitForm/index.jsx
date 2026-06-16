@@ -742,7 +742,7 @@ const isFormValid =
   form.documentos.mtcCheckTractor &&
   form.documentos.mtcCheckCarreta &&
 // ARCHIVOS
-  form.archivos.length > 6;
+  form.archivos.length > 8;
 
 const handleClose = () => {
 
