@@ -54,7 +54,8 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
     unidad: {
       placaTractor: "",
       placaCarreta: "",
-      marca: "",
+      marcaTractor: "",
+      marcaCarreta: "",
     },
     fechaInicio: "",
     fechaFin: "",
@@ -102,19 +103,19 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
   .map((contract) => contract.auditUnidad)
   .filter(Boolean)
   .map((u) =>
-    `${u.placaTractor}-${u.placaCarreta}-${u.marca}`
+    `${u.placaTractor}-${u.placaCarreta}-${u.marcaTractor}-${u.marcaCarreta}`
   );
 
   const availableUnits = units.filter((unit) => {
 
   const unitValue =
-    `${unit.placaTractor}-${unit.placaCarreta}-${unit.marca}`;
+    `${unit.placaTractor}-${unit.placaCarreta}-${unit.marcaTractor}-${unit.marcaCarreta}`;
 
   if (
     contractData &&
     contractData.auditUnidad &&
     unitValue ===
-      `${contractData.auditUnidad.placaTractor}-${contractData.auditUnidad.placaCarreta}-${contractData.auditUnidad.marca}`
+      `${contractData.auditUnidad.placaTractor}-${contractData.auditUnidad.placaCarreta}-${contractData.auditUnidad.marcaTractor}-${contractData.auditUnidad.marcaCarreta}`
   ) {
     return true;
   }
@@ -161,7 +162,8 @@ export default function DriverContractForm({ onHide, onSave, contractData }) {
       unidad: contractData.auditUnidad || {
         placaTractor: "",
         placaCarreta: "",
-        marca: "",
+        marcaTractor: "",
+        marcaCarreta: "",
       },
       gpsId: contractData.gpsId || "",
       licencia: contractData.auditLicense || "",
@@ -221,7 +223,8 @@ setOriginalFiles(files);
       _id: selectedUnit._id, // 👈 CLAVE
       placaTractor: selectedUnit.placaTractor,
       placaCarreta: selectedUnit.placaCarreta,
-      marca: selectedUnit.marca,
+      marcaTractor: selectedUnit.marcaTractor,
+      marcaCarreta: selectedUnit.marcaCarreta,
     },
   }));
 };
@@ -471,7 +474,7 @@ const isFormValid =
                   key={unit._id}
                   value={unit._id}
                 >
-                  {unit.placaTractor} - {unit.marca}
+                  {unit.placaTractor} - {unit.marcaTractor}
                 </option>
               ))}
             </select>

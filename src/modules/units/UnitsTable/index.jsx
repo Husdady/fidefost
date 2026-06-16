@@ -8,14 +8,17 @@ import getRevisionStatus from "utils/getRevisionStatus";
 import { useGetContracts, useUpdateContract} from "context/contracts/useContracts";
 //export 
 import exportUnitsExcel from "utils/exportUnitsExcel";
-import exportUnitsZip from "utils/exportUnitsZip";
-
+import exportUnitTractorExcel from "utils/exportUnitTractorExcel";
+import exportUnitCarretaExcel from "utils/exportUnitCarretaExcel";
+import exportUnitZip from "utils/exportUnitZip";
 //icons
 import EditIcon from "./icons/edit-icon";
 import DeleteIcon from "./icons/delete-icon";
 import ExportIcon from "./icons/export-icon";
 import UnitIcon from "./icons/unit-icon";
 import InsuranceContracts from "components/features/InsuranceContracts";
+import FolderIcon from "./icons/folder-icon";
+
 export default function UnitsTable() {
 
 const deleteUnit = useDeleteUnit();
@@ -56,7 +59,11 @@ const filteredUnits = units.filter((unit) => {
       ?.toLowerCase()
       .includes(query) ||
 
-    unit.marca
+    unit.marcaTractor
+      ?.toLowerCase()
+      .includes(query) ||
+    
+    unit.marcaCarreta
       ?.toLowerCase()
       .includes(query) ||
 
@@ -80,7 +87,11 @@ const filteredUnits = units.filter((unit) => {
       .toLowerCase()
       .includes(query) ||
     
-    unit.mtc
+    unit.mtcTractor
+      ?.toLowerCase()
+      .includes(query) ||
+
+    unit.mtcCarreta
       ?.toLowerCase()
       .includes(query) ||
 
@@ -117,7 +128,7 @@ const formatDate = (dateString) => {
                onClick={() => exportUnitsExcel(units)}
                className="export-btn"
           >
-            Exportar Data
+            Exportar Data XLSX
           </button>
         </div>
         
@@ -164,8 +175,10 @@ const formatDate = (dateString) => {
 
                   <div className="unit-plate">
                     <strong>PT: {unit.placaTractor}</strong>
+                    <p>{unit.marcaTractor}</p>
                     <strong>PC: {unit.placaCarreta}</strong>
-                    <p>{unit.marca}</p>
+                    <p>{unit.marcaCarreta}</p>
+
                   </div>
 
                 </div>
@@ -173,7 +186,10 @@ const formatDate = (dateString) => {
 
               <td className="col-tarjetas">
                 <strong>
-                  MTC: {unit.mtc}
+                  MTC T: {unit.mtcTractor}
+                </strong>
+                <strong>
+                  MTC C: {unit.mtcCarreta}
                 </strong>
                 <p>
                   T.P: {unit.tarjetaVehicularInfo}
@@ -262,8 +278,10 @@ const formatDate = (dateString) => {
                             unit.placaTractor &&
                           auditUnit.placaCarreta ===
                             unit.placaCarreta &&
-                          auditUnit.marca ===
-                            unit.marca;
+                          auditUnit.marcaTractor ===
+                            unit.marcaTractor;
+                          auditUnit.marcaCarreta ===
+                            unit.marcaCarreta;
 
                         if (sameUnit) {
 
@@ -273,7 +291,8 @@ const formatDate = (dateString) => {
                               auditUnidad: {
                                 placaTractor: "",
                                 placaCarreta: "",
-                                marca: "",
+                                marcaTractor: "",
+                                marcaCarreta: "",
                               },
                             }
                           );
@@ -287,18 +306,41 @@ const formatDate = (dateString) => {
                     </button>
                   
 
-                  
+                  <div className="btn-col-export">
                     <button className="btn-actions"
                     onClick={() =>
-                      exportUnitsZip(
+                      exportUnitTractorExcel(
+                        unit,
+                      )
+                    }
+                    >
+                      <ExportIcon/>
+                      <strong>XLSX TRACTOR</strong>
+                    </button>
+                    
+                    <button className="btn-actions"
+                    onClick={() =>
+                      exportUnitCarretaExcel(
+                        unit,
+                      )
+                    }
+                    >
+                      <ExportIcon/>
+                      <strong>XLSX CARRETA</strong>
+                    </button>
+                    
+                    <button className="btn-actions"
+                    onClick={() =>
+                      exportUnitZip(
                         unit,
                         insuranceContracts
                       )
                     }
                     >
-                      <ExportIcon />
-                    </button>
-                  
+                      <FolderIcon/>
+                      <strong className="btn-folder">OTROS</strong>
+                  </button>
+                  </div>
                   
                 </div>
               </td>

@@ -20,22 +20,14 @@ export default function UnitForm({ show, onHide, initialData = null,
   const updateUnit = useUpdateUnit();
   const insuranceContracts = useGetInsurance();
   const units = useGetUnits();
-  const usedVehicularPolicies = units
-  .filter(
-    (unit) =>
-      unit._id !== initialData?._id
-  )
-  .map(
-    (unit) => unit.polizaVehicular
-  )
-  .filter(Boolean);
 
  const [deletedFiles, setDeletedFiles] = useState([]);
 
  const [originalFiles, setOriginalFiles] = useState([]);
 
  const emptyForm = {
-  marca: "",
+  marcaTractor: "",
+  marcaCarreta: "",
   polizaVehicular: "",
   polizaCarga: "",
   polizaEndoso: "",
@@ -43,12 +35,15 @@ export default function UnitForm({ show, onHide, initialData = null,
   placaCarreta: "",
   revisionFechaPT: "",
   revisionFechaPC: "",
-  mtc: "",
+  mtcTractor: "",
+  mtcCarreta: "",
   poliza: "",
   soat: "",
   documentos: {
-    mtcCheck: false,
-    revisionTecnicaCheck: false,
+    mtcCheckTractor: false,
+    mtcCheckCarreta: false,
+    revisionTecnicaTractorCheck: false,
+    revisionTecnicaCarretaCheck: false,
     soatCheck: false,
     polizaCheck: false,
     tarjetaVehicularCheck: false,
@@ -222,13 +217,17 @@ const handleSubmit = async () => {
 
       _id: currentUnitId,
 
-      marca: form.marca,
+      marcaTractor: form.marcaTractor,
+
+      marcaCarreta: form.marcaCarreta,
 
       placaTractor: form.placaTractor,
 
       placaCarreta: form.placaCarreta,
 
-      mtc: form.mtc,
+      mtcTractor: form.mtcTractor,
+
+      mtcCarreta: form.mtcCarreta,
 
       tarjetaVehicularInfo:
         form.documentos.tarjetaVehicularInfo,
@@ -317,13 +316,23 @@ const validateUniqueFields = () => {
       );
     }
 
-    // MTC
+    // MTC TRACTOR
     if (
-      unit.mtc === form.mtc &&
-      form.mtc
+      unit.mtcTractor === form.mtcTractor &&
+      form.mtcTractor
     ) {
       duplicatedFields.push(
-        `MTC: ${form.mtc}`
+        `MTC: ${form.mtcTractor}`
+      );
+    }
+
+    // MTC TRACTOR
+    if (
+      unit.mtcCarreta === form.mtcCarreta &&
+      form.mtcCarreta 
+    ) {
+      duplicatedFields.push(
+        `MTC: ${form.mtcCarreta}`
       );
     }
 
@@ -709,8 +718,10 @@ useEffect(() => {
 
 const isFormValid =
  // CAMPOS
-  form.marca &&
-  form.mtc &&
+  form.marcaTractor &&
+  form.marcaCarreta &&
+  form.mtcTractor &&
+  form.mtcCarreta &&
   form.revisionFechaPT &&
   form.revisionFechaPC &&
   form.soat &&
@@ -722,14 +733,16 @@ const isFormValid =
   form.documentos.tarjetaVehicularInfo &&
 
   // CHECKS
-  form.documentos.revisionTecnicaCheck &&
+  form.documentos.revisionTecnicaTractorCheck &&
+  form.documentos.revisionTecnicaCarretaCheck &&
   form.documentos.soatCheck &&
   form.documentos.polizaCheck &&
   form.documentos.tarjetaVehicularCheck &&
   form.documentos.permisoMunicipalCheck &&
-  form.documentos.mtcCheck &&
+  form.documentos.mtcCheckTractor &&
+  form.documentos.mtcCheckCarreta &&
 // ARCHIVOS
-  form.archivos.length > 6;
+  form.archivos.length > 8;
 
 const handleClose = () => {
 
@@ -737,7 +750,7 @@ const handleClose = () => {
 
   onHide();
 };
-
+//SEGUROS UNICOS//
 const usedSoats = units
   .filter(
     (unit) =>
@@ -745,7 +758,17 @@ const usedSoats = units
   )
   .map((unit) => unit.soat)
   .filter(Boolean);
-  
+
+const usedEndosos = units
+  .filter(
+    (unit) =>
+      unit._id !== initialData?._id
+  )
+  .map((unit) => unit.polizaEndoso)
+  .filter(Boolean);
+
+//
+ 
   if (!show) return null;
 
   return createPortal(
@@ -777,27 +800,24 @@ const usedSoats = units
 
           {/* LEFT */}
           <div className="col">
+            <label className="label-col-subtitle">DATOS TRACTOR</label>
+              <div className="date-tractor">
+                <label className="label">
+                  MARCA
+                </label>
 
-            <label className="label">
-              MARCA
-            </label>
-
-            <input
-              className="uppercase-input"
-              type="text"
-              value={form.marca}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  marca: e.target.value.toUpperCase()
-                })
-              }
-              placeholder="Ej. VOLVO"
-            />
-
-            <label className="label">TRACTOR</label>
-
-            <div className="date-placa-revision">
+                <input
+                  className="uppercase-input"
+                  type="text"
+                  value={form.marcaTractor}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      marcaTractor: e.target.value.toUpperCase()
+                    })
+                  }
+                  placeholder="Ej. VOLVO"
+                />
 
                 <label className="label">
                   PLACA
@@ -828,11 +848,108 @@ const usedSoats = units
                     })
                   }
                 />
+                <label className="label">
+                  MTC
+                </label>
+
+                <input
+                  className="uppercase-input"
+                  type="text"
+                  value={form.mtcTractor}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      mtcTractor: e.target.value
+                    })
+                  }
+                  placeholder="CODIGO MTC TRACTOR"
+                />
+                <label className="label">
+                  SOAT
+                </label>
+
+                <select name="soat" 
+                        value={form.soat || ""} 
+                        onChange={(e)=>
+                          handleInsuranceSelect(
+                              "soat",
+                              e.target.value
+                            )
+                          }
+                >
+                  <option value="">Seleccionar SOAT...</option>
+                    
+                    {insuranceContracts
+                      .filter((insurance) => {
+
+                        // SOLO SOAT
+                        if (
+                          !insurance.poliza?.startsWith(
+                            "SOAT-"
+                          )
+                        ) {
+                          return false;
+                        }
+
+                        // EN EDICION SI PERMITIR EL MISMO
+                        if (
+                          isEdit &&
+                          form.soat === insurance.poliza
+                        ) {
+                          return true;
+                        }
+
+                        // BLOQUEAR SI YA ESTÁ USADO
+                        return !usedSoats.includes(
+                          insurance.poliza
+                        );
+                      })
+                        .map((insurance) => (
+                          <option
+                            key={insurance._id}
+                            value={insurance.poliza}
+                            
+                          >
+                            {
+                              `${
+                                getInsuranceStatus(
+                                  insurance.fechaFin
+                                ).status === "ACTIVO"
+                                  ? "🟢"
+                                  : getInsuranceStatus(
+                                      insurance.fechaFin
+                                    ).status === "PROX. EXPIRAR"
+                                  ? "🟡"
+                                  : "🔴"
+                              } ${insurance.poliza}`
+                            }
+                          </option>
+                  ))}
+                </select>
 
             </div>
+          </div>
 
-            <label className="label">CARRETA</label>
-            <div className="date-placa-revision">
+          {/* RIGHT */}
+          <div className="col">
+            <label className="label-col-subtitle">DATOS CARRETA</label>
+            <div className="date-carreta">
+                <label className="label">
+                  MARCA
+                </label>
+
+                <input
+                  className="uppercase-input"
+                  type="text"
+                  value={form.marcaCarreta}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      marcaCarreta: e.target.value.toUpperCase()
+                    })
+                  }
+                  placeholder="Ej. VOLVO"
+                />
 
                 <label className="label">
                   PLACA
@@ -862,31 +979,28 @@ const usedSoats = units
                     })
                   }
                 />
+                <label className="label">
+                  MTC
+                </label>
+
+                <input
+                  className="uppercase-input"
+                  type="text"
+                  value={form.mtcCarreta}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      mtcCarreta: e.target.value
+                    })
+                  }
+                  placeholder="CODIGO MTC CARRETA"
+                />
             </div>
           </div>
-
-          {/* RIGHT */}
-          <div className="col">
-
-            <label className="label">
-              MTC
-            </label>
-
-            <input
-              className="uppercase-input"
-              type="text"
-              value={form.mtc}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  mtc: e.target.value
-                })
-              }
-              placeholder="Codigo de Registro MTC"
-            />
-
-            <label className="label">
-              POLIZAS:
+        </div>
+        {/* POLIZAS */}
+        <label className="label-subtitle">
+            SEGUROS POLIZAS:
             </label>
               <div className="select-polizas">
                 <label className="label">
@@ -914,20 +1028,6 @@ const usedSoats = units
                           ?.toLowerCase()
                           .includes("vehicular")
                     )
-                    .filter((insurance) => {
-
-                      // EN EDICION PERMITIR LA ACTUAL
-                      if (
-                        isEdit &&
-                        form.polizaVehicular === insurance.poliza
-                      ) {
-                        return true;
-                      }
-
-                      return !usedVehicularPolicies.includes(
-                        insurance.poliza
-                      );
-                    })
                     .map((insurance) => (
                       <option
                         key={insurance._id}
@@ -1013,13 +1113,28 @@ const usedSoats = units
                 <option value="">
                   Seleccionar poliza...
                 </option>
+                {/*poliza unica*/}
 
                 {insuranceContracts
-                  .filter(
-                    (insurance) =>
-                      insurance.tipo?.toLowerCase().includes("endoso")
-                  )
-                  .map((insurance) => (
+                    .filter(
+                      (insurance) =>
+                        insurance.tipo?.toLowerCase().includes("endoso")
+                    )
+                    .filter((insurance) => {
+                      if (
+                        isEdit &&
+                        form.polizaEndoso === insurance.poliza
+                      ) {
+                        return true;
+                      }
+
+                      return !usedEndosos.includes(
+                        insurance.poliza
+                      );
+                    })
+                    .map((insurance) => (
+                      
+  
                     <option
                       key={insurance._id}
                       value={insurance.poliza}
@@ -1042,99 +1157,53 @@ const usedSoats = units
               </select>
               </div>
 
-            <label className="label">
-              SOAT
-            </label>
-
-            <select name="soat" 
-                    value={form.soat || ""} 
-                    onChange={(e)=>
-                       handleInsuranceSelect(
-                          "soat",
-                          e.target.value
-                        )
-                      }
-            >
-              <option value="">Seleccionar SOAT...</option>
-                
-                {insuranceContracts
-                  .filter((insurance) => {
-
-                    // SOLO SOAT
-                    if (
-                      !insurance.poliza?.startsWith(
-                        "SOAT-"
-                      )
-                    ) {
-                      return false;
-                    }
-
-                    // EN EDICION SI PERMITIR EL MISMO
-                    if (
-                      isEdit &&
-                      form.soat === insurance.poliza
-                    ) {
-                      return true;
-                    }
-
-                    // BLOQUEAR SI YA ESTÁ USADO
-                    return !usedSoats.includes(
-                      insurance.poliza
-                    );
-                  })
-                     .map((insurance) => (
-                      <option
-                        key={insurance._id}
-                        value={insurance.poliza}
-                        
-                      >
-                        {
-                          `${
-                            getInsuranceStatus(
-                              insurance.fechaFin
-                            ).status === "ACTIVO"
-                              ? "🟢"
-                              : getInsuranceStatus(
-                                  insurance.fechaFin
-                                ).status === "PROX. EXPIRAR"
-                              ? "🟡"
-                              : "🔴"
-                          } ${insurance.poliza}`
-                        }
-                      </option>
-              ))}
-            </select>
-
-          </div>
-        </div>
-
         {/* CHECKLIST */}
         
             <div className="list-checklist"> 
-              CHECKLIST DE DOCUMENTACION
+              <label className="label-subtitle">CHECKLIST DE DOCUMENTACION</label>
               <div className="checklist">
                <div className="grid">
                 <div className="col">
                 <label>
                   <input
                     type="checkbox"
-                    checked={form.documentos.mtcCheck}
+                    checked={form.documentos.mtcCheckTractor}
                     onChange={() =>
-                      handleCheckbox("mtcCheck")
+                      handleCheckbox("mtcCheckTractor")
                     }
                   />
                   MTC TRACTOR
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.mtcCheckCarreta}
+                    onChange={() =>
+                      handleCheckbox("mtcCheckCarreta")
+                    }
+                  />
+                  MTC CARRETA
                 </label>
 
                 <label>
                   <input
                     type="checkbox"
-                    checked={form.documentos.revisionTecnicaCheck}
+                    checked={form.documentos.revisionTecnicaTractorCheck}
                     onChange={() =>
-                      handleCheckbox("revisionTecnicaCheck")
+                      handleCheckbox("revisionTecnicaTractorCheck")
                     }
                   />
-                  REVISIÓN TÉCNICA
+                  REVISIÓN TÉCNICA TRACTOR
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.documentos.revisionTecnicaCarretaCheck}
+                    onChange={() =>
+                      handleCheckbox("revisionTecnicaCarretaCheck")
+                    }
+                  />
+                  REVISIÓN TÉCNICA CARRETA
                 </label>
 
                 <label>
@@ -1147,7 +1216,10 @@ const usedSoats = units
                   />
                   SOAT
                 </label>
+              </div>
 
+              <div className="col">
+                <div className="check-item">
                 <label>
                   <input
                     type="checkbox"
@@ -1158,10 +1230,6 @@ const usedSoats = units
                   />
                   POLIZAS
                 </label>
-              </div>
-
-              <div className="col">
-                <div className="check-item">
                 <label className="check-row">
                   <input
                     type="checkbox"
